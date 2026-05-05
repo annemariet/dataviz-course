@@ -31,13 +31,139 @@ Join at **wooclap.com** · code **AZNPLT**
 Switch to Wooclap tab → https://app.wooclap.com/events/AZNPLT/live-session
 -->
 
+
+---
+layout: center
 ---
 
-# The same structure, rendered four ways
+# Why learn about data visualization?
 
-<p class="text-gray-500 text-sm mb-3">Same structure — different representations, different purposes. Data is no different.</p>
+<br/>
 
-<div class="grid grid-cols-4 gap-3">
+**You will spend a lot of time visualizing data.**
+
+- Exploring datasets before modelling
+- Debugging model behaviour
+- Discussing results with colleagues
+- Convincing stakeholders
+
+<img src="/images/training-console-output.png" class="w-full" style="max-height:250px; object-fit:cover object-position:left" />
+
+
+---
+layout: two-cols-header
+---
+
+# Why learn about data visualization?
+
+::left::
+
+**Good charts are rarer than they should be.**
+
+- Tables where a chart would tell the story faster
+- Rainbow colormaps that obscure rather than reveal
+- Pie charts where a bar chart would be obvious
+- Axes truncated to exaggerate small differences
+
+
+::right::
+
+<img src="/images/bad-chart-example.jpg" class="w-full" style="max-height:250px; object-fit:cover object-position:left" />
+
+<br />
+
+> The ability to make a good chart is underrated — and more impactful than most people think.
+
+
+---
+layout: center
+---
+
+# I keep seeing plain tables
+
+<div class="grid grid-cols-2 gap-8 mt-4">
+<div>
+
+<img src="/images/ml-paper-results-table.jpg" class="w-full" style="max-height:300px; object-fit:cover" />
+
+<p class="text-xs text-gray-400 mt-1">Real ML paper results table. Which method wins? Hard to say.</p>
+
+</div>
+<div class="text-gray-700">
+
+Questions this raises:
+
+- Do they want me to read *all* of this?
+- Did they copy-paste from their paper?
+- Do they care about their audience?
+- **Are they hiding something?**
+- Do they realize a chart would be clearer?
+
+Most charitable interpretation: **they didn't think about it.**
+
+</div>
+</div>
+
+
+---
+layout: center
+---
+
+# What to expect from this course
+
+- Learn principled ways of designing your graphics
+- Build hands-on experience with data (interactive) visualization tools
+- Debug models visually
+- Communicate results more efficiently to your stakeholders
+
+---
+layout: two-cols-header
+---
+
+# What to expect from this course
+
+::left::
+
+**Tentative program**
+
+| # | Date | Topic |
+|---|------|-------|
+| 1 | 07/05 | Principles + Matplotlib/Seaborn |
+| 2 | 27/05 | Grammar of Graphics + Altair |
+| 3 | 28/05 | Communication & Storytelling |
+| 4 | 03/06 | Visualization × ML |
+| 5 | 04/06 | Big Data Scale |
+| 6 | 08/06 | AI-Assisted Viz + Ethics |
+| 7+8 | 11/06 | Mini-project hackathon |
+
+::right::
+
+**How each session works**
+
+- 30–45 min: presentation
+- 2h+: hands-on notebook workshop
+- 15 min: quiz (spaced repetition)
+
+**Assessment:** mini-project on June 11:
+
+- choose a dataset (can be related to your daily work)
+- find a story to tell / a problem to solve
+- choose your tools
+- demonstrate acquired visualization skills!
+
+* Rubric will be communicated soon*.
+
+---
+
+# Visualization: a different view on data
+
+<p class="text-gray-500 text-sm mb-3">There are many ways to represent the world. Don't get stuck in one projection.</p>
+
+<div class="grid grid-cols-4 gap-3 items-end">
+<div class="text-center">
+<img src="/images/eiffel-engineering-blueprints-1887.jpeg" class="mx-auto w-full" style="max-height:310px; object-fit:cover; object-position:bottom" />
+<p class="text-xs text-gray-400 mt-1">Engineering blueprints (1887)</p>
+</div>
 <div class="text-center">
 <img src="/images/eiffel-photo-sunny.jpeg" class="mx-auto w-full" style="max-height:310px; object-fit:cover" />
 <p class="text-xs text-gray-400 mt-1">Photography</p>
@@ -50,39 +176,7 @@ Switch to Wooclap tab → https://app.wooclap.com/events/AZNPLT/live-session
 <img src="/images/eiffel-delaunay-painting-1926.jpeg" class="mx-auto w-full" style="max-height:310px; object-fit:cover" />
 <p class="text-xs text-gray-400 mt-1">Painting (Delaunay, 1926)</p>
 </div>
-<div class="text-center">
-<img src="/images/eiffel-engineering-blueprints-1887.jpeg" class="mx-auto w-full" style="max-height:310px; object-fit:cover" />
-<p class="text-xs text-gray-400 mt-1">Engineering blueprints (1887)</p>
 </div>
-</div>
-
----
-layout: two-cols-header
----
-
-# Why does this course exist?
-
-::left::
-
-**You will spend a lot of time visualizing data.**
-
-- Exploring datasets before modelling
-- Debugging model behaviour
-- Communicating results to colleagues
-- Convincing stakeholders
-
-::right::
-
-**Most of what you see is bad.**
-
-- Plain tables where a chart would fit on one slide
-- Rainbow color maps hiding structure
-- Pie charts that nobody can read
-- Charts that mislead rather than inform
-
-<br/>
-
-> The ability to make a good chart is rarer than it should be — and more impactful than most people think.
 
 ---
 layout: center
@@ -118,70 +212,6 @@ Communicate what you found to someone else.
 layout: two-cols-header
 ---
 
-# What to expect from this course
-
-::left::
-
-**6 sessions + 1 mini-project day**
-
-| # | Date | Topic |
-|---|------|-------|
-| 1 | 07/05 | Principles + Matplotlib/Seaborn |
-| 2 | 27/05 | Grammar of Graphics + Altair |
-| 3 | 28/05 | Communication & Storytelling |
-| 4 | 03/06 | Visualization × ML |
-| 5 | 04/06 | Big Data Scale |
-| 6 | 08/06 | AI-Assisted Viz + Ethics |
-| 7+8 | 11/06 | Mini-project hackathon |
-
-::right::
-
-**How each session works**
-
-- 30–45 min: concepts & examples
-- 2h+: hands-on notebook workshop
-- 15 min: quiz (spaced repetition)
-
-**What you'll be able to do**
-
-- Choose the right chart for any comparison
-- Write publication-quality Python plots
-- Debug models visually
-- Communicate results that convince
-
-**Assessment:** the mini-project on June 11 — one dataset, one story, your tools.
-
----
-
-# I keep seeing plain tables
-
-<div class="grid grid-cols-2 gap-8 mt-4">
-<div>
-
-<img src="/images/ml-paper-results-table.jpg" class="w-full" style="max-height:300px; object-fit:cover" />
-
-<p class="text-xs text-gray-400 mt-1">Real ML paper results table. Which method wins? Hard to say.</p>
-
-</div>
-<div class="text-gray-700">
-
-Questions this raises:
-
-- Do they want me to read *all* of this?
-- Did they copy-paste from their paper?
-- Do they care about their audience?
-- **Are they hiding something?**
-- Do they realize a chart would be clearer?
-
-Most charitable interpretation: **they didn't think about it.**
-
-</div>
-</div>
-
----
-layout: two-cols-header
----
-
 # A picture tells a thousand words
 
 ::left::
@@ -199,13 +229,6 @@ A chart that makes the comparison **obvious** communicates far more than a table
 Direct labeling beats a legend. Annotations tell the story.
 
 **Rule:** if your audience has to squint at a legend, you've already lost them.
-
----
-layout: center
-class: text-center
----
-
-<img src="/images/meme-plot-all-the-data.jpg" class="mx-auto" style="max-height:400px" />
 
 ---
 layout: two-cols-header
@@ -844,3 +867,11 @@ uv run marimo edit notebooks/01_matplotlib_seaborn.py
 ```
 
 <p class="text-gray-400 mt-8">Open the notebook in edit mode to follow along and run each cell.</p>
+
+
+---
+layout: center
+class: text-center
+---
+
+<img src="/images/meme-plot-all-the-data.jpg" class="mx-auto" style="max-height:400px" />

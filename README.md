@@ -5,9 +5,8 @@ PSL Master IASD · 2026 · Anne-Marie Tousch
 ## Structure
 
 ```
-slides/          Slidev presentation (slides.md)
-notebooks/       Marimo workshop notebooks
-TEACHER_NOTES.md Rationale behind design decisions
+slides/      Slidev presentation (slides.md)
+notebooks/   Marimo workshop notebooks
 ```
 
 ## Running the slides
@@ -32,8 +31,13 @@ Images are **not tracked by git** — they live in the vault and are only availa
 ## Running the notebooks
 
 ```bash
-cd ..
 uv sync --no-install-project
 uv run marimo edit notebooks/01_matplotlib_seaborn.py
 uv run marimo edit notebooks/02_gog_altair.py
+```
+
+If you haven't used Marimo before, run the built-in intro tutorial first:
+
+```bash
+uv run marimo tutorial intro
 ```
