@@ -55,19 +55,15 @@ marimo edit notebooks/01_matplotlib_seaborn.py
 
 ## Images
 
-Images are committed directly to `slides/public/images/` — **do not use symlinks**.
-
-This repo originated from a monorepo where images were a vault symlink. That approach
-doesn't work for students cloning the repo, so images are now real committed files.
+Images are committed directly to `slides/public/images/`.
 
 **To add a new image:**
 1. Drop it into `slides/public/images/`
 2. Reference it in slides.md as `<img src="/images/filename.ext" />`
 3. Commit it
 
-**Pitfall:** `slides/.gitignore` used to have a blanket `public/` rule (Slidev default).
-It was replaced with specific entries (`public/fonts/`, `public/icons/`) so that
-`slides/public/images/` is tracked. Don't re-add `public/` there.
+**Pitfall:** `slides/.gitignore` has `public/fonts/` and `public/icons/` but NOT a
+blanket `public/` rule — that's intentional so images are tracked. Don't add `public/` back.
 
 ---
 

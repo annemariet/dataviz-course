@@ -8,3 +8,5 @@ slides/node_modules/
 slides/dist/
 slides/.slidev/
 
+*.local.md
+
