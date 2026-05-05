@@ -13,11 +13,20 @@ mdc: true
 colorSchema: light
 ---
 
+<div class="absolute inset-0 z-0">
+  <img src="/images/eiffel-photo-sunny.jpeg" class="w-full h-full object-cover" />
+  <div class="absolute inset-0" style="background: rgba(0,0,0,0.5)"></div>
+</div>
+
+<div class="relative z-10 flex flex-col items-center justify-center h-full text-white text-center" style="text-shadow: 0 1px 10px rgba(0,0,0,0.9), 0 0 3px rgba(0,0,0,1)">
+
 # Data is Beautiful
 
 ## Please Don't Ruin It
 
 Anne-Marie Tousch · PSL Master IASD · May 2026
+
+</div>
 
 ---
 layout: center
@@ -61,14 +70,13 @@ layout: two-cols-header
 </div>
 
 ---
-layout: two-cols-header
 ---
 
 # Why learn about data visualization?
 
-::left::
+<div class="grid grid-cols-2 gap-8">
 
-<div class="flex flex-col justify-center h-full">
+<div class="flex flex-col justify-center">
 
 **Good charts are rarer than they should be.**
 
@@ -79,17 +87,15 @@ layout: two-cols-header
 
 </div>
 
-::right::
+<div class="flex flex-col justify-center">
 
-<div class="flex flex-col justify-center h-full">
-
-<img src="/images/bad-chart-example.jpg" class="w-full" style="max-height:250px; object-fit:cover object-position:left" />
-
-<br />
-
-> The ability to make a good chart is underrated — and more impactful than most people think.
+<img src="/images/bad-chart-example.jpg" class="w-full" style="max-height:200px; object-fit:cover object-position:left" />
 
 </div>
+
+</div>
+
+> The ability to make a good chart is underrated — and more impactful than most people think.
 
 
 ---
