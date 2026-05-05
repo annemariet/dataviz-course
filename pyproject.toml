@@ -1,0 +1,19 @@
+[project]
+name = "dataviz-workshop"
+version = "0.1.0"
+description = "Python Data Visualization Workshop: matplotlib → seaborn → altair"
+requires-python = ">=3.11"
+dependencies = [
+    "marimo>=0.10.0",
+    "matplotlib>=3.9",
+    "seaborn>=0.13",
+    "altair>=5.4",
+    "pandas>=2.2",
+    "numpy>=1.26",
+    "vega-datasets>=0.9",
+    "requests>=2.31",
+    "pyarrow>=14.0",
+    "vegafusion>=2.0.3",
+    "vl-convert-python>=1.9.0.post1",
+]
+

@@ -1,0 +1,11 @@
+__pycache__/
+__marimo__/
+notebooks/layouts/
+data/
+.venv/
+
+slides/node_modules/
+slides/dist/
+slides/.slidev/
+slides/public/images/
+
