@@ -33,12 +33,15 @@ Switch to Wooclap tab → https://app.wooclap.com/events/AZNPLT/live-session
 
 
 ---
-layout: center
+layout: two-cols-header
 ---
+
 
 # Why learn about data visualization?
 
-<br/>
+::left::
+
+<div class="flex flex-col justify-center h-full">
 
 **You will spend a lot of time visualizing data.**
 
@@ -47,8 +50,15 @@ layout: center
 - Discussing results with colleagues
 - Convincing stakeholders
 
+</div>
+
+::right::
+
+<div class="flex flex-col justify-center h-full">
+
 <img src="/images/training-console-output.png" class="w-full" style="max-height:250px; object-fit:cover object-position:left" />
 
+</div>
 
 ---
 layout: two-cols-header
@@ -58,6 +68,8 @@ layout: two-cols-header
 
 ::left::
 
+<div class="flex flex-col justify-center h-full">
+
 **Good charts are rarer than they should be.**
 
 - Tables where a chart would tell the story faster
@@ -65,14 +77,19 @@ layout: two-cols-header
 - Pie charts where a bar chart would be obvious
 - Axes truncated to exaggerate small differences
 
+</div>
 
 ::right::
+
+<div class="flex flex-col justify-center h-full">
 
 <img src="/images/bad-chart-example.jpg" class="w-full" style="max-height:250px; object-fit:cover object-position:left" />
 
 <br />
 
 > The ability to make a good chart is underrated — and more impactful than most people think.
+
+</div>
 
 
 ---
