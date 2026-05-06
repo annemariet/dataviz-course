@@ -440,7 +440,7 @@ def _(mo):
 
     | Channel | Matplotlib | Use it for |
     |---------|-----------|------------|
-    | Spatial region | subplots / facets | Strong separation when you have room |
+    | Spatial grouping | ordering, offsets, enclosure, facets | Keep related items together; facets are one option |
     | Hue | `color=`, `c=` | A few categories, usually <= 6-8 |
     | Shape | `marker=` | A few categories, often redundant with hue |
     | Line style | `linestyle=` | Groups in line charts |
@@ -452,6 +452,10 @@ def _(mo):
     - Humans compare lengths better than areas; bubble size is approximate.
     - Redundant encoding (same variable → color *and* shape) can improve accessibility.
     - Avoid using hue for both categories and quantities in the same chart.
+
+    Here, **spatial grouping** means using the plane to keep categories visually
+    distinct: adjacent positions, separated bands, enclosed regions, or separate
+    facets. Faceting is a strong case, but not the only one.
     """)
     return
 
