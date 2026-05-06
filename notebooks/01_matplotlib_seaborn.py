@@ -10,7 +10,7 @@ app = marimo.App(
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    # Part 1 — Matplotlib & Seaborn
+    # Datavis in practice, part 1 — the fundamentals: Matplotlib & Seaborn
 
     **Session duration**: ~2 hours &nbsp;|&nbsp; **Datasets**: Gapminder, Palmer Penguins
 
@@ -191,7 +191,7 @@ def _(mo):
     ---
     ## 3 · Our Two Datasets
 
-    We'll use the same two datasets throughout both sessions so you can focus on
+    We'll use the same two datasets in the next 2 sessions so you can focus on
     **the chart**, not on learning new data each time.
 
     ### Gapminder
@@ -323,8 +323,22 @@ def _(gm2000, plt):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
+    **Try it! Make it break!**
+
+    Mixing the 2 APIs is generally a bad idea, in particular becaues the pyplot API doesn't work intuitively with subplots.
+
+    In the plot above, try using the pyplot API after the Object-oriented one (eg add `plt.xlabel("new label")). What happens?
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
     ---
     ## 5 · Encoding Variables as Visual Channels
+
+    **Reminder:**
 
     Every variable you show must be mapped to a visual *channel* — a property of a mark
     that the eye can decode. Not all channels are equal.
@@ -334,15 +348,14 @@ def _(mo):
     - **Effectiveness**: use the most accurate channel for the most important variable.
     - **Expressiveness**: encode all the data — and only the data (no decoration that implies information you don't have).
 
-    Munzner's *Visualization Analysis and Design* (2014) is the most accessible synthesis
-    of both — a good next read after this workshop.
+    Munzner's *Visualization Analysis and Design* (2014) builds on their work in her formal textbook which strives to define the most useful data abstractions for datavis.
 
     | Channel | Matplotlib | Accuracy | Best for |
     |---------|-----------|----------|---------|
-    | Position (x, y) | `x=`, `y=` | Highest | Your most important variables |
-    | Color (hue) | `c=` | High | Categories (≤ 8) or a quantitative gradient |
+    | Position (x, y) | `x=`, `y=` | High | Your most important variables |
     | Size | `s=` | Medium | Quantitative, order-of-magnitude differences (e.g. population) |
-    | Shape | `marker=` | Low | Categories (≤ 6), when color is already taken |
+    | Shape | `marker=` | Medium | Categories (≤ 6), when color is already taken |
+    | Color (hue) | `c=` | Low | Categories (≤ 8) or a quantitative gradient |
     | Transparency | `alpha=` | Low | Density, overlap, uncertainty — not categories |
 
     **Rules of thumb**:
