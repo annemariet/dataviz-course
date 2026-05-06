@@ -63,51 +63,41 @@ layout: two-cols-footer
 
 
 ---
-layout: two-cols-footer
----
-
-# Why learn about data visualization?
-
-::left::
-
-**Good charts are rarer than they should be.**
-
-- Tables where a chart would tell the story faster
-- Rainbow colormaps that obscure rather than reveal
-- Pie charts where a bar chart would be obvious
-- Axes truncated to exaggerate small differences
-
-::right::
-
-<img src="/images/bad-chart-example.jpg" class="w-full" style="max-height:200px; object-fit:cover; object-position:left" />
-
-::tagline::
-
-> The ability to make a good chart is underrated — and more impactful than most people think.
-
-
----
 
 # Bad charts are everywhere
 
 <div class="grid grid-cols-2 gap-3 mt-3">
 <div class="text-center">
 <img src="/images/bad-chart-french-tv-pie.png" class="mx-auto w-full" style="max-height:160px; object-fit:contain" />
-<p class="text-xs text-gray-400 mt-1">French TV — a pie where the numbers don't add up</p>
 </div>
 <div class="text-center">
 <img src="/images/bad-chart-fox-news-economic.png" class="mx-auto w-full" style="max-height:160px; object-fit:contain" />
-<p class="text-xs text-gray-400 mt-1">Fox News — axis truncated to exaggerate a small change</p>
 </div>
 <div class="text-center">
 <img src="/images/bad-charts-pie-rounding.png" class="mx-auto w-full" style="max-height:160px; object-fit:contain" />
-<p class="text-xs text-gray-400 mt-1">Rounding errors that break the chart's own story</p>
 </div>
 <div class="text-center">
 <img src="/images/bad-chart-french-tv-bars.png" class="mx-auto w-full" style="max-height:160px; object-fit:contain" />
-<p class="text-xs text-gray-400 mt-1">French TV bars — bars whose heights don't match the values</p>
 </div>
 </div>
+
+---
+layout: two-cols-footer
+---
+
+# What's wrong with this chart?
+
+::left::
+
+<img src="/images/bad-chart-fox-news-economic.png" class="w-full" style="max-height:260px; object-fit:contain" />
+
+::right::
+
+**Chartjunk** showing many distracting colors, lines, glowing effects.
+
+**Wrong label** (1.4% or 2%??)
+
+**Dishonest:** Compares two periods of unequal length (59 years vs. 8 years)
 
 
 ---
@@ -120,28 +110,15 @@ layout: two-cols-footer
 
 <img src="/images/bad-chart-fox-news-tax-cuts.png" class="w-full" style="max-height:260px; object-fit:contain" />
 
-<img src="/images/bad-chart-fox-redesign.png" class="w-full mt-3" style="max-height:55px; object-fit:contain" />
-<p class="text-xs text-gray-400 mt-1">The fix: same data, honest scale.</p>
 
 ::right::
 
-**Lie Factor** (Tufte, 1983):
+**Aesthetic** full of chartjunk
 
-**Lie Factor** = (effect size in graphic) / (effect size in data)
+**Lie Factor** = (effect size in graphic) / (effect size in data) ~ 29 > 1
 
-A factor of 1 = honest. Above 5 = misleading.
-
-Truncating the y-axis amplifies small differences. The eye sees a dramatic change; the data tells a quieter story.
-
-**Rules:**
-- Bar charts must start at zero
-- If you must truncate, break the axis and mark it
-- Ask: what would this look like at true scale?
-
-::tagline::
-
-> "Any graphic that makes the data look more dramatic than it is, is lying." — Tufte
-
+A quick redesign tells a different story:
+<img src="/images/bad-chart-fox-redesign.png" class="w-full mt-3" style="max-height:55px; object-fit:contain" />
 
 ---
 layout: center
@@ -189,29 +166,26 @@ layout: two-cols-header
 - choose your tools
 - demonstrate acquired visualization skills!
 
-* Rubric will be communicated soon*.
+*Rubric will be communicated soon*.
 
 ---
-layout: two-cols-header
+layout: image-right
+image: /images/eiffel-from-below-structural.jpeg
+class: flex flex-col justify-center
+---
+
+# Why visualize?
+
+---
+layout: center
 ---
 
 # A picture tells a thousand words
 
-::left::
 
 <img src="/images/chart-nvidia-vs-banks-market-cap.webp" class="w-full" style="max-height: 320px; object-fit: contain;" />
 
 *[Nvidia's market cap vs. major banks. Source: Visual Capitalist, 2024.](https://www.visualcapitalist.com/chart-nvidias-market-cap-compared-to-banks/)*
-
-::right::
-
-<br/><br/>
-
-A chart that makes the comparison **obvious** communicates far more than a table.
-
-Direct labeling beats a legend. Annotations tell the story.
-
-**Rule:** if your audience has to squint at a legend, you've already lost them.
 
 ---
 layout: two-cols-header
