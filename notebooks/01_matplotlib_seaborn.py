@@ -142,15 +142,15 @@ def _(mo):
 @app.cell
 def _(StringIO, pd, requests):
     _datasaurus_url = "https://openintro.org/data/csv/datasaurus.csv"
-    _datasaurus_error = None
+    datasaurus_error = None
     try:
         _response = requests.get(_datasaurus_url, timeout=10)
         _response.raise_for_status()
         datasaurus = pd.read_csv(StringIO(_response.text))
     except Exception as _err:
         datasaurus = pd.DataFrame(columns=["dataset", "x", "y"])
-        _datasaurus_error = _err
-    return datasaurus, _datasaurus_error
+        datasaurus_error = _err
+    return datasaurus, datasaurus_error
 
 
 @app.cell
@@ -168,9 +168,9 @@ def _(datasaurus):
 
 
 @app.cell
-def _(_datasaurus_error, datasaurus, plt):
+def _(datasaurus, datasaurus_error, plt):
     if datasaurus.empty:
-        print(f"Datasaurus data unavailable: {_datasaurus_error}")
+        print(f"Datasaurus data unavailable: {datasaurus_error}")
     else:
         _names = datasaurus["dataset"].unique()[:6]
         _fig, _axes = plt.subplots(2, 3, figsize=(10, 6), sharex=True, sharey=True)
@@ -1075,6 +1075,16 @@ def _(gapminder, plt, sns):
     _ax.set_title("Gapminder correlation matrix", fontsize=11)
     plt.tight_layout()
     _fig
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    **Caution:** a correlation heatmap shows pairwise linear association.
+    It can hide nonlinear patterns, subgroup structure, outliers, and changes
+    over time. Treat it as a quick EDA index, not as evidence of causality.
+    """)
     return
 
 
