@@ -1105,6 +1105,7 @@ def _(mo):
     - **Sequential data**: `viridis`, `plasma`, `cividis` — perceptually uniform
     - **Diverging data** (e.g., correlation): `RdBu`, `coolwarm`
     - **Categorical**: Matplotlib's `tab10` or Seaborn's `"colorblind"` palette
+    - **Consistency**: keep the same category → color mapping across plots
     - **Avoid**: red + green together; jet/rainbow for continuous data
 
     Print your chart in greyscale — if information is lost, fix the palette.
@@ -1210,7 +1211,7 @@ def _(mo):
     | Seaborn | High-level API on Matplotlib; statistical defaults built in |
     | Distributions | `histplot` → `kdeplot` → `violinplot` as you need more detail |
     | Uncertainty | Distinguish estimate uncertainty from data spread |
-    | Color | Use library palette tools; test for colorblindness |
+    | Color | Use library palette tools; keep category colors consistent; test accessibility |
 
     **Next session**: Grammar of Graphics + Altair — a principled framework for
     thinking about visualization, and a Python library that implements it directly.

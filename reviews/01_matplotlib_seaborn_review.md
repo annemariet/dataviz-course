@@ -55,6 +55,7 @@ heatmaps, and the Datasaurus extension as optional material.
   example. It now uses Matplotlib's active color cycle.
 - The accessibility section now demonstrates palette choice through Seaborn's
   palette API (`tab10` vs `colorblind`).
+- Added a reminder to keep category-color mappings stable across plots.
 
 ### Anscombe / Datasaurus extension
 
