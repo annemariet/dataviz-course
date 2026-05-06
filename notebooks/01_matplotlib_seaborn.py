@@ -12,7 +12,7 @@ def _(mo):
     mo.md(r"""
     # Part 1 — Matplotlib & Seaborn
 
-    **Session duration**: ~3 hours &nbsp;|&nbsp; **Datasets**: Gapminder, Palmer Penguins
+    **Session duration**: ~2 hours &nbsp;|&nbsp; **Datasets**: Gapminder, Palmer Penguins
 
     ## What you'll be able to do after this session
 

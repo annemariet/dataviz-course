@@ -11,11 +11,12 @@ drawings:
 transition: slide-left
 mdc: true
 colorSchema: light
+showSlideNumber: true
 ---
 
 <div class="absolute inset-0 z-0">
   <img src="/images/eiffel-photo-sunny.jpeg" class="w-full h-full object-cover" />
-  <div class="absolute inset-0" style="background: rgba(0,0,0,0.5)"></div>
+  <div class="absolute inset-0" style="background: rgba(0,0,0,0.2)"></div>
 </div>
 
 <div class="relative z-10 flex flex-col items-center justify-center h-full text-white text-center" style="text-shadow: 0 1px 10px rgba(0,0,0,0.9), 0 0 3px rgba(0,0,0,1)">
@@ -42,15 +43,12 @@ Switch to Wooclap tab → https://app.wooclap.com/events/AZNPLT/live-session
 
 
 ---
-layout: two-cols-header
+layout: two-cols-footer
 ---
-
 
 # Why learn about data visualization?
 
 ::left::
-
-<div class="flex flex-col justify-center h-full">
 
 **You will spend a lot of time visualizing data.**
 
@@ -59,24 +57,18 @@ layout: two-cols-header
 - Discussing results with colleagues
 - Convincing stakeholders
 
-</div>
-
 ::right::
 
-<div class="flex flex-col justify-center h-full">
+<img src="/images/training-console-output.png" class="w-full" style="max-height:250px; object-fit:cover; object-position:left" />
 
-<img src="/images/training-console-output.png" class="w-full" style="max-height:250px; object-fit:cover object-position:left" />
-
-</div>
 
 ---
+layout: two-cols-footer
 ---
 
 # Why learn about data visualization?
 
-<div class="grid grid-cols-2 gap-8">
-
-<div class="flex flex-col justify-center">
+::left::
 
 **Good charts are rarer than they should be.**
 
@@ -85,47 +77,70 @@ layout: two-cols-header
 - Pie charts where a bar chart would be obvious
 - Axes truncated to exaggerate small differences
 
-</div>
+::right::
 
-<div class="flex flex-col justify-center">
+<img src="/images/bad-chart-example.jpg" class="w-full" style="max-height:200px; object-fit:cover; object-position:left" />
 
-<img src="/images/bad-chart-example.jpg" class="w-full" style="max-height:200px; object-fit:cover object-position:left" />
-
-</div>
-
-</div>
+::tagline::
 
 > The ability to make a good chart is underrated — and more impactful than most people think.
 
 
 ---
-layout: center
+
+# Bad charts are everywhere
+
+<div class="grid grid-cols-2 gap-3 mt-3">
+<div class="text-center">
+<img src="/images/bad-chart-french-tv-pie.png" class="mx-auto w-full" style="max-height:160px; object-fit:contain" />
+<p class="text-xs text-gray-400 mt-1">French TV — a pie where the numbers don't add up</p>
+</div>
+<div class="text-center">
+<img src="/images/bad-chart-fox-news-economic.png" class="mx-auto w-full" style="max-height:160px; object-fit:contain" />
+<p class="text-xs text-gray-400 mt-1">Fox News — axis truncated to exaggerate a small change</p>
+</div>
+<div class="text-center">
+<img src="/images/bad-charts-pie-rounding.png" class="mx-auto w-full" style="max-height:160px; object-fit:contain" />
+<p class="text-xs text-gray-400 mt-1">Rounding errors that break the chart's own story</p>
+</div>
+<div class="text-center">
+<img src="/images/bad-chart-french-tv-bars.png" class="mx-auto w-full" style="max-height:160px; object-fit:contain" />
+<p class="text-xs text-gray-400 mt-1">French TV bars — bars whose heights don't match the values</p>
+</div>
+</div>
+
+
+---
+layout: two-cols-footer
 ---
 
-# I keep seeing plain tables
+# What's wrong with this chart?
 
-<div class="grid grid-cols-2 gap-8 mt-4">
-<div>
+::left::
 
-<img src="/images/ml-paper-results-table.jpg" class="w-full" style="max-height:300px; object-fit:cover" />
+<img src="/images/bad-chart-fox-news-tax-cuts.png" class="w-full" style="max-height:260px; object-fit:contain" />
 
-<p class="text-xs text-gray-400 mt-1">Real ML paper results table. Which method wins? Hard to say.</p>
+<img src="/images/bad-chart-fox-redesign.png" class="w-full mt-3" style="max-height:55px; object-fit:contain" />
+<p class="text-xs text-gray-400 mt-1">The fix: same data, honest scale.</p>
 
-</div>
-<div class="text-gray-700">
+::right::
 
-Questions this raises:
+**Lie Factor** (Tufte, 1983):
 
-- Do they want me to read *all* of this?
-- Did they copy-paste from their paper?
-- Do they care about their audience?
-- **Are they hiding something?**
-- Do they realize a chart would be clearer?
+**Lie Factor** = (effect size in graphic) / (effect size in data)
 
-Most charitable interpretation: **they didn't think about it.**
+A factor of 1 = honest. Above 5 = misleading.
 
-</div>
-</div>
+Truncating the y-axis amplifies small differences. The eye sees a dramatic change; the data tells a quieter story.
+
+**Rules:**
+- Bar charts must start at zero
+- If you must truncate, break the axis and mark it
+- Ask: what would this look like at true scale?
+
+::tagline::
+
+> "Any graphic that makes the data look more dramatic than it is, is lying." — Tufte
 
 
 ---
@@ -175,61 +190,6 @@ layout: two-cols-header
 - demonstrate acquired visualization skills!
 
 * Rubric will be communicated soon*.
-
----
-
-# Visualization: a different view on data
-
-<p class="text-gray-500 text-sm mb-3">There are many ways to represent the world. Don't get stuck in one projection.</p>
-
-<div class="grid grid-cols-4 gap-3 items-end">
-<div class="text-center">
-<img src="/images/eiffel-engineering-blueprints-1887.jpeg" class="mx-auto w-full" style="max-height:310px; object-fit:cover; object-position:bottom" />
-<p class="text-xs text-gray-400 mt-1">Engineering blueprints (1887)</p>
-</div>
-<div class="text-center">
-<img src="/images/eiffel-photo-sunny.jpeg" class="mx-auto w-full" style="max-height:310px; object-fit:cover" />
-<p class="text-xs text-gray-400 mt-1">Photography</p>
-</div>
-<div class="text-center">
-<img src="/images/eiffel-lego-model.jpeg" class="mx-auto w-full" style="max-height:310px; object-fit:cover" />
-<p class="text-xs text-gray-400 mt-1">Model (LEGO)</p>
-</div>
-<div class="text-center">
-<img src="/images/eiffel-delaunay-painting-1926.jpeg" class="mx-auto w-full" style="max-height:310px; object-fit:cover" />
-<p class="text-xs text-gray-400 mt-1">Painting (Delaunay, 1926)</p>
-</div>
-</div>
-
----
-layout: center
-class: text-center
----
-
-# Two reasons to visualize
-
-<div class="grid grid-cols-2 gap-16 mt-12">
-<div class="border border-blue-400 rounded-xl p-8">
-
-### Explore
-
-Understand your data before you model it.
-
-*What is the distribution? Are there outliers? Is there a pattern?*
-
-</div>
-<div class="border border-orange-400 rounded-xl p-8">
-
-### Explain
-
-Communicate what you found to someone else.
-
-*What is the story? What should they remember?*
-
-</div>
-</div>
-
-<p class="mt-12 text-gray-400">The tools and the mindset are different. Know which mode you're in.</p>
 
 ---
 layout: two-cols-header
@@ -303,6 +263,199 @@ Our visual cortex processes images through a hierarchy of specialized areas — 
 > Good dataviz exploits these principles intentionally.
 
 ---
+
+# Visualization: a different view on data
+
+<p class="text-gray-500 text-sm mb-3">There are many ways to represent the world. Don't get stuck in one projection.</p>
+
+<div class="grid grid-cols-4 gap-3">
+<div class="text-center">
+<img src="/images/eiffel-engineering-blueprints-1887.jpeg" class="mx-auto w-full" style="max-height:200px; object-fit:cover; object-position:bottom" />
+<p class="text-xs text-gray-400 mt-1">Engineering blueprints (1887)</p>
+</div>
+<div class="text-center">
+<img src="/images/eiffel-under-construction-1888.jpeg" class="mx-auto w-full" style="max-height:200px; object-fit:cover" />
+<p class="text-xs text-gray-400 mt-1">Under construction (1888)</p>
+</div>
+<div class="text-center">
+<img src="/images/eiffel-from-below-structural.jpeg" class="mx-auto w-full" style="max-height:200px; object-fit:cover" />
+<p class="text-xs text-gray-400 mt-1">Structural view from below</p>
+</div>
+<div class="text-center">
+<img src="/images/eiffel-cail-inscription-detail.jpeg" class="mx-auto w-full" style="max-height:200px; object-fit:cover" />
+<p class="text-xs text-gray-400 mt-1">Detail: Cail inscription</p>
+</div>
+<div class="text-center">
+<img src="/images/eiffel-hand-forced-perspective.jpeg" class="mx-auto w-full" style="max-height:200px; object-fit:cover" />
+<p class="text-xs text-gray-400 mt-1">Forced perspective</p>
+</div>
+<div class="text-center">
+<img src="/images/eiffel-photo-sunny.jpeg" class="mx-auto w-full" style="max-height:200px; object-fit:cover" />
+<p class="text-xs text-gray-400 mt-1">Photography</p>
+</div>
+<div class="text-center">
+<img src="/images/eiffel-lego-model.jpeg" class="mx-auto w-full" style="max-height:200px; object-fit:cover" />
+<p class="text-xs text-gray-400 mt-1">Model (LEGO)</p>
+</div>
+<div class="text-center">
+<img src="/images/eiffel-delaunay-painting-1926.jpeg" class="mx-auto w-full" style="max-height:200px; object-fit:cover" />
+<p class="text-xs text-gray-400 mt-1">Painting (Delaunay, 1926)</p>
+</div>
+</div>
+
+---
+layout: center
+class: text-center
+---
+
+# Two reasons to visualize
+
+<div class="grid grid-cols-2 gap-16 mt-8">
+<div class="border border-blue-400 rounded-xl p-6">
+
+### Explore
+
+<img src="/images/oysters-explore.jpg" class="w-full mx-auto my-3" style="max-height:160px; object-fit:cover" />
+
+Understand your data before you model it.
+
+*What is the distribution? Are there outliers? Is there a pattern?*
+
+</div>
+<div class="border border-orange-400 rounded-xl p-6">
+
+### Explain
+
+<img src="/images/pearl-explain.jpg" class="w-full mx-auto my-3" style="max-height:160px; object-fit:cover" />
+
+Communicate what you found to someone else.
+
+*What is the story? What should they remember?*
+
+</div>
+</div>
+
+<p class="mt-6 text-gray-400">The tools and the mindset are different. Know which mode you're in.</p>
+
+
+---
+layout: image-right
+image: /images/eiffel-under-construction-1888.jpeg
+class: flex flex-col justify-center
+---
+
+# How?
+
+A four-step process for charts that actually work.
+
+<div class="mt-6 text-gray-500">
+
+1. Define your goal
+2. Choose an effective visual
+3. Find the right focus
+4. Close the loop
+
+</div>
+
+
+---
+layout: image-right
+image: /images/eiffel-engineering-blueprints-1887.jpeg
+class: flex flex-col justify-center
+---
+
+<p class="text-gray-400 text-sm font-mono mb-2">Step 1 / 4</p>
+
+# Define your goal
+
+Before picking a chart type, know what question you're answering — and who you're answering it for.
+
+
+---
+layout: two-cols-footer
+---
+
+# Discovery or Communication?
+
+*Andrew Gelman & Antony Unwin — Infovis and Statistical Graphics (2013)*
+
+::left::
+
+**Discovery**
+*For yourself*
+
+- Fast, rough, iterative
+- Many plots, few eyes
+- Unexpected findings welcome
+- "What's going on here?"
+
+::right::
+
+**Communication**
+*For your audience*
+
+- Polished, purposeful, annotated
+- One plot, many readers
+- Story decided in advance
+- "Here is what I found"
+
+::tagline::
+
+> These modes have different aesthetics and conventions — and different failure modes. Know which one you're in.
+
+
+---
+
+# Table or graph?
+
+*Stephen Few, Show Me the Numbers (2012)*
+
+<div class="grid grid-cols-2 gap-8 mt-4">
+<div class="border border-blue-300 rounded-xl p-6">
+
+**Use a table when:**
+
+- Reader needs to **look up individual values**
+- Precise numbers matter
+- Multiple units of measure in one display
+- Values at different levels of aggregation (summary + detail)
+
+*Example: quarterly sales by region with % of plan*
+
+</div>
+<div class="border border-orange-300 rounded-xl p-6">
+
+**Use a graph when:**
+
+- The message lives in **patterns, trends, exceptions**
+- Whole series need to be compared at a glance
+
+*Example: six months of revenue vs. last year vs. target*
+
+</div>
+</div>
+
+<br/>
+
+**The 8 relationships graphs can show:** nominal comparison · time series · ranking · part-of-whole · deviation · distribution · correlation · geospatial
+
+> Choosing a table is a valid decision — don't reach for a chart by default.
+
+
+---
+layout: image-right
+image: /images/eiffel-hand-forced-perspective.jpeg
+class: flex flex-col justify-center
+---
+
+<p class="text-gray-400 text-sm font-mono mb-2">Step 2 / 4</p>
+
+# Choose an effective visual
+
+Match the visual encoding to the comparison you want to make. Not all channels carry the same weight.
+
+
+---
 layout: center
 class: text-center
 ---
@@ -354,7 +507,7 @@ Processed in < 200ms — *before* conscious attention.
 
 ::left::
 
-<img src="/images/preattentive-attributes-examples.png" class="w-full mt-2" />
+<img src="/images/preattentive-attributes-full-channels.png" class="w-full mt-2" />
 
 ::right::
 
@@ -374,31 +527,55 @@ Processed in < 200ms — *before* conscious attention.
 layout: two-cols-header
 ---
 
-# Which channels carry quantity most accurately?
+# Stevens' Psychophysical Power Law
 
-*Cleveland & McGill (1984) — empirical ranking from perception experiments*
+*S. S. Stevens (1957) — the science behind perception accuracy*
 
 ::left::
 
-<img src="/images/cleveland-mcgill-channel-ranking.png" class="w-full" style="max-height:420px; object-fit:contain" />
+<img src="/images/stevens-psychophysical-power-law.png" class="w-full" style="max-height:340px; object-fit:contain" />
 
 ::right::
 
 <br/>
 
-Viewers extract quantities **most accurately** from:
+**S = I^n** — perceived magnitude *S* scales as a power of actual intensity *I*.
 
-1. **Position on a common scale** — scatter, dot plot
-2. **Length** — bar chart
-3. **Direction / angle** — line slope
-4. Area — bubble chart
-5. Volume / 3D — avoid
-6. Color saturation — heatmap
-7. Color hue — never for quantities
+The exponent *n* varies by channel:
 
-**Why pie charts fail:** they encode quantities as angles and areas — ranks 3–5. A bar chart uses position and length — ranks 1–2.
+| Channel | n | Implication |
+|---|---|---|
+| Line length | ≈ 1.0 | Accurate |
+| Area | ≈ 0.7 | We underestimate |
+| Brightness | ≈ 0.33 | Heavily compressed |
 
-> "Encode your most important variable with the most effective channel."
+This is why **bar charts** (length, n≈1) outperform **bubble charts** (area, n≈0.7) for precise comparisons.
+
+> Use channels where n≈1 for your most important variable.
+
+---
+layout: center
+---
+
+# Visual encoding channels — ranked by accuracy
+
+*Cleveland & McGill (1984) — empirical ranking from perception experiments*
+
+<img src="/images/channel-ranking-infographic.png" class="mx-auto mt-4" style="max-height:400px; object-fit:contain" />
+
+
+---
+layout: image-right
+image: /images/eiffel-cail-inscription-detail.jpeg
+class: flex flex-col justify-center
+---
+
+<p class="text-gray-400 text-sm font-mono mb-2">Step 3 / 4</p>
+
+# Find the right focus
+
+Remove everything that isn't load-bearing. Highlight what matters. One chart = one message.
+
 
 ---
 
@@ -509,49 +686,19 @@ If one thing is more important — make it **BIG**.
 </div>
 </div>
 
+
+---
+layout: image-right
+image: /images/eiffel-delaunay-painting-1926.jpeg
+class: flex flex-col justify-center
 ---
 
-# Follow the process
+<p class="text-gray-400 text-sm font-mono mb-2">Step 4 / 4</p>
 
-<div class="grid grid-cols-2 gap-8 mt-4">
-<div>
+# Close the loop
 
-**1. Define your goal**
-- Explore vs explain?
-- Who is the audience?
-- What is the one thing they should remember?
+Does it answer your question? Is there a story? Would a stranger understand it in 5 seconds?
 
-**2. Choose an effective visual**
-- Match chart type to the comparison you want
-- Simple is almost always better
-
-**3. Find the right focus**
-- Remove everything that isn't load-bearing
-- Highlight the key element
-
-**4. Close the loop**
-- Does it answer your question?
-- Is there a story?
-
-</div>
-<div>
-
-```
-Explore / Explain
-        ↓
-Simple > Complex
-        ↓
-Function first, form next
-        ↓
-Use color and size with intent
-        ↓
-Remove clutter
-        ↓
-Does it answer your question?
-```
-
-</div>
-</div>
 
 ---
 
@@ -792,43 +939,6 @@ Before reaching for a chart type, ask:
 > Choosing the wrong chart type for a comparison is one of the most common mistakes. A bar chart is terrible at showing a trend over time. A line chart is terrible at comparing magnitudes between unrelated categories.
 
 ---
-
-# Table or graph?
-
-*Stephen Few, Show Me the Numbers (2012)*
-
-<div class="grid grid-cols-2 gap-8 mt-4">
-<div class="border border-blue-300 rounded-xl p-6">
-
-**Use a table when:**
-
-- Reader needs to **look up individual values**
-- Precise numbers matter
-- Multiple units of measure in one display
-- Values at different levels of aggregation (summary + detail)
-
-*Example: quarterly sales by region with % of plan*
-
-</div>
-<div class="border border-orange-300 rounded-xl p-6">
-
-**Use a graph when:**
-
-- The message lives in **patterns, trends, exceptions**
-- Whole series need to be compared at a glance
-
-*Example: six months of revenue vs. last year vs. target*
-
-</div>
-</div>
-
-<br/>
-
-**The 8 relationships graphs can show:** nominal comparison · time series · ranking · part-of-whole · deviation · distribution · correlation · geospatial
-
-> "Colorful 3D bar charts look impressive but tell the executive almost nothing. A plain table with context tells the whole story."
-
----
 layout: two-cols-header
 ---
 
@@ -875,6 +985,10 @@ Matejka & Fitzmaurice (2017) — Datasaurus
 <br/>
 
 **Dataset:** Gapminder — 63 countries × 11 time points (1955–2005). Familiar, tells real stories, rewards every chart type we'll try.
+
+<br/>
+
+*Coming sessions will go deeper: Grammar of Graphics, interactive viz, storytelling, visualization × ML, and AI-assisted tools.*
 
 ---
 layout: center
