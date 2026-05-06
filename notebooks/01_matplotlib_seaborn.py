@@ -859,10 +859,13 @@ def _(mo):
     | `ecdfplot` | Cumulative view — "what fraction is below X?" |
     | `boxplot` | Compact summary: median, IQR, outliers |
     | `violinplot` | Full distribution shape + quartiles |
+    | `swarmplot` | Individual observations for small/medium groups |
 
     **Caution:** KDE and violin plots estimate a smooth density. Bandwidth is a
     modelling choice; a smooth curve can hide small clusters or imply structure
-    that is not really in the data.
+    that is not really in the data. `swarmplot` avoids overlap by moving points,
+    but it does not scale well to large numbers of observations; use `stripplot`
+    or sampling when there are too many points.
     """)
     return
 
@@ -1236,7 +1239,7 @@ def _(mo):
     | Small multiples | Repeat the same chart per group for effortless comparison |
     | Polishing | Title = insight, direct labels, no top/right spines |
     | Seaborn | High-level API on Matplotlib; statistical defaults built in |
-    | Distributions | `histplot` → `kdeplot` → `violinplot` as you need more detail |
+    | Distributions | `histplot` → `kdeplot` → `violinplot`; `swarmplot` for small groups |
     | Uncertainty | Distinguish estimate uncertainty from data spread |
     | Color | Use library palette tools; keep category colors consistent; test accessibility |
 

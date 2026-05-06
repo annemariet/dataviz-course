@@ -41,6 +41,8 @@ heatmaps, and the Datasaurus extension as optional material.
   for the estimated mean, not direct country-level spread.
 - Added cautions for KDE/violin plots, regression lines, and correlation
   heatmaps.
+- Added `swarmplot` to the distribution overview, with Seaborn's caveat that it
+  shows individual observations but does not scale well to many points.
 - Fixed exercise export paths to use `figures/`, and added `figures/` to
   `.gitignore`.
 
