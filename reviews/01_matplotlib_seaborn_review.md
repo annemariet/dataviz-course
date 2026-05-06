@@ -56,6 +56,9 @@ heatmaps, and the Datasaurus extension as optional material.
 - The accessibility section now demonstrates palette choice through Seaborn's
   palette API (`tab10` vs `colorblind`).
 - Added a reminder to keep category-color mappings stable across plots.
+- Added a prompt to try alternative built-in palettes and to reuse a palette
+  dictionary across plots. Okabe-Ito is noted as future Matplotlib support, not
+  a stable dependency for this course environment.
 
 ### Anscombe / Datasaurus extension
 

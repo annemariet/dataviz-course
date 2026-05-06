@@ -1108,6 +1108,10 @@ def _(mo):
     - **Consistency**: keep the same category → color mapping across plots
     - **Avoid**: red + green together; jet/rainbow for continuous data
 
+    Okabe-Ito is a well-known accessible palette, but it is not available as a
+    named palette in the stable Matplotlib/Seaborn versions used here. If you
+    need it, define it once and reuse it; otherwise prefer built-in palette APIs.
+
     Print your chart in greyscale — if information is lost, fix the palette.
     """)
     return
@@ -1138,6 +1142,29 @@ def _(gm2000, plt, sns):
     plt.suptitle("Same chart — different palettes", fontsize=11)
     plt.tight_layout()
     _fig
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    **Try different palettes.**
+
+    - Replace `"colorblind"` with `"Set2"`, `"Dark2"`, or `"Paired"`.
+    - Try Matplotlib's style context: `with plt.style.context("tableau-colorblind10"): ...`
+    - For repeated plots, build a mapping once and reuse it:
+
+    ```python
+    _levels = sorted(gm2000["region"].dropna().unique())
+    _palette = dict(zip(_levels, sns.color_palette("colorblind", n_colors=len(_levels))))
+
+    sns.scatterplot(..., hue="region", hue_order=_levels, palette=_palette)
+    sns.boxplot(..., hue="region", hue_order=_levels, palette=_palette)
+    ```
+
+    The goal is not to find the prettiest palette. It is to keep categories
+    distinguishable, accessible, and consistent across the whole analysis.
+    """)
     return
 
 
