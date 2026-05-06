@@ -822,12 +822,12 @@ layout: two-cols-header
 
 <div class="absolute inset-0 z-0">
   <img src="/images/practice-time.png" class="w-full h-full object-cover" />
-  <div class="absolute inset-0" style="background: rgba(0,0,0,0.4)"></div>
+  <div class="absolute inset-0" style="background: rgba(255, 255, 255, 0.14)"></div>
 </div>
 
 <div class="relative z-10 flex flex-col items-center justify-center h-full text-black text-center" style="text-shadow: 0 1px 10px rgba(255, 255, 255, 0.9), 0 0 3px rgba(255, 255, 255, 1)">
 
-# Time to practice!
+<h1 class="!text-black">Time to practice!</h1>
 
 </div>
 
@@ -861,7 +861,8 @@ class: text-center
 # Let's build some charts
 
 ```bash
-cd projects/dataviz-workshop
+git clone git@github.com:annemariet/dataviz-course.git
+cd dataviz-course
 uv sync --no-install-project
 uv run marimo edit notebooks/01_matplotlib_seaborn.py
 ```
