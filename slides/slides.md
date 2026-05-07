@@ -729,6 +729,9 @@ layout: two-cols-header
 
 <img src="/images/label-axes.jpg" class="w-full" style="max-height:340px; object-fit:cover" />
 
+---
+layout: two-cols-header
+---
 
 # Be honest
 
@@ -744,7 +747,7 @@ layout: two-cols-header
 
 ::right::
 
-<img src="/images/label-axes.jpg" class="w-full" style="max-height:340px; object-fit:cover" />
+<img src="/images/truncated-baseline.png" class="w-full" style="max-height:340px; object-fit:cover" />
 
 
 ---
@@ -847,11 +850,6 @@ layout: two-cols-header
 
 <br/>
 
-**Dataset:** Gapminder — 63 countries × 11 time points (1955–2005). Familiar, tells real stories, rewards every chart type we'll try.
-
-<br/>
-
-*Coming sessions will go deeper: Grammar of Graphics, interactive viz, storytelling, visualization × ML, and AI-assisted tools.*
 
 ---
 layout: center
