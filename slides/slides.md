@@ -11,13 +11,23 @@ drawings:
 transition: slide-left
 mdc: true
 colorSchema: light
+showSlideNumber: true
 ---
+
+<div class="absolute inset-0 z-0">
+  <img src="/images/eiffel-photo-sunny.jpeg" class="w-full h-full object-cover" />
+  <div class="absolute inset-0" style="background: rgba(0,0,0,0.2)"></div>
+</div>
+
+<div class="relative z-10 flex flex-col items-center justify-center h-full text-white text-center" style="text-shadow: 0 1px 10px rgba(0,0,0,0.9), 0 0 3px rgba(0,0,0,1)">
 
 # Data is Beautiful
 
 ## Please Don't Ruin It
 
 Anne-Marie Tousch · PSL Master IASD · May 2026
+
+</div>
 
 ---
 layout: center
@@ -33,15 +43,12 @@ Switch to Wooclap tab → https://app.wooclap.com/events/AZNPLT/live-session
 
 
 ---
-layout: two-cols-header
+layout: two-cols-footer
 ---
-
 
 # Why learn about data visualization?
 
 ::left::
-
-<div class="flex flex-col justify-center h-full">
 
 **You will spend a lot of time visualizing data.**
 
@@ -50,77 +57,68 @@ layout: two-cols-header
 - Discussing results with colleagues
 - Convincing stakeholders
 
-</div>
-
 ::right::
 
-<div class="flex flex-col justify-center h-full">
+<img src="/images/training-console-output.png" class="w-full" style="max-height:250px; object-fit:cover; object-position:left" />
 
-<img src="/images/training-console-output.png" class="w-full" style="max-height:250px; object-fit:cover object-position:left" />
 
+---
+
+# Bad charts are everywhere
+
+<div class="grid grid-cols-2 gap-3 mt-3">
+<div class="text-center">
+<img src="/images/bad-chart-french-tv-pie.png" class="mx-auto w-full" style="max-height:160px; object-fit:contain" />
+</div>
+<div class="text-center">
+<img src="/images/bad-chart-fox-news-economic.png" class="mx-auto w-full" style="max-height:160px; object-fit:contain" />
+</div>
+<div class="text-center">
+<img src="/images/bad-charts-pie-rounding.png" class="mx-auto w-full" style="max-height:160px; object-fit:contain" />
+</div>
+<div class="text-center">
+<img src="/images/bad-chart-french-tv-bars.png" class="mx-auto w-full" style="max-height:160px; object-fit:contain" />
+</div>
 </div>
 
 ---
-layout: two-cols-header
+layout: two-cols-footer
 ---
 
-# Why learn about data visualization?
+# What's wrong with this chart?
 
 ::left::
 
-<div class="flex flex-col justify-center h-full">
-
-**Good charts are rarer than they should be.**
-
-- Tables where a chart would tell the story faster
-- Rainbow colormaps that obscure rather than reveal
-- Pie charts where a bar chart would be obvious
-- Axes truncated to exaggerate small differences
-
-</div>
+<img src="/images/bad-chart-fox-news-economic.png" class="w-full" style="max-height:260px; object-fit:contain" />
 
 ::right::
 
-<div class="flex flex-col justify-center h-full">
+**Chartjunk** showing many distracting colors, lines, glowing effects.
 
-<img src="/images/bad-chart-example.jpg" class="w-full" style="max-height:250px; object-fit:cover object-position:left" />
+**Wrong label** (1.4% or 2%??)
 
-<br />
-
-> The ability to make a good chart is underrated — and more impactful than most people think.
-
-</div>
+**Dishonest:** Compares two periods of unequal length (59 years vs. 8 years)
 
 
 ---
-layout: center
+layout: two-cols-footer
 ---
 
-# I keep seeing plain tables
+# What's wrong with this chart?
 
-<div class="grid grid-cols-2 gap-8 mt-4">
-<div>
+::left::
 
-<img src="/images/ml-paper-results-table.jpg" class="w-full" style="max-height:300px; object-fit:cover" />
+<img src="/images/bad-chart-fox-news-tax-cuts.png" class="w-full" style="max-height:260px; object-fit:contain" />
 
-<p class="text-xs text-gray-400 mt-1">Real ML paper results table. Which method wins? Hard to say.</p>
 
-</div>
-<div class="text-gray-700">
+::right::
 
-Questions this raises:
+**Aesthetic** full of chartjunk
 
-- Do they want me to read *all* of this?
-- Did they copy-paste from their paper?
-- Do they care about their audience?
-- **Are they hiding something?**
-- Do they realize a chart would be clearer?
+**Lie Factor** = (effect size in graphic) / (effect size in data) ~ 29 > 1
 
-Most charitable interpretation: **they didn't think about it.**
-
-</div>
-</div>
-
+A quick redesign tells a different story:
+<img src="/images/bad-chart-fox-redesign.png" class="w-full mt-3" style="max-height:55px; object-fit:contain" />
 
 ---
 layout: center
@@ -168,84 +166,60 @@ layout: two-cols-header
 - choose your tools
 - demonstrate acquired visualization skills!
 
-* Rubric will be communicated soon*.
+*Rubric will be communicated soon*.
+
+---
+layout: image-right
+image: /images/eiffel-from-below-structural.jpeg
+class: flex flex-col justify-center
+---
+
+# Why visualize?
+
 
 ---
 
-# Visualization: a different view on data
+# Many ways to represent the world
 
-<p class="text-gray-500 text-sm mb-3">There are many ways to represent the world. Don't get stuck in one projection.</p>
 
-<div class="grid grid-cols-4 gap-3 items-end">
-<div class="text-center">
-<img src="/images/eiffel-engineering-blueprints-1887.jpeg" class="mx-auto w-full" style="max-height:310px; object-fit:cover; object-position:bottom" />
-<p class="text-xs text-gray-400 mt-1">Engineering blueprints (1887)</p>
+<div class="grid grid-cols-4 gap-2">
+<div class="flex items-center justify-center" style="height:155px">
+<img src="/images/eiffel-engineering-blueprints-1887.jpeg" style="max-height:155px; max-width:100%; object-fit:contain" />
 </div>
-<div class="text-center">
-<img src="/images/eiffel-photo-sunny.jpeg" class="mx-auto w-full" style="max-height:310px; object-fit:cover" />
-<p class="text-xs text-gray-400 mt-1">Photography</p>
+<div class="flex items-center justify-center" style="height:155px">
+<img src="/images/eiffel-under-construction-1888.jpeg" style="max-height:155px; max-width:100%; object-fit:contain" />
 </div>
-<div class="text-center">
-<img src="/images/eiffel-lego-model.jpeg" class="mx-auto w-full" style="max-height:310px; object-fit:cover" />
-<p class="text-xs text-gray-400 mt-1">Model (LEGO)</p>
+<div class="flex items-center justify-center" style="height:155px">
+<img src="/images/eiffel-from-below-structural.jpeg" style="max-height:155px; max-width:100%; object-fit:contain" />
 </div>
-<div class="text-center">
-<img src="/images/eiffel-delaunay-painting-1926.jpeg" class="mx-auto w-full" style="max-height:310px; object-fit:cover" />
-<p class="text-xs text-gray-400 mt-1">Painting (Delaunay, 1926)</p>
+<div class="flex items-center justify-center" style="height:155px">
+<img src="/images/eiffel-cail-inscription-detail.jpeg" style="max-height:155px; max-width:100%; object-fit:contain" />
+</div>
+<div class="flex items-center justify-center" style="height:155px">
+<img src="/images/eiffel-hand-forced-perspective.jpeg" style="max-height:155px; max-width:100%; object-fit:contain" />
+</div>
+<div class="flex items-center justify-center" style="height:155px">
+<img src="/images/eiffel-photo-sunny.jpeg" style="max-height:155px; max-width:100%; object-fit:contain" />
+</div>
+<div class="flex items-center justify-center" style="height:155px">
+<img src="/images/eiffel-lego-model.jpeg" style="max-height:155px; max-width:100%; object-fit:contain" />
+</div>
+<div class="flex items-center justify-center" style="height:155px">
+<img src="/images/eiffel-delaunay-painting-1926.jpeg" style="max-height:155px; max-width:100%; object-fit:contain" />
 </div>
 </div>
+
 
 ---
 layout: center
-class: text-center
----
-
-# Two reasons to visualize
-
-<div class="grid grid-cols-2 gap-16 mt-12">
-<div class="border border-blue-400 rounded-xl p-8">
-
-### Explore
-
-Understand your data before you model it.
-
-*What is the distribution? Are there outliers? Is there a pattern?*
-
-</div>
-<div class="border border-orange-400 rounded-xl p-8">
-
-### Explain
-
-Communicate what you found to someone else.
-
-*What is the story? What should they remember?*
-
-</div>
-</div>
-
-<p class="mt-12 text-gray-400">The tools and the mindset are different. Know which mode you're in.</p>
-
----
-layout: two-cols-header
 ---
 
 # A picture tells a thousand words
 
-::left::
 
 <img src="/images/chart-nvidia-vs-banks-market-cap.webp" class="w-full" style="max-height: 320px; object-fit: contain;" />
 
 *[Nvidia's market cap vs. major banks. Source: Visual Capitalist, 2024.](https://www.visualcapitalist.com/chart-nvidias-market-cap-compared-to-banks/)*
-
-::right::
-
-<br/><br/>
-
-A chart that makes the comparison **obvious** communicates far more than a table.
-
-Direct labeling beats a legend. Annotations tell the story.
-
-**Rule:** if your audience has to squint at a legend, you've already lost them.
 
 ---
 layout: two-cols-header
@@ -283,7 +257,7 @@ layout: two-cols-header
 
 Our visual cortex processes images through a hierarchy of specialized areas — V1 through V8+.
 
-**~50%** of the cerebral cortex is involved in vision.
+A **large fraction** of the cerebral cortex is involved in vision.
 
 **Gestalt principles** (1920s–) describe how we group:
 
@@ -295,6 +269,158 @@ Our visual cortex processes images through a hierarchy of specialized areas — 
 | Closure | We complete incomplete shapes |
 
 > Good dataviz exploits these principles intentionally.
+
+
+---
+layout: image-right
+image: /images/eiffel-under-construction-1888.jpeg
+class: flex flex-col justify-center
+---
+
+# How?
+
+A four-step process for charts that actually work.
+
+<div class="mt-6 text-gray-500">
+
+1. Define your goal
+2. Choose an effective visual
+3. Find the right focus
+4. Close the loop
+
+</div>
+
+
+---
+layout: image-right
+image: /images/eiffel-engineering-blueprints-1887.jpeg
+class: flex flex-col justify-center
+---
+
+<p class="text-gray-400 text-sm font-mono mb-2">Step 1 / 4</p>
+
+# Define your goal
+
+
+---
+
+# What is the context?
+
+**Success starts with an understanding of the context.**
+
+- **WHAT**: What is the question you want to anwer?
+    - Explore: Define before starting the exploration.
+    - Explain: You know the answer.
+
+- **HOW**: How can you use data to make your point?
+
+- **WHO**: Consider your audience
+
+---
+layout: center
+class: text-center
+---
+
+# Two different types of goals
+
+<div class="grid grid-cols-2 gap-16 mt-8">
+<div class="border border-blue-400 rounded-xl p-6">
+
+### Explore
+
+<img src="/images/oysters-explore.jpg" class="w-full mx-auto my-3" style="max-height:160px; object-fit:cover" />
+
+Understand your data before you model it.
+
+*What is the distribution? Are there outliers? Is there a pattern?*
+
+</div>
+<div class="border border-orange-400 rounded-xl p-6">
+
+### Explain
+
+<img src="/images/pearl-explain.jpg" class="w-full mx-auto my-3" style="max-height:160px; object-fit:cover" />
+
+Communicate what you found to someone else.
+
+*What is the story? What should they remember?*
+
+</div>
+</div>
+
+
+---
+layout: two-cols-footer
+---
+
+# Discovery or Communication?
+
+<div class="flex items-center gap-3 mb-2">
+<img src="/images/portrait-andrew-gelman.gif" class="rounded-full" style="height:48px; width:48px; object-fit:cover" />
+<img src="/images/portrait-antony-unwin.jpeg" class="rounded-full" style="height:48px; width:48px; object-fit:cover" />
+</div>
+
+::left::
+
+**Discovery**
+
+- Observe **deviation** from expectations
+- Overview / check **assumptions**, look for patterns
+- Give a sense of the **complexity** of the data
+- Flexible displays / interaction
+
+::right::
+
+**Communication**
+
+- Display a **convincing** pattern
+- Share information readily **understandable**
+- **Storytelling**
+- Attract attention, **stimulate** interest
+
+::footer::
+
+*Gelman & Unwin, "Infovis and Statistical Graphics: Different Goals, Different Looks" (2013) — [vis14.pdf](http://www.stat.columbia.edu/~gelman/research/published/vis14.pdf)*
+
+
+---
+layout: two-cols-footer
+---
+
+# Table or graph?
+
+
+::left::
+
+**Use a table when:**
+
+- Reader needs to **look up individual values**
+- Precise numbers matter
+- Multiple units of measure in one display
+- Values at different levels of aggregation (summary + detail)
+
+
+::right::
+
+**Use a graph when:**
+
+- The message lives in **patterns, trends, exceptions**
+- Whole series need to be compared at a glance
+- Distributions, correlations, similarities...
+- Network topology, spatial shapes...
+
+
+
+---
+layout: image-right
+image: /images/eiffel-hand-forced-perspective.jpeg
+class: flex flex-col justify-center
+---
+
+<p class="text-gray-400 text-sm font-mono mb-2">Step 2 / 4</p>
+
+# Choose an effective visual
+
 
 ---
 layout: center
@@ -336,22 +462,62 @@ class: text-center
 
 </div>
 
-<p class="text-gray-400 mt-8">Color highlights the target before conscious processing. This is a <strong>preattentive attribute</strong>.</p>
+
+---
+
+# Preattentive attributes
+
+Processed in < 200ms, *before* conscious attention.
+
+
+<img src="/images/preattentive-attributes-full-channels.png" class="w-full mt-2" />
+
+
+> Encode your most important dimension with the most powerful channel.
 
 ---
 layout: two-cols-header
 ---
 
-# Preattentive attributes
+# Stevens' Psychophysical Power Law
 
-Processed in < 200ms — *before* conscious attention.
+*S. S. Stevens (1957) — the science behind perception accuracy*
 
 ::left::
 
-<img src="/images/preattentive-attributes-examples.png" class="w-full mt-2" />
+<img src="/images/stevens-psychophysical-power-law.png" class="w-full" style="max-height:340px; object-fit:contain" />
 
 ::right::
 
+<br/>
+
+**S = I^n** — perceived magnitude *S* scales as a power of actual intensity *I*.
+
+The exponent *n* varies by channel:
+
+<!--
+| Channel | n | Implication |
+|---|---|---|
+| Line length | ≈ 1.0 | Accurate |
+| Area | ≈ 0.7 | We underestimate |
+| Brightness | ≈ 0.5 | We underestimate even more |
+
+This is why **bar charts** (length, n≈1) outperform **bubble charts** (area, n≈0.7) for precise comparisons.
+
+> Use channels where n≈1 for your most important variable.
+-->
+
+---
+layout: center
+---
+
+# Visual encoding channels — ranked by accuracy
+
+*Cleveland & McGill (1984) — empirical ranking from perception experiments*
+
+<img src="/images/channel-ranking-infographic.png" class="mx-auto mt-4" style="max-height:400px; object-fit:contain" />
+
+<!--
 **Most powerful** (use for key comparisons)
 - Spatial position
 - Color hue / intensity
@@ -361,472 +527,276 @@ Processed in < 200ms — *before* conscious attention.
 - Angle → pie charts fail here
 - Volume / 3D perspective
 - Curvature
-
-> Encode your most important dimension with the most powerful channel.
+-->
 
 ---
-layout: two-cols-header
+layout: image-right
+image: /images/eiffel-cail-inscription-detail.jpeg
+class: flex flex-col justify-center
 ---
 
-# Which channels carry quantity most accurately?
+<p class="text-gray-400 text-sm font-mono mb-2">Step 3 / 4</p>
 
-*Cleveland & McGill (1984) — empirical ranking from perception experiments*
+# Find the right focus
+
+
+---
+
+# Clutter is your worst enemy
+
+<!-- 
+Clutter is any visual element that takes up space but does not increase understanding.
+The example shows a cluttered line chart before and after decluttering.
+-->
+
+<div class="grid grid-cols-2 gap-6 mt-4">
+<div>
+
+<img src="/images/line-chart-bad-before-redesign.png" class="w-full" style="max-height:200px; object-fit:contain" />
+
+</div>
+<div>
+
+<img src="/images/line-chart-good-after-redesign.png" class="w-full" style="max-height:200px; object-fit:contain" />
+
+</div>
+</div>
+
+---
+layout: center
+---
+
+# Leverage white space
+
+> Don't fear white space.
+
+---
+
+# Gestalt theory: similarity
+
+<img src="/images/gestalt-similarity.png" class="w-full mt-2" style="max-height:360px; object-fit:contain" />
+---
+
+# Gestalt theory: proximity
+
+<img src="/images/gestalt-proximity.png" class="w-full mt-2" style="max-height:360px; object-fit:contain" />
+---
+layout: one-col-footer
+---
+
+# There are many preattentive attributes
+
+<img src="/images/preattentive-attributes-examples.png" class="w-full mt-2" style="max-height:360px; object-fit:contain" />
+
+::footer::
+Source: http://www.storytellingwithdata.com/book/downloads 
+
+---
+
+# But two are special
+<br />
+
+<span class="text-2xl font-bold">Size</span>  matters.
+
+- If items are equally important, size them similarly.
+- If one item is critical, make it *BIG*.
+
+<span class="font-bold text-blue-600">Color</span> is the most powerful tool you have.
+
+- Use it sparingly.
+- Resist using color just to be colorful.
+- Use color selectively to highlight what matters.
+
+---
+layout: two-cols-footer
+---
+
+# Colors
 
 ::left::
+Think about:
 
-<img src="/images/cleveland-mcgill-channel-ranking.png" class="w-full" style="max-height:420px; object-fit:contain" />
+- Color blindness
+- Black & white reproduction
+- Choosing the right palette
+
+Use:
+
+- Categories -> hue
+- Magnitudes -> saturation / value
 
 ::right::
 
-<br/>
+<img src="/images/colorblind-ishihara-test.jpeg" class="w-full mt-3" style="max-height:360px; object-fit:contain"/>
 
-Viewers extract quantities **most accurately** from:
+::footer::
+Tip: [colorbrewer2.org](https://colorbrewer2.org)
 
-1. **Position on a common scale** — scatter, dot plot
-2. **Length** — bar chart
-3. **Direction / angle** — line slope
-4. Area — bubble chart
-5. Volume / 3D — avoid
-6. Color saturation — heatmap
-7. Color hue — never for quantities
+---
+layout: quote
+---
 
-**Why pie charts fail:** they encode quantities as angles and areas — ranks 3–5. A bar chart uses position and length — ranks 1–2.
+Maximise data-ink ratio, within reason.
 
-> "Encode your most important variable with the most effective channel."
+::author::
+Edward Tufte, *The Visual Display of Quantitative Information*
 
 ---
 
-# Use color sparingly
+# The moiré effect
 
-Limit to 6–8 distinct hues. Beyond that, viewers can't track them. Use color to *highlight*, not to decorate.
+<img src="/images/moire-hatched-bars-chartjunk.png" class="w-full mt-3" style="max-height:360px; object-fit:contain" />
 
-<div class="grid grid-cols-2 gap-8 mt-6">
+---
+layout: quote
+---
+
+Forgo chartjunk, including moire vibration, the grid, and the duck.
+
+::author::
+Edward Tufte, *The Visual Display of Quantitative Information*
+
+---
+
+# Rules of thumb
+
+No unjustified 3D
+
+
+<div class="grid grid-cols-2 gap-6 mt-4">
 <div>
 
-**Choose the right type for your data:**
-
-| Data type | Palette |
-|---|---|
-| Sequential (low→high) | `viridis`, `plasma`, `cividis` |
-| Diverging (midpoint matters) | `RdBu`, `PiYG`, `coolwarm` |
-| Categorical (no order) | `tab10`, `Set2`, `Paired` |
-| **Never** | `jet`, `rainbow`, `hsv` |
-
+<img src="/images/pie-chart-3d-ugly.png" class="mx-auto mt-4" style="max-height:240px; object-fit:contain" />
 </div>
 <div>
-
-```python
-# Bad: rainbow colormap
-ax.scatter(x, y, c=values, cmap="jet")
-
-# Good: perceptually uniform
-ax.scatter(x, y, c=values, cmap="viridis")
-
-# Best for categories: qualitative palette
-palette = sns.color_palette("tab10", n_colors=5)
-```
-
+<img src="/images/bad-chart-example.jpg" class="mx-auto mt-4" style="max-height:240px; object-fit:contain" />
 </div>
 </div>
 
 ---
+layout: center
+class: text-center
+---
 
-# Design for color accessibility
+# Remember
 
-~8% of men have color vision deficiency. Design for them by default.
+<div class="font-mono text-2xl tracking-widest leading-loose mt-8">
 
-<div class="grid grid-cols-2 gap-8 mt-6">
-<div>
+756<span class="text-red-400 font-bold">3</span>9506847<span class="text-red-400 font-bold">3</span>
 
-**Rules:**
-- Avoid red/green as the only distinguishing factor
-- Use ColorBrewer palettes ([colorbrewer2.org](https://colorbrewer2.org))
-- Add shape or texture as a second channel
-- Test with a colorblind simulator before publishing
+65866<span class="text-red-400 font-bold">3</span>0<span class="text-red-400 font-bold">3</span>7576
 
-**Resist decorative color.**  
-If color carries no information, remove it.
+860<span class="text-red-400 font-bold">3</span>72658602
 
-</div>
-<div>
+8465891078<span class="text-red-400 font-bold">3</span>0
 
-```python
-# seaborn's colorblind palette — safe by default
-sns.set_palette("colorblind")
-
-# matplotlib: explicit Okabe-Ito palette
-OKABE_ITO = [
-    "#E69F00", "#56B4E9", "#009E73",
-    "#F0E442", "#0072B2", "#D55E00",
-    "#CC79A7", "#000000",
-]
-ax.set_prop_cycle(color=OKABE_ITO)
-```
-
-</div>
 </div>
 
 ---
-
-# Size matters
-
-Encode magnitude differences you want to compare.
-
-<div class="grid grid-cols-2 gap-8 mt-4">
-<div>
-
-**When to use size:**
-- Bubble charts: 3rd quantitative dimension
-- Bar width (usually keep uniform)
-- Point size in scatter plots for emphasis
-
-**Rules:**
-- Area encodes value → radius should be `sqrt(value)`
-- Don't map 1D quantities to 2D area without warning
-
-</div>
-<div>
-
-```python
-# Bubble chart with Gapminder
-ax.scatter(
-    gdp_per_cap, life_expect,
-    s=population / 1e5,   # area ∝ pop
-    alpha=0.6,
-    c=region_colors,
-)
-```
-
-**If something is equally important, size it equally.**  
-If one thing is more important — make it **BIG**.
-
-</div>
-</div>
-
+layout: quote
 ---
 
-# Follow the process
-
-<div class="grid grid-cols-2 gap-8 mt-4">
-<div>
-
-**1. Define your goal**
-- Explore vs explain?
-- Who is the audience?
-- What is the one thing they should remember?
-
-**2. Choose an effective visual**
-- Match chart type to the comparison you want
-- Simple is almost always better
-
-**3. Find the right focus**
-- Remove everything that isn't load-bearing
-- Highlight the key element
-
-**4. Close the loop**
-- Does it answer your question?
-- Is there a story?
-
-</div>
-<div>
-
-```
-Explore / Explain
-        ↓
-Simple > Complex
-        ↓
-Function first, form next
-        ↓
-Use color and size with intent
-        ↓
-Remove clutter
-        ↓
-Does it answer your question?
-```
-
-</div>
-</div>
+Don't let your design choices be happenstance. They should be the result of explicit decisions.
 
 ---
-
-# Best practices
-
-<div class="grid grid-cols-2 gap-6">
-<div>
-
-✅ **Do**
-- Choose the simplest chart that shows the pattern
-- Start axes at zero for bar charts
-- Label directly (annotations > legends when possible)
-- Sort categories meaningfully
-- Use a consistent color scheme
-- Think about colorblind readers
-
-</div>
-<div>
-
-❌ **Don't**
-- Use 3D effects (skews perception)
-- Truncate axes to exaggerate differences (without marking it clearly)
-- Use pie charts for > 2 categories
-- Use dual y-axes (almost always confusing)
-- Add decorative grid lines, borders, tick marks
-- Map the same variable to multiple channels redundantly
-
-</div>
-</div>
-
-> "Don't let your design choices be happenstance. They should be the result of explicit decisions." — Tufte
-
+layout: image-right
+image: /images/eiffel-photo-sunny.jpeg
+class: flex flex-col justify-center
 ---
 
-# Pie charts are evil
+<p class="text-gray-400 text-sm font-mono mb-2">Step 4 / 4</p>
 
-Humans judge *angles* and *areas* poorly. Bar charts use *position* — our strongest channel.
+# Close the loop
 
-<div class="grid grid-cols-3 gap-4 mt-4">
-<div class="text-center">
-
-<img src="/images/pie-chart-3d-ugly.png" class="mx-auto" style="max-height:185px" />
-
-*3D tilt makes comparison impossible.*
-
-</div>
-<div class="text-center">
-
-<img src="/images/pie-charts-three-variants.jpeg" class="mx-auto" style="max-height:185px" />
-
-*Flat pies. Which slice is biggest in A vs C?*
-
-</div>
-<div class="text-center">
-
-<img src="/images/bar-charts-three-variants.jpeg" class="mx-auto" style="max-height:185px" />
-
-*Same data as bars. Ranking is obvious.*
-
-</div>
-</div>
-
-<p class="text-gray-400 mt-4 text-sm">Your stakeholders will still ask for pie charts. Now you know how to push back.</p>
-
----
-
-# Maximize data-ink ratio
-
-**Edward Tufte**, *The Visual Display of Quantitative Information* (1983):
-
-> "Data-ink is the non-erasable core of a graphic. The rest is ink that can be wiped away without losing data-information."
-
-<div class="grid grid-cols-2 gap-8 mt-4">
-<div>
-
-**Chartjunk to remove:**
-- Background colors
-- Decorative borders
-- Gradient fills
-- Unnecessary tick marks
-- Redundant labels
-- 3D effects
-- The grid (unless needed for reading values)
-
-</div>
-<div>
-
-```python
-# Matplotlib: start clean
-plt.rcParams.update({
-    "axes.spines.top": False,
-    "axes.spines.right": False,
-    "axes.grid": False,
-    "figure.facecolor": "white",
-})
-
-# Or use seaborn's default style
-sns.set_theme(style="ticks")
-sns.despine()
-```
-
-</div>
-</div>
-
----
-
-# The moiré effect & other traps
-
-<div class="grid grid-cols-2 gap-8">
-<div>
-
-<img src="/images/moire-hatched-bars-chartjunk.png" class="w-full" />
-
-*Hatched bars with a dense legend — visually noisy, no extra information gained.*
-
-</div>
-<div>
-
-**Moiré patterns** arise from hatching. Distracting, carry no data.
-
-**3D bar charts** distort heights — back bars look shorter even when equal.
-
-**Rainbow colormaps** create false discontinuities. Prefer:
-
-```python
-# Sequential: viridis, plasma, cividis
-# Diverging:  RdBu, PiYG, coolwarm
-# Categorical: tab10, Set2, Paired
-# Never: jet, rainbow, hsv
-```
-
-</div>
-</div>
 
 ---
 layout: two-cols-header
 ---
 
-# Good defaults: matplotlib
+# Show rigor
 
 ::left::
 
-<img src="/images/matplotlib-defaults-histogram.png" class="w-full" />
-<p class="text-xs text-gray-400 text-center mt-1">matplotlib out of the box</p>
+<div class="flex flex-col justify-center h-full">
+
+- Check the data
+- Label axes
+- Include units
+
+</div>
 
 ::right::
 
-<br/>
-
-Not terrible — but vivid blue, heavy spines, and no visual hierarchy.
-
-A few `rcParams` changes buy you a lot:
-
-```python
-plt.rcParams.update({
-    "figure.dpi": 110,
-    "font.family": "sans-serif",
-    "axes.spines.top": False,
-    "axes.spines.right": False,
-})
-```
+<img src="/images/label-axes.jpg" class="w-full" style="max-height:340px; object-fit:cover" />
 
 ---
 layout: two-cols-header
 ---
 
-# Good defaults: seaborn
+# Be honest
 
 ::left::
 
-<img src="/images/seaborn-colorblind-clean-histogram.png" class="w-full" />
-<p class="text-xs text-gray-400 text-center mt-1">seaborn white + colorblind + despine</p>
+<div class="flex flex-col justify-center h-full">
+
+- Check the lie factor, keep your geometry in check
+- Include your sources
+- Include a baseline
+
+</div>
 
 ::right::
 
-<br/>
+<img src="/images/truncated-baseline.png" class="w-full" style="max-height:340px; object-fit:cover" />
 
-Same data, two lines of change:
-
-```python
-sns.set_theme(
-    style="white",
-    palette="colorblind",
-    font_scale=1.2,
-)
-sns.despine()
-```
-
-Set this **once** at the top of every notebook. Every plot inherits it.
 
 ---
-layout: two-cols-header
+layout: two-cols-footer
 ---
 
-# What can be visualized?
-
-*Tamara Munzner, Visualization Analysis and Design (2014)*
+# Overview first, Zoom and Filter, Details on demand
 
 ::left::
-
-<img src="/images/munzner-what-data-types.png" class="w-full" style="max-height:390px; object-fit:contain" />
+<img src="/images/zoom-filter.png" class="w-full mt-2" style="max-height:360px; object-fit:contain" />
 
 ::right::
+"The click-through solution"
 
-<br/>
+- Start with a visually grabby graphic (Infovis) or a simple graph (stats)
+- Click and get a suite of statistical graphs showing more details
+- Click again to get a spreadsheet with all the numbers and a list of sources.
 
-**4 dataset types** shape what charts are even possible:
-
-- **Tables** — rows are items, columns are attributes
-- **Networks** — nodes and links (trees are a subtype)
-- **Fields** — continuous data (images, simulation grids)
-- **Geometry** — spatial data with explicit positions
-
-**5 attribute types** shape how you encode:
-
-- *Categorical* — no order (countries, species)
-- *Ordinal* — ordered but not numeric (small/medium/large)
-- *Quantitative* — numeric with magnitude
-- *Sequential / Diverging / Cyclic* — ordering direction
-
-> "Many aspects of vis design are driven by the kind of data that you have at your disposal."
+::footer::
+From http://andrewgelman.com/2015/08/26/vizzy-vizzy-vizzy-viz/
 
 ---
 
-# Know your data
+# Function first, form next.
 
-Before reaching for a chart type, ask:
 
-| Question | Answer shapes the chart |
-|---|---|
-| How many variables? | 1 → distribution; 2 → relationship; 3+ → need encoding strategy |
-| What *type* of variable? | Quantitative, Ordinal, Nominal, Temporal |
-| What *comparison* do I want? | Ranking? Part-of-whole? Trend over time? Distribution? Correlation? |
-| What is the *audience*? | Explorer needs detail; presenter needs story |
+<img src="/images/duck-building-venturi-form-function.jpg" class="w-full mt-2" style="max-height:360px; object-fit:contain" />
 
-<br/>
-
-> Choosing the wrong chart type for a comparison is one of the most common mistakes. A bar chart is terrible at showing a trend over time. A line chart is terrible at comparing magnitudes between unrelated categories.
+<!--
+The duck: when the architect went too far and forgot the windows.
+-->
 
 ---
 
-# Table or graph?
 
-*Stephen Few, Show Me the Numbers (2012)*
+# A wealth of resources: links
 
-<div class="grid grid-cols-2 gap-8 mt-4">
-<div class="border border-blue-300 rounded-xl p-6">
-
-**Use a table when:**
-
-- Reader needs to **look up individual values**
-- Precise numbers matter
-- Multiple units of measure in one display
-- Values at different levels of aggregation (summary + detail)
-
-*Example: quarterly sales by region with % of plan*
-
-</div>
-<div class="border border-orange-300 rounded-xl p-6">
-
-**Use a graph when:**
-
-- The message lives in **patterns, trends, exceptions**
-- Whole series need to be compared at a glance
-
-*Example: six months of revenue vs. last year vs. target*
-
-</div>
-</div>
-
-<br/>
-
-**The 8 relationships graphs can show:** nominal comparison · time series · ranking · part-of-whole · deviation · distribution · correlation · geospatial
-
-> "Colorful 3D bar charts look impressive but tell the executive almost nothing. A plain table with context tells the whole story."
+- [awesome-dataviz](https://github.com/hal9ai/awesome-dataviz)
+- [flowingdata.com](https://flowingdata.com)
+- [colorbrewer2.org](https://colorbrewer2.org)
+- [viz.wtf](https://viz.wtf)
+- [nytimes.com/section/upshot](https://www.nytimes.com/section/upshot)
+- [informationisbeautiful.net](https://informationisbeautiful.net/)
 
 ---
 layout: two-cols-header
 ---
 
-# Books worth reading
+# A wealth of resources: books
 
 ::left::
 
@@ -834,24 +804,36 @@ layout: two-cols-header
 
 ::right::
 
-**Classics**
 
-*The Visual Display of Quantitative Information* — Tufte · 2001  
-*Visualization Analysis and Design* — Munzner · 2014
+- *How to Lie with Statistics*, Huff, 1954
+- *The Visual Display of Quantitative Information*, Tufte, 2001
+- *Show Me the Numbers*, Few, 2012
+- *The Wall Street Journal Guide to Information Graphics: The Dos and Don'ts of Presenting Data, Facts, and Figures*, Dona M. Wong. W. W. Norton & Company, 2013.
+- *Visualization Analysis and Design*, Munzner, 2014
+- *Storytelling with Data: A Data Visualization Guide for Business Professionals*, Knaflic, 2015  
 
-**For practitioners**
+---
 
-*Show Me the Numbers* — Few · 2012  
-*Storytelling with Data* — Knaflic · 2015  
-*How to Lie with Statistics* — Huff · 1954 (still sharp)
+# A wealth of resources: papers
 
-**Research**
 
-Cleveland & McGill (1984) — Graphical perception  
-Gelman & Unwin (2013) — Infovis vs statistical graphics  
-Matejka & Fitzmaurice (2017) — Datasaurus
+- Cleveland, William S., and Robert McGill. "Graphical perception: Theory, experimentation, and application to the development of graphical methods." Journal of the American statistical association 79.387 (1984): 531-554.  
+- Gelman, Andrew, and Antony Unwin. "Infovis and statistical graphics: different goals, different looks." Journal of Computational and Graphical Statistics 22.1 (2013): 2-28
+- [Datasaurus] Matejka, J., & Fitzmaurice, G. (2017, May). Same stats, different graphs: generating datasets with varied appearance and identical statistics through simulated annealing. In Proceedings of the 2017 CHI conference on human factors in computing systems (pp. 1290-1294)
 
-**Online:** [flowingdata.com](https://flowingdata.com) · [colorbrewer2.org](https://colorbrewer2.org) · [viz.wtf](https://viz.wtf) · [nytimes.com/section/upshot](https://www.nytimes.com/section/upshot)
+---
+
+<div class="absolute inset-0 z-0">
+  <img src="/images/practice-time.png" class="w-full h-full object-cover" />
+  <div class="absolute inset-0" style="background: rgba(255, 255, 255, 0.14)"></div>
+</div>
+
+<div class="relative z-10 flex flex-col items-center justify-center h-full text-black text-center" style="text-shadow: 0 1px 10px rgba(255, 255, 255, 0.9), 0 0 3px rgba(255, 255, 255, 1)">
+
+<h1 class="!text-black">Time to practice!</h1>
+
+</div>
+
 
 ---
 
@@ -868,7 +850,6 @@ Matejka & Fitzmaurice (2017) — Datasaurus
 
 <br/>
 
-**Dataset:** Gapminder — 63 countries × 11 time points (1955–2005). Familiar, tells real stories, rewards every chart type we'll try.
 
 ---
 layout: center
@@ -878,7 +859,8 @@ class: text-center
 # Let's build some charts
 
 ```bash
-cd projects/dataviz-workshop
+git clone git@github.com:annemariet/dataviz-course.git
+cd dataviz-course
 uv sync --no-install-project
 uv run marimo edit notebooks/01_matplotlib_seaborn.py
 ```

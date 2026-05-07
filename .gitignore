@@ -3,6 +3,7 @@ __marimo__/
 notebooks/layouts/
 data/
 .venv/
+figures/
 
 slides/node_modules/
 slides/dist/

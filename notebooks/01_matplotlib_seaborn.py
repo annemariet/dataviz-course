@@ -10,18 +10,18 @@ app = marimo.App(
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    # Part 1 — Matplotlib & Seaborn
+    # Datavis in practice, part 1 — the fundamentals: Matplotlib & Seaborn
 
-    **Session duration**: ~3 hours &nbsp;|&nbsp; **Datasets**: Gapminder, Palmer Penguins
+    **Session duration**: ~2 hours &nbsp;|&nbsp; **Datasets**: Gapminder, Palmer Penguins
 
     ## What you'll be able to do after this session
 
-    - Reshape data into tidy format — the prerequisite for almost every plotting library
+    - Use tidy / long-form data as the default structure for reusable plots
     - Build charts with Matplotlib's **object-oriented API**
-    - Encode variables as position, color, size, and transparency
+    - Encode ordered and categorical variables with appropriate visual channels
     - Annotate, polish, and export publication-quality figures
     - Use Seaborn to build statistical visualizations with less code
-    - Show uncertainty honestly with confidence intervals and distribution plots
+    - Show uncertainty and spread honestly with distributions and interval plots
 
     ---
     """)
@@ -30,11 +30,14 @@ def _(mo):
 
 @app.cell
 def _():
+    from io import StringIO
+
     import marimo as mo
     import matplotlib.pyplot as plt
     import seaborn as sns
     import numpy as np
     import pandas as pd
+    import requests
     from vega_datasets import data as vega_data
 
     plt.rcParams.update({
@@ -113,9 +116,71 @@ def _(anscombe, np, plt):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    > **Core lesson**: Summary statistics *summarize*. Visualization *shows*.
+    > **Core lesson**: Summary statistics hide patterns.
     > Always plot your data before drawing conclusions from numbers alone.
     """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ### If you're curious: the datasaurus dozen
+
+    Matejka & Fitzmaurice (2017) showed how to generate many datasets with
+    near-identical summary statistics but radically different shapes. Their
+    method starts from an existing dataset, perturbs one point at a time, keeps
+    summary statistics within tolerance, and uses simulated annealing to move
+    toward a target shape.
+
+    The full algorithm is a good advanced exercise, though beside the point of this course.
+    What's interesting is the fact that they proved: **summary statistics hide fundamental patterns in your data**.
+
+    You can download the **Datasaurus Dozen**: 12 fancy datasets with the same statistics at [https://www.openintro.org/data/csv/datasaurus.csv](https://www.openintro.org/data/csv/datasaurus.csv).
+
+    Use the cells below to
+    - update the file location and load the dataset
+    - compare the summaries, then plot the data
+    - [stretch] explore whether more robust statistics can help.
+    """)
+    return
+
+
+@app.cell
+def _(pd):
+    from pathlib import Path
+    datasaurus = pd.read_csv(Path.home()/"Downloads/datasaurus.csv")
+    datasaurus.head()
+    return (datasaurus,)
+
+
+@app.cell
+def _(datasaurus):
+    _summary = datasaurus.groupby("dataset").agg(
+        x_mean=("x", "mean"),
+        x_std=("x", "std"),
+        y_mean=("y", "mean"),
+        y_std=("y", "std"),
+        corr=("x", lambda s: s.corr(datasaurus.loc[s.index, "y"])),
+    ).round(2)
+    _summary
+    return
+
+
+@app.cell
+def _(datasaurus, plt):
+    _names = datasaurus["dataset"].unique()
+    _fig, _axes = plt.subplots(4, 3, figsize=(10, 10), sharex=True, sharey=True)
+    _color = plt.rcParams["axes.prop_cycle"].by_key()["color"][0]
+
+    for _ax, _name in zip(_axes.flatten(), _names):
+        _grp = datasaurus[datasaurus["dataset"] == _name]
+        _ax.scatter(_grp["x"], _grp["y"], s=18, alpha=0.8, color=_color)
+        _ax.set_title(_name, fontsize=9, fontweight="bold")
+
+    _fig.suptitle("Same summary statistics, different visual structures", fontsize=12)
+    plt.tight_layout()
+    _fig
     return
 
 
@@ -125,7 +190,8 @@ def _(mo):
     ---
     ## 2 · Tidy Data
 
-    Every plotting library you'll use (Seaborn, Altair, ggplot2) expects **tidy data**
+    Seaborn, Altair, ggplot2, and most reusable visualization pipelines work best
+    with **tidy data**
     — a concept formalised by Hadley Wickham in his 2014 paper
     [*Tidy Data*, Journal of Statistical Software 59(10)](https://doi.org/10.18637/jss.v059.i10).
 
@@ -142,7 +208,9 @@ def _(mo):
     - **map columns directly to aesthetics** (`x=`, `y=`, `color=`, `size=`) — this is exactly what Seaborn and Altair expect
     - **reuse the same pipeline** across datasets with the same structure
 
-    The most common transformation: `DataFrame.melt()` converts **wide → long (tidy)**.
+    Matplotlib can plot arrays directly, and Seaborn accepts some wide-form inputs,
+    but tidy data keeps mappings explicit. The most common transformation:
+    `DataFrame.melt()` converts **wide → long (tidy)**.
     """)
     return
 
@@ -187,16 +255,25 @@ def _(mo):
 
 @app.cell(hide_code=True)
 def _(mo):
+    mo.md(r"""
+    **Question:** Is the datasaurus dataset tidy?
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
     mo.md("""
     ---
     ## 3 · Our Two Datasets
 
-    We'll use the same two datasets throughout both sessions so you can focus on
-    **the chart**, not on learning new data each time.
+    We'll use the same two datasets in the next 2 sessions so you can focus on
+    **the chart**, not on learning new data each time. Feel free to bring your own data later!
 
     ### Gapminder
     Originally compiled by Hans Rosling's Gapminder Foundation, this dataset tracks
-    development indicators for ~140 countries from 1955 to 2005 (5-year steps).
+    development indicators for 63 countries from 1955 to 2005 (5-year steps),
+    for 693 country-year observations.
 
     | Column | Type | Description |
     |--------|------|-------------|
@@ -225,9 +302,9 @@ def _(mo):
     | `body_mass_g` | float | Body mass |
     | `sex` | string | Male / Female |
 
-    It's the modern replacement for the Iris dataset — clean structure,
+    It's the modern replacement for the Iris dataset. It has a similar clean structure,
     three well-separated clusters, and several correlated continuous variables
-    that reward visual exploration. We'll use it mainly in the Seaborn sections.
+    that reward visual exploration. We'll use it later in the Seaborn sections.
     """)
     return
 
@@ -255,6 +332,14 @@ def _(gapminder):
     return gm2000, line_subset
 
 
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    Marimo automatically displays a rich view of the dataframe you want to see in a frame. Let's validate that the values look correct.
+    """)
+    return
+
+
 @app.cell
 def _(gapminder):
     gapminder.head()
@@ -267,18 +352,11 @@ def _(penguins):
     return
 
 
-@app.cell
-def _(gapminder, penguins):
-    print(f"gapminder: {gapminder.shape[0]} rows × {gapminder.shape[1]} cols")
-    print(f"penguins:  {penguins.shape[0]} rows × {penguins.shape[1]} cols")
-    return
-
-
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
     ---
-    ## 4 · Matplotlib: Figure Anatomy & Two APIs
+    ## 4 · Matplotlib: two APIs
 
     Every Matplotlib chart is built from two objects:
 
@@ -295,6 +373,8 @@ def _(mo):
 
     **Recommendation**: use `pyplot` to get something on screen fast,
     then switch to the object-oriented API as soon as you have more than one panel.
+
+    **Tip**: type `help(plt.scatter)` or another function to display the corresponding doc.
     """)
     return
 
@@ -323,8 +403,23 @@ def _(gm2000, plt):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
+    **Try it! Make it break!**
+
+    Mixing the 2 APIs is generally a bad idea, in particular because the pyplot API doesn't work intuitively with subplots.
+
+    In the plot above, try using the pyplot API after the object-oriented one
+    (e.g. add `plt.xlabel("new label")`). What happens?
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
     ---
     ## 5 · Encoding Variables as Visual Channels
+
+    **Reminder:**
 
     Every variable you show must be mapped to a visual *channel* — a property of a mark
     that the eye can decode. Not all channels are equal.
@@ -334,40 +429,73 @@ def _(mo):
     - **Effectiveness**: use the most accurate channel for the most important variable.
     - **Expressiveness**: encode all the data — and only the data (no decoration that implies information you don't have).
 
-    Munzner's *Visualization Analysis and Design* (2014) is the most accessible synthesis
-    of both — a good next read after this workshop.
+    Munzner's *Visualization Analysis and Design* (2014) builds on their work in her formal textbook which strives to define the most useful data abstractions for datavis.
 
-    | Channel | Matplotlib | Accuracy | Best for |
-    |---------|-----------|----------|---------|
-    | Position (x, y) | `x=`, `y=` | Highest | Your most important variables |
-    | Color (hue) | `c=` | High | Categories (≤ 8) or a quantitative gradient |
-    | Size | `s=` | Medium | Quantitative, order-of-magnitude differences (e.g. population) |
-    | Shape | `marker=` | Low | Categories (≤ 6), when color is already taken |
-    | Transparency | `alpha=` | Low | Density, overlap, uncertainty — not categories |
+    <img src="public/expressiveness-types-and-effectiveness-ranks.png" width="700" />
+    *(Figure 5.1 from Munzner)*
+
+    Munzner separates channels by the kind of attribute you encode.
+    A ranking for quantitative values is not the same as a ranking for categories.
+
+    **Ordered attributes** — quantitative, temporal, ordinal:
+
+    | Channel | Matplotlib | Use it for |
+    |---------|-----------|------------|
+    | Position on a common scale | `x=`, `y=` | Primary quantitative comparisons |
+    | Length | bars, intervals | Magnitudes with a common baseline |
+    | Area / size | `s=` | Rough magnitude, not precise ratios |
+    | Luminance / saturation | sequential `cmap=` | Ordered values when position is already used |
+
+    **Categorical attributes** — nominal groups:
+
+    | Channel | Matplotlib | Use it for |
+    |---------|-----------|------------|
+    | Spatial grouping | ordering, offsets, enclosure, facets | Keep related items together; facets are one option |
+    | Hue | `color=`, `c=` | A few categories, usually <= 6-8 |
+    | Shape | `marker=` | A few categories, often redundant with hue |
+    | Line style | `linestyle=` | Groups in line charts |
+    | Transparency | `alpha=` | Overplotting or uncertainty, not nominal labels |
 
     **Rules of thumb**:
-    - Don't use more channels than you have variables — each extra channel adds cognitive load.
-    - Humans compare lengths well but areas poorly — size encodes *order*, not precise ratios.
-    - Color is tempting but limited: use it for categories *or* a quantity, not both in the same chart.
-    - Redundant encoding (same variable → color *and* shape) can improve accessibility without misleading.
-    - Transparency implies ordering; avoid it for nominal categories.
+    - First identify the attribute type, then choose the channel.
+    - Encode the most important ordered variable with position when possible.
+    - Humans compare lengths better than areas; bubble size is approximate.
+    - Redundant encoding (same variable → color *and* shape) can improve accessibility.
+    - Avoid using hue for both categories and quantities in the same chart.
+
+    Here, **spatial grouping** means using the plane to keep categories visually
+    distinct: adjacent positions, separated bands, enclosed regions, or separate
+    facets. Faceting is a strong case, but not the only one.
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    Let's say we want to explore how the fertility rate correlates with life expectancy, and see if there are regional patterns.
+
+    - the most important variables are fertility and life expectancy, which we can encode with positions x and y.
+    - to group regions together, we can do one plot per region. But it might be clearer to superimpose them, so the next choice is color
+    - population size is interesting but not fundamental, we can encode it with a less efficient channel, circle area
+    - we add transparency to avoid overlapping points to become invisible.
     """)
     return
 
 
 @app.cell
 def _(gm2000, plt):
-    _palette = {
-        "South Asia": "#4C72B0", "Europe & Central Asia": "#DD8452",
-        "Sub-Saharan Africa": "#55A868", "Americas": "#C44E52",
-        "East Asia & Pacific": "#8172B2", "Middle East & N. Africa": "#937860",
-    }
+    _regions = sorted(gm2000["region"].dropna().unique())
+    _color_cycle = plt.rcParams["axes.prop_cycle"].by_key()["color"]
+    _palette = dict(zip(_regions, _color_cycle))
+    _marker_map = {"Sub-Saharan Africa": "^", "East Asia & Pacific": "s"}
 
     _fig, _ax = plt.subplots(figsize=(9, 6))
     for _region, _grp in gm2000.groupby("region"):
         _ax.scatter(
             _grp["fertility"], _grp["life_expect"],
-            c=_palette[_region],
+            color=_palette[_region],
+            marker=_marker_map.get(_region, "o"),
             s=_grp["pop"] / gm2000["pop"].max() * 700 + 15,
             alpha=0.72, edgecolors="white", linewidths=0.4,
             label=_region,
@@ -378,8 +506,44 @@ def _(gm2000, plt):
     _ax.set_title("Gapminder 2000 — four variables encoded in one chart",
                   fontsize=12, fontweight="bold")
     _ax.legend(fontsize=8, loc="lower left", framealpha=0.9, title="Region")
-    plt.tight_layout()
+    _fig.tight_layout()
     _fig
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.vstack([
+        mo.md(r"""
+    **Try another encoding.**
+
+    - Remove `s=...`: what becomes easier or harder to see?
+    - Replace region color with a single neutral color: what story disappears?
+    - Try `marker=` for two selected regions. When does shape help? When does it clutter?
+
+    Note: in Matplotlib, `s` is marker **area** in points squared (`points**2`).
+    Area is useful for rough magnitude, not for reading exact values.
+    """),
+        mo.accordion({
+            "Hint — adding markers per group": mo.md(r"""
+    Unlike `c=` and `s=`, `marker=` only accepts a **single value** per `scatter()` call — you cannot pass an array.
+    Since the chart already loops over groups, assign one marker per group:
+
+    ```python
+    _marker_map = {"Sub-Saharan Africa": "^", "East Asia & Pacific": "s"}
+
+    for _region, _grp in gm2000.groupby("region"):
+        _ax.scatter(
+            _grp["fertility"], _grp["life_expect"],
+            color=_palette[_region],
+            marker=_marker_map.get(_region, "o"),  # "o" for all other regions
+        )
+    ```
+
+    Common marker strings: `"o"` circle · `"s"` square · `"^"` triangle · `"D"` diamond · `"P"` plus · `"X"` cross
+    """)
+        })
+    ])
     return
 
 
@@ -405,7 +569,7 @@ def _(gm2000, plt):
 
     _ax.axvspan(1.0, 2.3, ymin=0.68, alpha=0.06, color="#55A868")
 
-    for _country in ["Japan", "Niger", "Singapore"]:
+    for _country in ["France", "China", "India"]:
         _row = gm2000[gm2000["country"] == _country]
         if _row.empty:
             continue
@@ -432,11 +596,22 @@ def _(gm2000, plt):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
+    **Exercise:**
+
+    - Remove country labels. Add more. What is the effect?
+    - Try a lower `alpha`: when does transparency reveal density, and when does it
+      just make the chart harder to read?
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
     ---
     ## 7 · Time Series and Line Charts
 
     Line charts connect ordered observations — most commonly over time.
-    Direct labels at line endpoints are cleaner than a separate legend box.
     """)
     return
 
@@ -445,18 +620,27 @@ def _(mo):
 def _(line_subset, plt):
     _fig, _ax = plt.subplots(figsize=(10, 5))
     for _country, _grp in line_subset.groupby("country"):
-        _line, = _ax.plot(_grp["year"], _grp["life_expect"], lw=2.2)
+        _line, = _ax.plot(_grp["year"], _grp["life_expect"], lw=2.2, label=_country)
         _last = _grp.iloc[-1]
-        _ax.text(_last["year"] + 0.4, _last["life_expect"],
-                 _country, color=_line.get_color(),
-                 va="center", fontsize=9, fontweight="bold")
 
     _ax.set_xlim(right=2011)
     _ax.set_xlabel("Year", fontsize=11)
     _ax.set_ylabel("Life expectancy (years)", fontsize=11)
-    _ax.set_title("All five countries converge toward 70+ years", fontsize=12, fontweight="bold")
-    plt.tight_layout()
+    _ax.set_title("Evolution of Life expectancy in 5 countries", fontsize=12)
+    _ax.legend(bbox_to_anchor=(1.02, 1), loc="upper left", borderaxespad=0) 
+    _fig.tight_layout()
     _fig
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    **Exercise:**
+
+    - How many more countries can you add before it becomes unreadable?
+    - Can you think of strategies to improve readability beyond that number?
+    """)
     return
 
 
@@ -512,6 +696,16 @@ def _(mo):
     - **Direct labels** instead of a legend box
     - **Spine cleanup** (no top, no right border)
     - **Intentional color** (consistent palette)
+
+    ### Exercise:
+
+    Improve the plot on the right in the figure below applying these principles where relevant to build a publication-ready line chart.
+
+    1. Pick **5 countries** from at least 3 different region (`line_subset` was defined towards the beginning of the notebook).
+    2. One line per country, labelled at the endpoint — no legend box.
+    3. Title that states an **insight**, not just a description.
+    4. No top or right spines.
+    5. Save as `figures/exercise_1.pdf` (see section 10 for syntax).
     """)
     return
 
@@ -522,25 +716,78 @@ def _(line_subset, plt):
 
     for _country, _grp in line_subset.groupby("country"):
         _ax_raw.plot(_grp["year"], _grp["life_expect"])
-    _ax_raw.set_title("Draft (defaults)")
+    _ax_raw.set_title("Evolution of Life expectancy in 5 countries")
     _ax_raw.set_xlabel("year")
     _ax_raw.set_ylabel("life_expect")
     _ax_raw.spines["top"].set_visible(True)
     _ax_raw.spines["right"].set_visible(True)
 
     for _country, _grp in line_subset.groupby("country"):
-        _line, = _ax_pol.plot(_grp["year"], _grp["life_expect"], lw=2.2)
+        _line, = _ax_pol.plot(_grp["year"], _grp["life_expect"])
         _last = _grp.iloc[-1]
         _ax_pol.text(_last["year"] + 0.4, _last["life_expect"],
                      _country, color=_line.get_color(), va="center", fontsize=9, fontweight="bold")
 
+
     _ax_pol.set_xlim(right=2011)
-    _ax_pol.set_xlabel("Year", fontsize=11)
-    _ax_pol.set_ylabel("Life expectancy (years)", fontsize=11)
-    _ax_pol.set_title("Life expectancy is rising globally, but gaps remain",
-                      fontsize=11, fontweight="bold")
+    _ax_pol.set_xlabel("year")
+    _ax_pol.set_ylabel("life_expect")
+    _ax_pol.set_title("Evolution of Life expectancy in 5 countries",
+                      fontsize=11)
     plt.tight_layout()
     _fig
+    return
+
+
+@app.cell
+def _(mo):
+    mo.accordion({
+            "Hint — Direct labels at line endpoints": mo.md(r"""
+
+        ```python
+            ...
+            _line, = _ax.plot(_grp["year"], _grp["life_expect"], lw=2.2)
+            _last = _grp.iloc[-1]
+            _ax.text(_last["year"] + 0.4, _last["life_expect"],
+                     _country, color=_line.get_color(),
+                     va="center", fontsize=9, fontweight="bold")
+            ...
+        ```
+    """)
+    })
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.accordion({
+        "Hint — code skeleton": mo.md(
+            r"""
+            ```python
+            from pathlib import Path
+
+            _countries = ["...", "...", "...", "...", "..."]
+            _subset = gapminder[gapminder["country"].isin(_countries)].sort_values("year")
+
+            _fig, _ax = plt.subplots(figsize=(10, 5))
+            for _country, _grp in _subset.groupby("country"):
+                _line, = _ax.plot(_grp["year"], _grp["life_expect"], lw=2)
+                _last = _grp.iloc[-1]
+                _ax.text(_last["year"] + 0.4, _last["life_expect"],
+                         _country, color=_line.get_color(), va="center", fontsize=9)
+
+            _ax.set_xlim(right=2011)
+            _ax.set_xlabel("Year")
+            _ax.set_ylabel("Life expectancy (years)")
+            _ax.set_title("Your insight here")
+            for spine in ["top", "right"]:
+                _ax.spines[spine].set_visible(False)
+            Path("figures").mkdir(exist_ok=True)
+            _fig.savefig("figures/exercise_1.pdf", bbox_inches="tight")
+            ```
+            """
+        )
+    })
     return
 
 
@@ -570,53 +817,6 @@ def _(mo):
 def _(mo):
     mo.md(r"""
     ---
-    ## Exercise 1 — Life Expectancy Trajectories
-
-    Build a publication-ready line chart:
-
-    1. Pick **5 countries** from at least 3 different regions.
-    2. One line per country, labelled at the endpoint — no legend box.
-    3. Title that states an **insight**, not just a description.
-    4. No top or right spines.
-    5. Save as `../figures/exercise_1.pdf`.
-    """)
-    return
-
-
-@app.cell(hide_code=True)
-def _(mo):
-    mo.accordion({
-        "Hint — code skeleton": mo.md(
-            r"""
-            ```python
-            _countries = ["...", "...", "...", "...", "..."]
-            _subset = gapminder[gapminder["country"].isin(_countries)].sort_values("year")
-
-            _fig, _ax = plt.subplots(figsize=(10, 5))
-            for _country, _grp in _subset.groupby("country"):
-                _line, = _ax.plot(_grp["year"], _grp["life_expect"], lw=2)
-                _last = _grp.iloc[-1]
-                _ax.text(_last["year"] + 0.4, _last["life_expect"],
-                         _country, color=_line.get_color(), va="center", fontsize=9)
-
-            _ax.set_xlim(right=2011)
-            _ax.set_xlabel("Year")
-            _ax.set_ylabel("Life expectancy (years)")
-            _ax.set_title("Your insight here")
-            for spine in ["top", "right"]:
-                _ax.spines[spine].set_visible(False)
-            _fig.savefig("../figures/exercise_1.pdf", bbox_inches="tight")
-            ```
-            """
-        )
-    })
-    return
-
-
-@app.cell(hide_code=True)
-def _(mo):
-    mo.md(r"""
-    ---
     ## 11 · Seaborn: Philosophy
 
     Seaborn is built on Matplotlib. It adds two things:
@@ -636,17 +836,67 @@ def _(mo):
 
 @app.cell
 def _(gm2000, plt, sns):
-    _fig, _axes = plt.subplots(1, 3, figsize=(13, 4))
-
-    for _ax, _theme in zip(_axes, ["white", "whitegrid", "darkgrid"]):
+    _fig = plt.figure(figsize=(13, 4))
+    for _i, _theme in enumerate(["white", "whitegrid", "darkgrid"]):
         with sns.axes_style(_theme):
+            _ax = _fig.add_subplot(1, 3, _i + 1)
             sns.scatterplot(data=gm2000, x="fertility", y="life_expect",
                             hue="region", s=40, alpha=0.75, legend=False, ax=_ax)
             _ax.set_title(f"style='{_theme}'", fontsize=10)
 
     _fig.suptitle("Same data — three Seaborn style contexts", fontsize=11)
+    _fig.tight_layout()
+    _fig
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ### ML practitioner checkpoint
+
+    Before fitting a classifier, it's advised to inspect the target and feature distributions.
+    With Penguins, this means checking class balance and whether a feature
+    separates species cleanly enough to be useful.
+    """)
+    return
+
+
+@app.cell
+def _(penguins, plt, sns):
+    _fig, (_ax_count, _ax_mass) = plt.subplots(1, 2, figsize=(11, 4))
+
+    sns.countplot(data=penguins, x="species", hue="species", legend=False, ax=_ax_count)
+    _ax_count.set_title("Target balance: species counts")
+    _ax_count.set_xlabel("")
+    _ax_count.set_ylabel("Count")
+
+    sns.boxplot(
+        data=penguins,
+        x="species",
+        y="body_mass_g",
+        hue="species",
+        legend=False,
+        ax=_ax_mass,
+    )
+    _ax_mass.set_title("Feature distribution: body mass by species")
+    _ax_mass.set_xlabel("")
+    _ax_mass.set_ylabel("Body mass (g)")
+
     plt.tight_layout()
     _fig
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    **Try it!**
+
+    - Replace `body_mass_g` with `bill_length_mm` or `flipper_length_mm`.
+    - Which single feature would you feed to a classifier first, and why?
+    - Where do you see overlap that a model might confuse?
+    """)
     return
 
 
@@ -665,6 +915,13 @@ def _(mo):
     | `ecdfplot` | Cumulative view — "what fraction is below X?" |
     | `boxplot` | Compact summary: median, IQR, outliers |
     | `violinplot` | Full distribution shape + quartiles |
+    | `swarmplot` | Individual observations for small/medium groups |
+
+    **Caution:** KDE and violin plots estimate a smooth density. Bandwidth is a
+    modelling choice; a smooth curve can hide small clusters or imply structure
+    that is not really in the data. `swarmplot` avoids overlap by moving points,
+    but it does not scale well to large numbers of observations; use `stripplot`
+    or sampling when there are too many points.
     """)
     return
 
@@ -708,7 +965,7 @@ def _(gm2000, plt, sns):
     _fig, (_ax1, _ax2) = plt.subplots(1, 2, figsize=(12, 4))
 
     sns.kdeplot(data=gm2000, x="life_expect", hue="region",
-                fill=True, alpha=0.25, linewidth=1.5, ax=_ax1)
+                fill=True, alpha=0.25, linewidth=1., ax=_ax1)
     _ax1.set_title("Life expectancy distribution by region (2000)")
     _ax1.set_xlabel("Life expectancy (years)")
 
@@ -764,8 +1021,11 @@ def _(mo):
     | Plot | Purpose |
     |------|---------|
     | `scatterplot` | Two quantitative variables, optionally grouped by color/size |
-    | `lineplot` | Ordered x-axis; shows **mean ± CI automatically** |
-    | `regplot` | Scatter + regression line + CI band |
+    | `lineplot` | Ordered x-axis; can aggregate repeated x-values and show uncertainty |
+    | `regplot` | Scatter + fitted regression line + CI band |
+
+    The regression line is descriptive here, not causal. Country-level fertility
+    and life expectancy are ecological aggregates, confounded by many variables.
     """)
     return
 
@@ -798,10 +1058,14 @@ def _(mo):
     mo.md(r"""
     ### `lineplot` with built-in uncertainty
 
-    `lineplot` aggregates repeated x-values and shows **mean ± 95% CI** by default.
+    `lineplot` aggregates repeated x-values with `estimator="mean"` and shows a
+    **95% bootstrap CI for that mean** by default.
 
     > **Important**: always caption what your CI band represents.
-    > Here it reflects spread *across countries* within a region, not model uncertainty.
+    > Here it is uncertainty about the estimated regional mean under a sampling
+    > interpretation. It is **not** the full spread of countries in the region.
+    > To show heterogeneity, plot individual countries or use a spread interval
+    > such as `errorbar="sd"` for standard deviation or `errorbar=("pi", 95)` for percentiles.
     """)
     return
 
@@ -810,7 +1074,7 @@ def _(mo):
 def _(gapminder, plt, sns):
     _fig, _ax = plt.subplots(figsize=(10, 5))
     sns.lineplot(data=gapminder, x="year", y="life_expect",
-                 hue="region", errorbar="ci", lw=2, ax=_ax)
+                 hue="region", errorbar=("ci", 95), lw=2, ax=_ax)
     _ax.set_title("Life expectancy over time — mean ± 95% CI per region",
                   fontsize=12, fontweight="bold")
     _ax.set_xlabel("Year")
@@ -827,11 +1091,14 @@ def _(mo):
     ---
     ## 14 · Grid Plots
 
+    This is the Seaborn version of **small multiples**: repeat the same plot
+    across groups so comparisons stay local and aligned.
+
     | Function | What it does |
     |----------|-------------|
     | `FacetGrid` | Repeat any chart across rows/columns of a categorical variable |
-    | `pairplot` | All pairwise scatter plots + diagonal distributions |
-    | `heatmap` | 2D colour grid — correlation matrices, pivot tables |
+    | `pairplot` | Optional ML EDA shortcut: all pairwise scatter plots + diagonal distributions |
+    | `heatmap` | Optional ML EDA shortcut: correlation matrices, pivot tables |
     """)
     return
 
@@ -877,6 +1144,16 @@ def _(gapminder, plt, sns):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
+    **Caution:** a correlation heatmap shows pairwise linear association.
+    It can hide nonlinear patterns, subgroup structure, outliers, and changes
+    over time. Treat it as a quick EDA index, not as evidence of causality.
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
     ---
     ## 15 · Color and Accessibility
 
@@ -886,8 +1163,13 @@ def _(mo):
     **Rules of thumb**:
     - **Sequential data**: `viridis`, `plasma`, `cividis` — perceptually uniform
     - **Diverging data** (e.g., correlation): `RdBu`, `coolwarm`
-    - **Categorical**: Seaborn's `"colorblind"` palette
+    - **Categorical**: Matplotlib's `tab10` or Seaborn's `"colorblind"` palette
+    - **Consistency**: keep the same category → color mapping across plots
     - **Avoid**: red + green together; jet/rainbow for continuous data
+
+    Okabe-Ito is a well-known accessible palette, but it is not available as a
+    named palette in the stable Matplotlib/Seaborn versions used here. If you
+    need it, define it once and reuse it; otherwise prefer built-in palette APIs.
 
     Print your chart in greyscale — if information is lost, fix the palette.
     """)
@@ -898,18 +1180,20 @@ def _(mo):
 def _(gm2000, plt, sns):
     _order = (gm2000.groupby("region")["life_expect"]
                .median().sort_values().index.tolist())
+    _palette_tab10 = sns.color_palette("tab10", n_colors=len(_order))
+    _palette_colorblind = sns.color_palette("colorblind", n_colors=len(_order))
     _fig, (_ax1, _ax2) = plt.subplots(1, 2, figsize=(13, 5), sharey=True)
 
     sns.boxplot(data=gm2000, y="region", x="life_expect",
                 hue="region", legend=False,
-                order=_order, ax=_ax1, width=0.5, palette="tab10")
-    _ax1.set_title("Default palette (tab10)", fontsize=10)
+                order=_order, ax=_ax1, width=0.5, palette=_palette_tab10)
+    _ax1.set_title("Matplotlib tab10", fontsize=10)
     _ax1.set_ylabel("")
 
     sns.boxplot(data=gm2000, y="region", x="life_expect",
                 hue="region", legend=False,
-                order=_order, ax=_ax2, width=0.5, palette="colorblind")
-    _ax2.set_title("colorblind-safe palette", fontsize=10)
+                order=_order, ax=_ax2, width=0.5, palette=_palette_colorblind)
+    _ax2.set_title("Seaborn colorblind", fontsize=10)
     _ax2.set_ylabel("")
 
     for _ax in [_ax1, _ax2]:
@@ -917,6 +1201,29 @@ def _(gm2000, plt, sns):
     plt.suptitle("Same chart — different palettes", fontsize=11)
     plt.tight_layout()
     _fig
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    **Try different palettes.**
+
+    - Replace `"colorblind"` with `"Set2"`, `"Dark2"`, or `"Paired"`.
+    - Try Matplotlib's style context: `with plt.style.context("tableau-colorblind10"): ...`
+    - For repeated plots, build a mapping once and reuse it:
+
+    ```python
+    _levels = sorted(gm2000["region"].dropna().unique())
+    _palette = dict(zip(_levels, sns.color_palette("colorblind", n_colors=len(_levels))))
+
+    sns.scatterplot(..., hue="region", hue_order=_levels, palette=_palette)
+    sns.boxplot(..., hue="region", hue_order=_levels, palette=_palette)
+    ```
+
+    The goal is not to find the prettiest palette. It is to keep categories
+    distinguishable, accessible, and consistent across the whole analysis.
+    """)
     return
 
 
@@ -933,7 +1240,18 @@ def _(mo):
        **all individual countries** in it (thin grey lines).
     2. Overlay the **regional mean** as a thick coloured line.
     3. Write a title that captures what this reveals beyond the average alone.
+
+    *To go further:*
+    - compare one region with low variation and one with high variation
+    - try different alpha values: when does overplotting become noise?
+    - decide whether the mean line helps or hides the individual trajectories
+    - write a caption that says exactly what the grey lines and mean line represent
     """)
+    return
+
+
+@app.cell
+def _():
     return
 
 
@@ -971,16 +1289,16 @@ def _(mo):
     | Concept | Key takeaway |
     |---------|-------------|
     | Why visualize | Anscombe's Quartet: identical stats, completely different shapes |
-    | Tidy data | One row = one observation; use `melt()` to get there |
+    | Tidy data | Prefer long-form data for explicit, reusable mappings |
     | Figure anatomy | `Figure` → `Axes` → artists (lines, patches, text) |
     | Two APIs | `pyplot` for exploration, object-oriented (`fig, ax`) for everything shareable |
-    | Visual channels | Position (most accurate) → color → size → shape → transparency |
+    | Visual channels | Ordered and categorical attributes need different channel rankings |
     | Small multiples | Repeat the same chart per group for effortless comparison |
     | Polishing | Title = insight, direct labels, no top/right spines |
     | Seaborn | High-level API on Matplotlib; statistical defaults built in |
-    | Distributions | `histplot` → `kdeplot` → `violinplot` as you need more detail |
-    | Uncertainty | `lineplot` shows mean ± CI automatically — always label your bands |
-    | Color | Use perceptually uniform colormaps; test for colorblindness |
+    | Distributions | `histplot` → `kdeplot` → `violinplot`; `swarmplot` for small groups |
+    | Uncertainty | Distinguish estimate uncertainty from data spread |
+    | Color | Use library palette tools; keep category colors consistent; test accessibility |
 
     **Next session**: Grammar of Graphics + Altair — a principled framework for
     thinking about visualization, and a Python library that implements it directly.
