@@ -84,10 +84,10 @@ def _(mo):
 
     > Source: Wickham (2010), §3 "Components of the Layered Grammar", p. 8.
 
-    The 7-component template (data, aesthetics, geom, stat, position, coordinates, facets)
-    also appears in Wickham & Grolemund, *R for Data Science* (2017), ch. 3, as a practical
-    ggplot2 companion to the 2010 paper. The two formulations are equivalent; ggplot2 and
-    Altair implement the same underlying grammar.
+    Wickham & Grolemund, *R for Data Science* (2017), ch. 3 presents a similar list with
+    7 components (data, aesthetics, geom, stat, position, coordinates, facets), omitting
+    scales as an explicit item. The table above adds scales back as a distinct row, following
+    the 2010 paper. Both formulations describe the same grammar; the difference is presentational.
     """)
     return
 
