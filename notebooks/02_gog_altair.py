@@ -61,18 +61,33 @@ def _(mo):
     the [Vega-Lite paper](https://doi.org/10.1109/TVCG.2016.2599030)
     (Satyanarayan et al., *IEEE TVCG*, 2017).
 
-    The grammar defines **seven layers** that together fully specify any chart.
-    Most layers are implemented with sensible defaults, so you can override only what you need to change:
+    Wickham's paper (§3) defines a plot as having **five top-level components**:
+    a default dataset + aesthetic mappings, one or more **layers**, scales,
+    a coordinate system, and a facet specification.
+    A *layer* is itself a composite of four parts:
+    data + mapping, a statistical transformation (*stat*), a geometric object (*geom*),
+    and a **position adjustment** — how overlapping marks are resolved (stack, dodge, jitter…).
 
-    | Layer | Question it answers | Example |
-    |-------|---------------------|---------|
+    For teaching, we flatten this into one working vocabulary.
+    Most components have sensible defaults, so you only override what you need:
+
+    | Component | Question it answers | Example |
+    |-----------|---------------------|---------|
     | **Data** | What dataset, in what format? | Gapminder, tidy (one row per country-year) |
     | **Aesthetics** | Which variable maps to which visual channel? | `x = fertility`, `color = region` |
     | **Geometry (Mark)** | What shape is drawn for each row? | Point, line, bar, area |
-    | **Statistics** | Any aggregation applied before drawing? | Mean per year, KDE, bin counts |
+    | **Stat** | Any transformation applied before drawing? | Mean per year, bin counts, smooth |
+    | **Position** | How to handle overlapping marks? | Identity (none), stack, dodge, jitter |
     | **Scales** | How are data values rendered visually? | Log axis, colour gradient, date format |
     | **Facets** | Small multiples along which variable? | One panel per region |
     | **Coordinates** | What coordinate system? | Cartesian (default), polar, geographic |
+
+    > Source: Wickham (2010), §3 "Components of the Layered Grammar", p. 8.
+
+    The 7-component template (data, aesthetics, geom, stat, position, coordinates, facets)
+    also appears in Wickham & Grolemund, *R for Data Science* (2017), ch. 3, as a practical
+    ggplot2 companion to the 2010 paper. The two formulations are equivalent; ggplot2 and
+    Altair implement the same underlying grammar.
     """)
     return
 
@@ -84,11 +99,12 @@ def _(mo):
         D["Data\n───\ntidy DataFrame"]
         A["Aesthetics\n───\nx, y, color\nsize, shape"]
         G["Geometry\n───\npoint, line\nbar, area"]
-        S["Statistics\n───\nmean, bin\nKDE, count"]
+        S["Stat\n───\nmean, bin\nsmooth"]
+        P["Position\n───\nidentity\nstack / dodge"]
         Sc["Scales\n───\nlog, sqrt\ncolor map"]
         F["Facets\n───\none panel\nper group"]
         C["Coordinates\n───\ncartesian\npolar / geo"]
-        D --> A --> G --> S --> Sc --> F --> C
+        D --> A --> G --> S --> P --> Sc --> F --> C
     """)
     return
 
@@ -856,12 +872,13 @@ def _(mo):
     Pick any chart you've created in Session 1 or 2 and decompose it
     using the Grammar of Graphics framework:
 
-    | Layer | Your answer |
-    |-------|------------|
+    | Component | Your answer |
+    |-----------|------------|
     | Data | |
     | Aesthetics | |
     | Geometry | |
-    | Statistics | |
+    | Stat | |
+    | Position | |
     | Scales | |
     | Facets | |
     | Coordinates | |
@@ -944,7 +961,7 @@ def _(mo):
 
     | Concept | Key takeaway |
     |---------|-------------|
-    | Grammar of Graphics | Data → Aesthetics → Geometry → Statistics → Scales → Facets |
+    | Grammar of Graphics | Data → Aesthetics → Geometry → Stat → Position → Scales → Facets → Coords |
     | GoG payoff | Compose any chart from first principles — not just named types |
     | Vega-Lite | Declarative JSON grammar; Altair generates it; Vega renders it via D3 |
     | Altair = GoG | `Chart(data).mark_X().encode(...)` = data → geometry → aesthetics |
