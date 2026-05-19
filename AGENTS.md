@@ -23,6 +23,7 @@ slides/           Slidev presentation (slides.md + seriph theme)
 notebooks/        Marimo workshop notebooks
   01_matplotlib_seaborn.py
   02_gog_altair.py
+  03_storytelling.py
 pyproject.toml    Python deps (uv)
 uv.lock
 ```
@@ -104,8 +105,9 @@ Use `object-fit:cover` for photos, `object-fit:contain` for diagrams/charts.
 
 - **Session 1** (`01_matplotlib_seaborn.py`): Matplotlib + Seaborn, Gapminder + Palmer Penguins datasets
 - **Session 2** (`02_gog_altair.py`): Grammar of Graphics + Altair, Gapminder + INSEE prénoms
+- **Session 3** (`03_storytelling.py`): Communication & Storytelling, KMeans on Palmer Penguins
 
-Both use **pandas** (not polars) — Seaborn's classic API requires it.
+All notebooks use **pandas** (not polars) — Seaborn's classic API requires it.
 
 The prénoms dataset (~300k rows) exceeds Altair's 5000-row default limit.
 VegaFusion is enabled at the top of `02_gog_altair.py` to lift that limit:
@@ -142,3 +144,6 @@ Key theoretical framework: Munzner's marks/channels vocabulary → Grammar of Gr
 - Don't add `public/` back to `slides/.gitignore`
 - Don't commit `data/`, `.venv/`, or `slides/node_modules/` (all gitignored)
 - Don't add a vault symlink at `slides/public/images` — commit images directly
+- **Never add quiz files with answers to this repo** — this is a public student-facing repo.
+  Quizzes (with correct answers and explanations) belong in `annemariet/knowledge-vault`
+  under `docs/library/raw/own/Teaching/Dataviz/`.
