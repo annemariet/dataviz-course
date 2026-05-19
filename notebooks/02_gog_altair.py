@@ -34,8 +34,8 @@ def _(mo):
 
     In 1999, Leland Wilkinson published
     [*The Grammar of Graphics*](https://link.springer.com/book/10.1007/0-387-28695-0)
-    (Springer; 2nd ed. 2005) — **GoG** for short — arguing that every statistical
-    chart is assembled from the same underlying components — a *grammar* — rather
+    (Springer; 2nd ed. 2005, **GoG** for short) arguing that every statistical
+    chart is assembled from the same underlying components, that is a *grammar*, rather
     than being one item in a fixed menu of named chart types.
 
     **Why it matters:**
@@ -48,27 +48,46 @@ def _(mo):
 
     Wickham's [*A Layered Grammar of Graphics*](https://doi.org/10.1198/jcgs.2009.07098)
     (*Journal of Computational and Graphical Statistics*, 2010) is a shorter, more
-    accessible reformulation — recommended as a next read after this session (find a pdf version [here](https://ucsb-bren.github.io/ESM296-3W-2016/refs/lit/Wickham%20-%202010%20-%20A%20Layered%20Grammar%20of%20Graphics.pdf)). It is
+    accessible reformulation (find a pdf version [here](https://ucsb-bren.github.io/ESM296-3W-2016/refs/lit/Wickham%20-%202010%20-%20A%20Layered%20Grammar%20of%20Graphics.pdf)). It is
     also the theoretical foundation of **ggplot2** and, through the Vega-Lite lineage,
     of **Altair**.
+
+    > This grammar is useful for both the user and the developer of statistical graphics. For the user, it makes it easier to iteratively update a plot, changing a single feature at a time. The grammar is also useful because it suggests the high-level aspects of a plot that can be changed, giving us a framework to think about graphics, and hopefully shortening the distance from mind to paper. It also encourages the use of graphics customized to a particular problem rather than relying on generic named graphics.
+    >
+    > For the developer, it makes it much easier to create new capabilities. You only need to add the one component that you need, and you can continue to use all the other existing components. For example, you can add a new statistical transformation, and continue to use the existing scales and geoms. It is also useful for discovering new types of graphics, as the grammar defines the parameter space of statistical graphics.
 
     For a hands-on reference beyond this notebook, see the
     [Altair user guide](https://altair-viz.github.io/user_guide/encoding.html) and
     the [Vega-Lite paper](https://doi.org/10.1109/TVCG.2016.2599030)
     (Satyanarayan et al., *IEEE TVCG*, 2017).
 
-    The grammar defines **seven layers** that together fully specify any chart.
-    Most layers have sensible defaults — you only override what you need to change:
+    Wickham's paper (§3) defines a plot as having **five top-level components**:
+    a default dataset + aesthetic mappings, one or more **layers**, scales,
+    a coordinate system, and a facet specification.
+    A *layer* is itself a composite of four parts:
+    data + mapping, a statistical transformation (*stat*), a geometric object (*geom*),
+    and a **position adjustment** — how overlapping marks are resolved (stack, dodge, jitter…).
 
-    | Layer | Question it answers | Example |
-    |-------|---------------------|---------|
+    For teaching, we flatten this into one working vocabulary.
+    Most components have sensible defaults, so you only override what you need:
+
+    | Component | Question it answers | Example |
+    |-----------|---------------------|---------|
     | **Data** | What dataset, in what format? | Gapminder, tidy (one row per country-year) |
     | **Aesthetics** | Which variable maps to which visual channel? | `x = fertility`, `color = region` |
     | **Geometry (Mark)** | What shape is drawn for each row? | Point, line, bar, area |
-    | **Statistics** | Any aggregation applied before drawing? | Mean per year, KDE, bin counts |
+    | **Stat** | Any transformation applied before drawing? | Mean per year, bin counts, smooth |
+    | **Position** | How to handle overlapping marks? | Identity (none), stack, dodge, jitter |
     | **Scales** | How are data values rendered visually? | Log axis, colour gradient, date format |
     | **Facets** | Small multiples along which variable? | One panel per region |
     | **Coordinates** | What coordinate system? | Cartesian (default), polar, geographic |
+
+    > Source: Wickham (2010), §3 "Components of the Layered Grammar", p. 8.
+
+    Wickham & Grolemund, *R for Data Science* (2017), ch. 3 presents a similar list with
+    7 components (data, aesthetics, geom, stat, position, coordinates, facets), omitting
+    scales as an explicit item. The table above adds scales back as a distinct row, following
+    the 2010 paper. Both formulations describe the same grammar; the difference is presentational.
     """)
     return
 
@@ -80,11 +99,12 @@ def _(mo):
         D["Data\n───\ntidy DataFrame"]
         A["Aesthetics\n───\nx, y, color\nsize, shape"]
         G["Geometry\n───\npoint, line\nbar, area"]
-        S["Statistics\n───\nmean, bin\nKDE, count"]
+        S["Stat\n───\nmean, bin\nsmooth"]
+        P["Position\n───\nidentity\nstack / dodge"]
         Sc["Scales\n───\nlog, sqrt\ncolor map"]
         F["Facets\n───\none panel\nper group"]
         C["Coordinates\n───\ncartesian\npolar / geo"]
-        D --> A --> G --> S --> Sc --> F --> C
+        D --> A --> G --> S --> P --> Sc --> F --> C
     """)
     return
 
@@ -106,8 +126,7 @@ def _(mo):
     | Violin plot | Area mark + KDE statistic + `x=N` |
     | Faceted scatter | Any of the above + `facet=N` |
 
-    Once you have the grammar, you can compose charts that don't have
-    a pre-set name — and you'll know exactly how to build them.
+    Using the grammar, you can compose charts that don't have a pre-set name.
     """)
     return
 
@@ -124,7 +143,7 @@ def _(mo):
     **Tamara Munzner**, *Visualization Analysis and Design* (2014), introduces
     two vocabulary terms that apply to any vis system, independent of any library:
 
-    **Marks** — the geometric primitives drawn for each data item:
+    **Marks** are the geometric primitives drawn for each data item:
 
     | Mark | Typical use |
     |------|------------|
@@ -133,7 +152,7 @@ def _(mo):
     | Area | Filled regions: area charts, maps |
     | Bar | Length-encoded magnitude: bar charts, histograms |
 
-    **Channels** — the visual properties that vary to carry data.
+    **Channels** are the visual properties that vary to carry data.
     Not all channels are equally readable. Cleveland & McGill (1984) measured
     empirically how accurately viewers can extract quantitative values from each:
 
@@ -156,8 +175,8 @@ def _(mo):
     - **Effectiveness**: use the most accurate channel for the most important variable.
       Your key quantitative comparison should use position; secondary distinctions use color or shape.
 
-    The classic failure: a pie chart encodes quantities as angles and areas —
-    two of the least accurate channels — when a bar chart (position + length from a common baseline)
+    The classic failure: a pie chart encodes quantities as angles and areas,
+    two of the least accurate channels, when a bar chart (position + length from a common baseline)
     would be immediately readable.
 
     **How this vocabulary maps across frameworks:**
@@ -170,10 +189,7 @@ def _(mo):
     | Channel (size / area) | Aesthetics `size` | `.encode(size="pop:Q")` |
     | Attribute type | Variable type | `:Q`, `:N`, `:O`, `:T` |
 
-    > When you write `.mark_point().encode(x="gdp:Q", color="region:N")`, you are making
-    > explicit design decisions: the quantitative variable gets the most effective channel
-    > (position); the nominal variable gets an appropriate channel (hue). That is principled
-    > design, not just syntax.
+    > **Syntax as design:** with `altair`, when you write `.mark_point().encode(x="gdp:Q", color="region:N")`, you are making explicit design decisions: the quantitative variable gets the most effective channel (position); the nominal variable gets an appropriate channel (hue).
     """)
     return
 
@@ -197,7 +213,7 @@ def _(mo):
     | 2017 | **plotnine** (Kibirige) | Python | ggplot2 API ported to Python; static only (matplotlib backend) | [GitHub](https://github.com/has2k1/plotnine) |
     | 2021 | **Observable Plot** (Bostock) | JavaScript | GoG-inspired high-level JS library, built on D3 | [GitHub](https://github.com/observablehq/plot) |
 
-    **Altair vs plotnine** — both are GoG implementations in Python, different trade-offs:
+    **Altair vs plotnine:** both are GoG implementations in Python, different trade-offs:
 
     | | Altair | plotnine |
     |---|---|---|
@@ -211,18 +227,18 @@ def _(mo):
 
     **A note on Observable Plot vs Observable:**
     These are two separate products by the same company (Observable, Inc.):
-    - **Observable Plot** — an open-source JS library (MIT licence, free forever).
+    - **Observable Plot:** an open-source JS library (MIT licence, free forever).
       Think of it as D3's high-level layer, in the same way Altair sits above Vega-Lite.
       D3 is *not* going away — Plot is built on top of it and still needs it for anything
       custom (force graphs, geographic projections, bespoke layouts).
-    - **Observable** — a cloud notebook platform for JavaScript (like Jupyter, but reactive
+    - **Observable:** a cloud notebook platform for JavaScript (like Jupyter, but reactive
       and browser-native). Free tier available; paid plans for private notebooks and teams.
       Observable notebooks can use Plot, D3, or any JS library.
 
     **Also common in Python** (but not GoG-native):
-    - **Plotly / Plotly Express** — chart-type focused, good for dashboards (Dash)
-    - **Bokeh** — interactive, different architecture
-    - **Matplotlib / Seaborn** — what you learned in session 1: explicit control, not declarative
+    - **Plotly / Plotly Express:** chart-type focused, good for dashboards (Dash)
+    - **Bokeh:** interactive, different architecture
+    - **Matplotlib / Seaborn:** what you learned in session 1: explicit control, not declarative
 
     > We will learn to use Altair because it is the most faithful GoG implementation in Python:
     > declarative, composable, interactive by default.
@@ -279,15 +295,15 @@ def _(mo):
     ```
 
     **Why the Vega editor is useful:**
-    - **Debugging** — when a chart looks wrong, inspecting the spec immediately
+    - **Debugging:** when a chart looks wrong, inspecting the spec immediately
       shows whether the issue is in encoding types, missing fields, or transforms.
-    - **Experimentation** — tweak a field name or type and re-render instantly,
+    - **Experimentation:** tweak a field name or type and re-render instantly,
       without re-running Python.
 
     We'll see an example chart with its Vega-Lite spec displayed alongside it below.
 
     We use the same Gapminder dataset as session 1 (63 countries, 1955–2005).
-    The cell below loads it — run it whether or not you have session 1 open.
+    The cell below loads it, you can run it whether or not you have another session open.
     """)
     return
 
@@ -339,7 +355,7 @@ def _(alt, gapminder, mo):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md("""
-    Hover over the points — `tooltip=True` on the mark enables tooltips
+    Hover over the points: `tooltip=True` on the mark enables tooltips
     for all encoded fields. Use `tooltip=[...]` in `.encode()` to customise which fields appear.
     """)
     return
@@ -351,7 +367,7 @@ def _(mo):
     ---
     ## 4 · Marks
 
-    The mark defines the **geometry** — what shape is drawn for each data row.
+    The mark defines the **geometry**, i.e. what shape is drawn for each data row.
 
     | Mark | Method | Best for |
     |------|--------|---------|
@@ -366,7 +382,7 @@ def _(mo):
 
     Configure with properties: `mark_point(size=60, opacity=0.7, filled=True)`.
 
-    `mark_circle()` is a shorthand alias for `mark_point(shape="circle", filled=True)` — same result.
+    `mark_circle()` is a shorthand alias for `mark_point(shape="circle", filled=True)`.
     """)
     return
 
@@ -454,7 +470,7 @@ def _(alt, gapminder, year_slider):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md("""
-    Move the slider — the chart updates reactively. This is Marimo's execution model.
+    Move the slider: the chart updates reactively. This is Marimo's execution model.
     """)
     return
 
@@ -463,9 +479,9 @@ def _(mo):
 def _(mo):
     mo.md(r"""
     ---
-    ## 7 · Transforms — Data Before Drawing
+    ## 7 · Transform Data Before Drawing
 
-    Altair can transform data *inside the specification* — no pandas groupby needed.
+    Altair can transform data *inside the specification*, avoiding preprocessing (no pandas groupby needed!).
 
     | Transform | What it does |
     |-----------|-------------|
@@ -502,7 +518,7 @@ def _(mo):
     ---
     ## 8 · Layering Charts
 
-    Add layers with `+`. Each layer can use different marks or data.
+    Add layers using the `+` symbol. Each layer can use different marks or data. Example:
 
     ```python
     points = alt.Chart(df).mark_point()...
@@ -527,7 +543,7 @@ def _(alt, gapminder):
     _reg = (_base.mark_line(color="#C44E52", strokeWidth=2, opacity=0.8)
                  .transform_regression("fertility", "life_expect"))
     (_points + _reg).properties(
-        title="Scatter + regression line — layered with +", width=540, height=360,
+        title="Scatter + regression line layered with +", width=540, height=360,
     )
     return
 
@@ -565,10 +581,10 @@ def _(alt, gapminder):
 def _(mo):
     mo.md(r"""
     ---
-    ## 10 · Interactivity — Selections
+    ## 10 · Interactivity & Selections
 
     Altair's interactivity is built on **selections** (params).
-    A selection is a filter — points inside are highlighted, others dimmed.
+    A selection is a filter: points inside are highlighted, others dimmed.
 
     | Selection | Triggered by | Use case |
     |-----------|-------------|---------|
@@ -610,7 +626,7 @@ def _(alt, gapminder):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    ### Linked views — the most powerful interaction pattern
+    ### Linked views: the most powerful interaction pattern
 
     Two charts sharing a selection: brushing one filters the other.
     This is where interactive charts genuinely help exploratory analysis.
@@ -655,7 +671,7 @@ def _(alt, gapminder):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    Drag a selection box on the scatter — the bar chart updates instantly.
+    Drag a selection box on the scatter and the bar chart updates instantly.
 
     This **brush-one, filter-another** pattern is one of the most effective tools
     for exploratory analysis.
@@ -758,7 +774,7 @@ def _(mo):
     mo.md(r"""
     ### Name trends over time
 
-    The chart normalises by total births per year — showing *popularity share*
+    The chart normalises by total births per year, showing *popularity share*
     rather than raw counts (birth rates changed considerably over 70 years).
     """)
     return
@@ -821,7 +837,7 @@ def _(mo):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md("""
-    ### The name diversity explosion — distinct names used per year
+    ### The name diversity explosion: distinct names used per year
     """)
     return
 
@@ -851,17 +867,18 @@ def _(alt, prenoms):
 def _(mo):
     mo.md(r"""
     ---
-    ## Exercise 1 — GoG Decomposition
+    ## Exercise 1: GoG Decomposition
 
     Pick any chart you've created in Session 1 or 2 and decompose it
     using the Grammar of Graphics framework:
 
-    | Layer | Your answer |
-    |-------|------------|
+    | Component | Your answer |
+    |-----------|------------|
     | Data | |
     | Aesthetics | |
     | Geometry | |
-    | Statistics | |
+    | Stat | |
+    | Position | |
     | Scales | |
     | Facets | |
     | Coordinates | |
@@ -875,7 +892,7 @@ def _(mo):
 def _(mo):
     mo.md(r"""
     ---
-    ## Exercise 2 — GoG Spec from Scratch
+    ## Exercise 2: GoG Spec from Scratch
 
     Using the French prénoms data, build an Altair chart showing the
     **top 15 names given in 2020** using only Altair transforms (no pandas):
@@ -919,7 +936,7 @@ def _(mo):
 def _(mo):
     mo.md(r"""
     ---
-    ## Exercise 3 — Your Own Interactive Chart
+    ## Exercise 3: Your Own Interactive Chart
 
     Build one interactive chart using either Gapminder or INSEE prénoms.
 
@@ -929,7 +946,7 @@ def _(mo):
     - A title that states an insight
 
     Directions:
-    - Gapminder: linked view — scatter + timeline of selected countries
+    - Gapminder: linked view between scatter + timeline of selected countries
     - Prénoms: brush on a time series → reveal which names were popular in that period
     - Prénoms: interactive bump chart of name rankings per decade
     """)
@@ -944,7 +961,7 @@ def _(mo):
 
     | Concept | Key takeaway |
     |---------|-------------|
-    | Grammar of Graphics | Data → Aesthetics → Geometry → Statistics → Scales → Facets |
+    | Grammar of Graphics | Data → Aesthetics → Geometry → Stat → Position → Scales → Facets → Coords |
     | GoG payoff | Compose any chart from first principles — not just named types |
     | Vega-Lite | Declarative JSON grammar; Altair generates it; Vega renders it via D3 |
     | Altair = GoG | `Chart(data).mark_X().encode(...)` = data → geometry → aesthetics |
