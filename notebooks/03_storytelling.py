@@ -49,19 +49,19 @@ def _(mo):
 
     Every effective data story has three acts:
 
-    1. **Setup** — Context: who is the audience, what do they already know, what is at stake?
-    2. **Conflict / Rising action** — Evidence: charts and statistics that reveal the problem or insight
-    3. **Resolution** — Call to action or key takeaway: what should the audience *do* or *believe*?
+    1. **Setup**: who is the audience, what do they already know, what is at stake?
+    2. **Conflict / Rising action**: charts and statistics that reveal the problem or insight
+    3. **Resolution**: call to action or key takeaway — what should the audience *do* or *believe*?
 
     ---
 
     ### 1.3  Five principles for explanation charts
 
-    1. **One chart, one message** — resist the urge to show everything
-    2. **Title = insight** — write the takeaway, not a variable name ("Gentoo flippers are 20 mm longer", not "Flipper length by species")
-    3. **Reduce cognitive load** — remove grid lines, borders, redundant legends
-    4. **Guide the eye** — use colour, size, or annotation to highlight what matters
-    5. **Respect the data** — don't truncate axes, don't cherry-pick time windows
+    1. **One chart, one message**: resist the urge to show everything
+    2. **Title = insight**: write the takeaway, not a variable name ("Gentoo flippers are 20 mm longer", not "Flipper length by species")
+    3. **Reduce cognitive load**: remove grid lines, borders, redundant legends
+    4. **Guide the eye**: use colour, size, or annotation to highlight what matters
+    5. **Respect the data**: don't truncate axes, don't cherry-pick time windows
 
     ---
 
@@ -69,9 +69,9 @@ def _(mo):
 
     For technical audiences who want both the story *and* the details, present in layers:
 
-    1. **Overview** — one grab chart, insight title, minimal decoration
-    2. **Statistical detail** — the evidence (elbow curve, silhouette, confidence intervals)
-    3. **Raw data** — link to dataset / appendix for reproducibility
+    1. **Overview**: one grab chart, insight title, minimal decoration
+    2. **Statistical detail**: the evidence (elbow curve, silhouette, confidence intervals)
+    3. **Raw data**: link to dataset / appendix for reproducibility
 
     This is the structure we will follow in the workshop today.
 
@@ -110,7 +110,7 @@ def _(mo):
     **Business question**: *"Are there natural groups of penguins that differ in their physical measurements?
     If so, how many groups are there, and what distinguishes them?"*
 
-    This mirrors a real ML workflow where you need to explain clustering results to a non-specialist audience.
+    This mirrors a real machine learning workflow where you need to explain clustering results to a non-specialist audience.
 
     ---
     """)
@@ -134,7 +134,7 @@ def _(pd, sns):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    ### Act 1 — Setup: What does the data look like?
+    ### Act 1: What does the data look like?
 
     Before we can tell a story, we need to explore.
     These charts are for **us**, not for the audience.
@@ -190,7 +190,7 @@ def _(mo):
 
     ---
 
-    ### Act 2 — Rising Action: How many clusters?
+    ### Act 2: How many clusters?
 
     We now need to justify our choice of K to the audience.
     Two complementary statistics: **inertia (elbow curve)** and **silhouette score**.
@@ -278,7 +278,7 @@ def _(KMeans, PCA, X_scaled, features, pd, penguins):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    ### Act 3 — Resolution: The grab chart
+    ### Act 3: The grab chart
 
     The grab chart is the single image that should work stand-alone:
     a reader who sees only this chart should understand the finding.
@@ -325,11 +325,11 @@ def _(alt, plot_df, var_explained):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    **Exercise**: hover over points. Notice how clusters align with species — we will reveal this shortly.
+    **Exercise**: hover over points. Notice how clusters align with species; we will reveal this shortly.
 
     ---
 
-    #### Supporting chart 1 — Violin plots (distribution per cluster)
+    #### Supporting chart 1: Violin plots (distribution per cluster)
 
     The grab chart tells us *that* groups exist; violin plots tell us *what* distinguishes them.
     """)
@@ -360,7 +360,7 @@ def _(cluster_labels, features, labels_feat, penguins, plt, sns):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    #### Supporting chart 2 — Cluster profile heatmap
+    #### Supporting chart 2: Cluster profile heatmap
 
     A heatmap of *standardised* mean values lets us name each cluster by its defining traits.
     Standardisation puts all features on the same ±2 scale regardless of units.
@@ -395,9 +395,9 @@ def _(mo):
     mo.md(r"""
     **Reading the heatmap**:
 
-    - **Cluster 1** — long bills, small flippers, light: likely a small-billed, compact species
-    - **Cluster 2** — short deep bills, average flippers: a stocky, bill-heavy morphotype
-    - **Cluster 3** — very large flippers, heavy: the big species
+    - **Cluster 1**: long bills, small flippers, light — likely a small-billed, compact species
+    - **Cluster 2**: short deep bills, average flippers — a stocky, bill-heavy morphotype
+    - **Cluster 3**: very large flippers, heavy — the big species
 
     Can you guess which clusters correspond to which species?
 
@@ -409,7 +409,7 @@ def _(mo):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    #### The reveal — clusters vs. species
+    #### The reveal: clusters vs. species
     """)
     return
 
@@ -431,7 +431,7 @@ def _(mo):
 
     ---
 
-    #### Presentation-ready grab chart — with cluster names
+    #### Presentation-ready grab chart with cluster names
     """)
     return
 
@@ -492,7 +492,7 @@ def _(mo):
 
     ## 3 — Exercises
 
-    ### Exercise A — Chart critique (15 min)
+    ### Exercise A: Chart critique (15 min)
 
     Find a chart online (news article, paper, social media) that tells a data story poorly.
     Identify:
@@ -504,19 +504,19 @@ def _(mo):
 
     ---
 
-    ### Exercise B — Build your own story (30 min)
+    ### Exercise B: Build your own story (30 min)
 
     Take the penguins dataset (or a dataset of your choice) and build a 3-chart story:
 
-    1. **One exploration chart** — help yourself find something interesting
-    2. **One evidence chart** — the statistical proof
-    3. **One grab chart** — presentation-ready, insight title, minimal decoration
+    1. **One exploration chart**: help yourself find something interesting
+    2. **One evidence chart**: the statistical proof
+    3. **One grab chart**: presentation-ready, insight title, minimal decoration
 
     Write the narrative arc (3 sentences: setup / conflict / resolution) to accompany your charts.
 
     ---
 
-    ### Exercise C — Apply to your project (remaining time)
+    ### Exercise C: Apply to your project (remaining time)
 
     Take the most important chart from your group project (Sessions 5–7).
     Apply the five storytelling principles to improve it.
@@ -534,7 +534,7 @@ def _(mo):
 
     | Concept | Key idea |
     |---------|----------|
-    | Exploration vs. Explanation | Different goals → different charts; switch modes deliberately |
+    | Exploration vs. Explanation | Different goals, different charts; switch modes deliberately |
     | Narrative arc | Setup → Conflict → Resolution; every presentation needs all three |
     | One chart, one message | Remove everything that doesn't serve the single takeaway |
     | Title = insight | Write what the chart *means*, not what it *shows* |
