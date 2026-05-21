@@ -149,7 +149,7 @@ def _(mo):
     empirically how accurately viewers can extract quantitative values from each:
 
     | Channel | Best data type | Accuracy |
-    |---------|---------------|---------|
+    |---------|---------------|----------|
     | Position on a common scale (x, y) | Quantitative | ★★★★★ most accurate |
     | Position on non-aligned scales | Quantitative | ★★★★☆ |
     | Length | Quantitative | ★★★☆☆ |
@@ -174,7 +174,7 @@ def _(mo):
     **How this vocabulary maps across frameworks:**
 
     | Munzner | GoG layer | Altair API |
-    |---------|-----------|-----------|
+    |---------|-----------|------------|
     | Mark | Geometry | `.mark_point()`, `.mark_line()`, `.mark_bar()`, … |
     | Channel (position) | Aesthetics `x`, `y` | `.encode(x="col:Q", y="col:Q")` |
     | Channel (color hue) | Aesthetics `color` | `.encode(color="cat:N")` |
@@ -261,7 +261,7 @@ def _(mo):
     two levels of JSON in the pipeline:
 
     | Level | What it is | How to get it | Editor dropdown |
-    |-------|-----------|---------------|-----------------|
+    |-------|-----------|---------------|------------------|
     | **Vega-Lite** | Compact, human-readable — what Altair writes | `with alt.data_transformers.enable("default"): print(chart.to_json(indent=2))` | *Vega-Lite* |
     | **Vega** | Compiled, verbose — what the browser renders | `chart.to_json(format="vega")` | *Vega* |
 
@@ -285,6 +285,11 @@ def _(mo):
       }
     }
     ```
+
+    Note that the Vega-Lite spec above includes explicit types (`"type": "quantitative"`, etc.).
+    That is because it loads data from a URL: Vega-Lite receives it without pandas
+    and cannot inspect column dtypes, so types must be stated explicitly.
+    When you work from a pandas DataFrame in Python, Altair infers them — see section 5.
 
     **Why the Vega editor is useful:**
     - **Debugging:** when a chart looks wrong, inspecting the spec immediately
@@ -362,7 +367,7 @@ def _(mo):
     The mark defines the **geometry**, i.e. what shape is drawn for each data row.
 
     | Mark | Method | Best for |
-    |------|--------|---------|
+    |------|--------|----------|
     | Point | `mark_point()` | Scatter plots — hollow by default; use `filled=True` for solid |
     | Line | `mark_line()` | Time series, trends |
     | Bar | `mark_bar()` | Counts, aggregates |
@@ -397,14 +402,28 @@ def _(mo):
     ---
     ## 5 · Encodings and Data Types
 
-    Altair needs to know the *type* of each variable to choose scales, axes, and legends.
+    When data comes from a pandas DataFrame, Altair infers the encoding type automatically
+    from the column dtype. No annotation needed:
 
-    | Type | Code | Examples |
-    |------|------|---------|
-    | Quantitative | `:Q` | Temperature, population, price |
-    | Ordinal | `:O` | Low/medium/high, survey scores |
-    | Nominal | `:N` | Country, species, category |
-    | Temporal | `:T` | Dates, timestamps |
+    | pandas dtype | Inferred Altair type | Code | Examples |
+    |---|---|---|---|
+    | float64, int64, … | Quantitative | `:Q` | Temperature, population, price |
+    | object, bool, … | Nominal | `:N` | Country, species, category name |
+    | Categorical (ordered) | Ordinal | `:O` | Low/medium/high, survey scores |
+    | datetime64 | Temporal | `:T` | Dates, timestamps |
+
+    The chart below uses no type annotations — Altair infers everything from the DataFrame.
+
+    Type annotations become necessary or useful in three specific situations:
+
+    - **URL-based data**: Vega-Lite receives the data without pandas and cannot inspect dtypes.
+      That is why the Vega-Lite spec in section 3 has explicit types, even though the chart
+      looks identical.
+    - **Overriding the inferred type**: a `year` column is `int64`, so Altair infers
+      quantitative and draws a continuous axis. Annotating it `:O` gives discrete tick marks
+      instead — often more readable for small ranges of years.
+    - **Aggregation shorthand**: expressions like `"mean(life_expect):Q"` require a type
+      because the result is a computed value, not a named column with a dtype.
 
     **Shorthand**: `"column:Q"` &nbsp;|&nbsp; **Longhand**: `alt.X("column", type="quantitative", title="…")`
     """)
@@ -579,7 +598,7 @@ def _(mo):
     A selection is a filter: points inside are highlighted, others dimmed.
 
     | Selection | Triggered by | Use case |
-    |-----------|-------------|---------|
+    |-----------|-------------|----------|
     | `selection_point()` | Click | Highlight individual points or legend entries |
     | `selection_interval()` | Click-drag | Brush a rectangular region |
 
@@ -957,7 +976,7 @@ def _(mo):
     | GoG payoff | Compose any chart from first principles — not just named types |
     | Vega-Lite | Declarative JSON grammar; Altair generates it; Vega renders it via D3 |
     | Altair = GoG | `Chart(data).mark_X().encode(...)` = data → geometry → aesthetics |
-    | Encoding types | `:Q` quantitative, `:N` nominal, `:O` ordinal, `:T` temporal |
+    | Type inference | Altair infers types from pandas dtypes; annotations override or clarify |
     | Transforms | Filter, aggregate, calculate — keep transformation in the spec |
     | Layering | `chart1 + chart2` — different marks or data, same axes |
     | Faceting | `.facet("col:N")` — small multiples in one line |
