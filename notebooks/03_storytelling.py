@@ -3,14 +3,14 @@ import marimo
 __generated_with = "0.23.2"
 app = marimo.App(
     width="medium",
-    app_title="Data Visualization — Part 3: Communication & Storytelling",
+    app_title="Data Visualization · Part 3: Communication & Storytelling",
 )
 
 
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    # Part 3 — Communication & Storytelling
+    # Part 3: Communication & Storytelling
 
     **Session duration**: ~3 hours &nbsp;|&nbsp; **Dataset**: Palmer Penguins
 
@@ -29,7 +29,7 @@ def _(mo):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    ## 1 — Theory: From Exploration to Explanation
+    ## 1 · Theory: From Exploration to Explanation
 
     ### 1.1  Two modes of visualisation
 
@@ -51,7 +51,7 @@ def _(mo):
 
     1. **Setup**: who is the audience, what do they already know, what is at stake?
     2. **Conflict / Rising action**: charts and statistics that reveal the problem or insight
-    3. **Resolution**: call to action or key takeaway — what should the audience *do* or *believe*?
+    3. **Resolution**: call to action or key takeaway (what should the audience *do* or *believe*?)
 
     ---
 
@@ -103,7 +103,7 @@ def _(mo):
     mo.md(r"""
     ---
 
-    ## 2 — Case Study: Telling the Story of Penguin Clusters
+    ## 2 · Case Study: Telling the Story of Penguin Clusters
 
     We will build a complete visual story in three acts using the Palmer Penguins dataset.
 
@@ -147,7 +147,7 @@ def _(mo):
 @app.cell
 def _(features, labels_feat, penguins, plt):
     fig, axes = plt.subplots(2, 2, figsize=(10, 7))
-    fig.suptitle("Penguin measurements — raw distributions (exploration)", fontsize=13)
+    fig.suptitle("Penguin measurements: raw distributions (exploration)", fontsize=13)
 
     for ax, feat in zip(axes.flat, features):
         for species, grp in penguins.groupby("species"):
@@ -177,7 +177,7 @@ def _(penguins, sns):
     _pp = sns.pairplot(penguins[["bill_length_mm", "bill_depth_mm",
                                   "flipper_length_mm", "body_mass_g", "species"]],
                        hue="species", plot_kws={"alpha": 0.5}, height=2.2)
-    _pp.fig.suptitle("Pairplot — exploration only, not for presentation", y=1.01, fontsize=11)
+    _pp.fig.suptitle("Pairplot: exploration only, not for presentation", y=1.01, fontsize=11)
     _pp.fig
     return
 
@@ -404,9 +404,9 @@ def _(mo):
     mo.md(r"""
     **Reading the heatmap**:
 
-    - **Cluster 1**: long bills, small flippers, light — likely a small-billed, compact species
-    - **Cluster 2**: short deep bills, average flippers — a stocky, bill-heavy morphotype
-    - **Cluster 3**: very large flippers, heavy — the big species
+    - **Cluster 1**: long bills, small flippers, light body; likely a small-billed, compact species
+    - **Cluster 2**: short deep bills, average flippers; a stocky, bill-heavy morphotype
+    - **Cluster 3**: very large flippers, heavy; the big species
 
     Can you guess which clusters correspond to which species?
 
@@ -499,7 +499,7 @@ def _(mo):
 
     ---
 
-    ## 3 — Exercises
+    ## 3 · Exercises
 
     ### Exercise A: Chart critique (15 min)
 

@@ -3,21 +3,21 @@ import marimo
 __generated_with = "0.23.2"
 app = marimo.App(
     width="medium",
-    app_title="Data Visualization — Part 2: Grammar of Graphics & Altair",
+    app_title="Data Visualization · Part 2: Grammar of Graphics & Altair",
 )
 
 
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    # Part 2 — Grammar of Graphics & Altair
+    # Part 2: Grammar of Graphics & Altair
 
     **Session duration**: ~3 hours &nbsp;|&nbsp; **Datasets**: Gapminder, INSEE prénoms
 
     ## What you'll be able to do after this session
 
     - Explain the Grammar of Graphics and decompose any chart into its layers
-    - Understand the Vega ecosystem — from D3 to Altair — and why we use Altair
+    - Understand the Vega ecosystem (from D3 to Altair) and why we use Altair
     - Read and write Altair's declarative API fluently
     - Build layered, faceted, and interactive charts with linked views
     - Build a name explorer from real French open data (INSEE baby names)
@@ -65,7 +65,7 @@ def _(mo):
     a coordinate system, and a facet specification.
     A *layer* is itself a composite of four parts:
     data + mapping, a statistical transformation (*stat*), a geometric object (*geom*),
-    and a **position adjustment** — how overlapping marks are resolved (stack, dodge, jitter…).
+    and a **position adjustment**: how overlapping marks are resolved (stack, dodge, jitter…).
 
     For teaching, we flatten this into one working vocabulary.
     Most components have sensible defaults, so you only override what you need:
@@ -106,8 +106,7 @@ def _(mo):
     mo.md(r"""
     ### GoG lens on charts you already know
 
-    Type codes: `Q` = Quantitative, `T` = Temporal, `N` = Nominal, `O` = Ordinal
-    — covered in detail in section 5.
+    Type codes: `Q` = Quantitative, `T` = Temporal, `N` = Nominal, `O` = Ordinal (covered in detail in section 5).
 
     | "Chart type" | GoG description |
     |-------------|----------------|
@@ -198,10 +197,10 @@ def _(mo):
     |------|------|----------|-----------|--------|
     | 1999 | **Grammar of Graphics** (Wilkinson) | — | The theory | — |
     | 2005 | **ggplot2** (Wickham) | R | First widely-adopted GoG implementation; the gold standard in R | [GitHub](https://github.com/tidyverse/ggplot2) |
-    | 2011 | **D3.js** (Bostock) | JavaScript | Low-level, data-driven SVG — the rendering engine underneath everything | [GitHub](https://github.com/d3/d3) |
+    | 2011 | **D3.js** (Bostock) | JavaScript | Low-level, data-driven SVG: the rendering engine underneath everything | [GitHub](https://github.com/d3/d3) |
     | 2013 | **Vega** (UW IDL) | JSON + JS | Declarative grammar on top of D3 | [GitHub](https://github.com/vega/vega) |
     | 2016 | **Vega-Lite** (UW IDL) | JSON + JS | Compact GoG grammar; compiles to Vega | [GitHub](https://github.com/vega/vega-lite) |
-    | 2016 | **Altair** (VanderPlas et al.) | Python | Python API for Vega-Lite — **what we use** | [GitHub](https://github.com/vega/altair) |
+    | 2016 | **Altair** (VanderPlas et al.) | Python | Python API for Vega-Lite (**what we use**) | [GitHub](https://github.com/vega/altair) |
     | 2017 | **plotnine** (Kibirige) | Python | ggplot2 API ported to Python; static only (matplotlib backend) | [GitHub](https://github.com/has2k1/plotnine) |
     | 2021 | **Observable Plot** (Bostock) | JavaScript | GoG-inspired high-level JS library, built on D3 | [GitHub](https://github.com/observablehq/plot) |
 
@@ -212,7 +211,7 @@ def _(mo):
     | Output | Web-native, interactive | Static image (matplotlib) |
     | Interactivity | First-class (brushing, linked views) | None built-in |
     | R crossover | New API to learn | Immediate if you know ggplot2 |
-    | Statistical transforms | Limited — pre-compute or use Altair transforms | Rich — `geom_smooth`, `stat_density`, etc. |
+    | Statistical transforms | Limited: pre-compute or use Altair transforms | Rich: `geom_smooth`, `stat_density`, etc. |
 
     We use Altair because interactivity is a first-class goal of this session.
     If you know R and ggplot2, you might want to give plotnine a shot as well.
@@ -221,7 +220,7 @@ def _(mo):
     These are two separate products by the same company (Observable, Inc.):
     - **Observable Plot:** an open-source JS library (MIT licence, free forever).
       Think of it as D3's high-level layer, in the same way Altair sits above Vega-Lite.
-      D3 is *not* going away — Plot is built on top of it and still needs it for anything
+      D3 is *not* going away; Plot is built on top of it and still needs it for anything
       custom (force graphs, geographic projections, bespoke layouts).
     - **Observable:** a cloud notebook platform for JavaScript (like Jupyter, but reactive
       and browser-native). Free tier available; paid plans for private notebooks and teams.
@@ -262,13 +261,13 @@ def _(mo):
 
     | Level | What it is | How to get it | Editor dropdown |
     |-------|-----------|---------------|------------------|
-    | **Vega-Lite** | Compact, human-readable — what Altair writes | `with alt.data_transformers.enable("default"): print(chart.to_json(indent=2))` | *Vega-Lite* |
-    | **Vega** | Compiled, verbose — what the browser renders | `chart.to_json(format="vega")` | *Vega* |
+    | **Vega-Lite** | Compact, human-readable: what Altair writes | `with alt.data_transformers.enable("default"): print(chart.to_json(indent=2))` | *Vega-Lite* |
+    | **Vega** | Compiled, verbose: what the browser renders | `chart.to_json(format="vega")` | *Vega* |
 
     The Vega-Lite level is what to read: its keys (`mark`, `encoding`, `transform`)
     map one-to-one to the GoG layers. Here is a self-contained Vega-Lite spec you
-    can paste straight into the [Vega editor](https://vega.github.io/editor/#/edited)
-    — select *Vega-Lite* in the dropdown:
+    can paste straight into the [Vega editor](https://vega.github.io/editor/#/edited);
+    select *Vega-Lite* in the dropdown:
 
     ```json
     {
@@ -289,7 +288,7 @@ def _(mo):
     Note that the Vega-Lite spec above includes explicit types (`"type": "quantitative"`, etc.).
     That is because it loads data from a URL: Vega-Lite receives it without pandas
     and cannot inspect column dtypes, so types must be stated explicitly.
-    When you work from a pandas DataFrame in Python, Altair infers them — see section 5.
+    When you work from a pandas DataFrame in Python, Altair infers them (see section 5).
 
     **Why the Vega editor is useful:**
     - **Debugging:** when a chart looks wrong, inspecting the spec immediately
@@ -368,7 +367,7 @@ def _(mo):
 
     | Mark | Method | Best for |
     |------|--------|----------|
-    | Point | `mark_point()` | Scatter plots — hollow by default; use `filled=True` for solid |
+    | Point | `mark_point()` | Scatter plots: hollow by default; use `filled=True` for solid |
     | Line | `mark_line()` | Time series, trends |
     | Bar | `mark_bar()` | Counts, aggregates |
     | Area | `mark_area()` | Filled time series |
@@ -412,7 +411,7 @@ def _(mo):
     | Categorical (ordered) | Ordinal | `:O` | Low/medium/high, survey scores |
     | datetime64 | Temporal | `:T` | Dates, timestamps |
 
-    The chart below uses no type annotations — Altair infers everything from the DataFrame.
+    The chart below uses no type annotations: Altair infers everything from the DataFrame.
 
     Type annotations become necessary or useful in three specific situations:
 
@@ -421,7 +420,7 @@ def _(mo):
       looks identical.
     - **Overriding the inferred type**: a `year` column is `int64`, so Altair infers
       quantitative and draws a continuous axis. Annotating it `:O` gives discrete tick marks
-      instead — often more readable for small ranges of years.
+      instead, which is often more readable for small ranges of years.
     - **Aggregation shorthand**: expressions like `"mean(life_expect):Q"` require a type
       because the result is a computed value, not a named column with a dtype.
 
@@ -441,7 +440,7 @@ def _(alt, gapminder):
         size=alt.Size("pop", title="Population",
                       scale=alt.Scale(range=[20, 600])),
         tooltip=["country", "fertility", "life_expect", "region"],
-    ).properties(title="Gapminder 2000 — hover for details", width=550, height=380)
+    ).properties(title="Gapminder 2000: hover for details", width=550, height=380)
     return
 
 
@@ -519,7 +518,7 @@ def _(alt, gapminder):
             alt.Tooltip("mean(life_expect):Q", format=".1f", title="Mean"),
             alt.Tooltip("count():Q", title="n countries"),
         ],
-    ).properties(title="Mean life expectancy by region — 2000", width=480, height=260)
+    ).properties(title="Mean life expectancy by region (2000)", width=480, height=260)
     return
 
 
@@ -740,7 +739,7 @@ def _(io, os, pd, requests, zipfile):
             except Exception:
                 continue
 
-        print("⚠️  Could not download INSEE data — using a small built-in sample.")
+        print("⚠️  Could not download INSEE data; using a small built-in sample.")
         _sample = pd.DataFrame({
             "sex":   ["Female"]*6 + ["Male"]*6,
             "name":  ["Marie","Marie","Marie","Emma","Emma","Emma",
@@ -815,7 +814,7 @@ def _(alt, name_input, prenoms):
     )
     if _trend.empty:
         _chart = alt.Chart({"values": [{}]}).mark_text().encode(
-            text=alt.value("No names found — try: Marie, Jean, Emma, Lucas")
+            text=alt.value("No names found. Try: Marie, Jean, Emma, Lucas")
         )
     else:
         _chart = alt.Chart(_trend).mark_line(strokeWidth=2.2).encode(
@@ -830,7 +829,7 @@ def _(alt, name_input, prenoms):
             tooltip=["name:N", "sex:N", "year:Q",
                      alt.Tooltip("share:Q", format=".1f", title="per 10 000")],
         ).properties(
-            title="Name trends in France — popularity per 10 000 births",
+            title="Name trends in France: popularity per 10 000 births",
             width=580, height=360,
         ).interactive()
     _chart
@@ -919,7 +918,7 @@ def _(mo):
 @app.cell(hide_code=True)
 def _(mo):
     mo.accordion({
-        "Hint — transform chain": mo.md(
+        "Hint: transform chain": mo.md(
             r"""
             ```python
             alt.Chart(prenoms).mark_bar().encode(
@@ -973,13 +972,13 @@ def _(mo):
     | Concept | Key takeaway |
     |---------|-------------|
     | Grammar of Graphics | Data → Aesthetics → Geometry → Stat → Position → Scales → Facets → Coords |
-    | GoG payoff | Compose any chart from first principles — not just named types |
+    | GoG payoff | Compose any chart from first principles, not just named types |
     | Vega-Lite | Declarative JSON grammar; Altair generates it; Vega renders it via D3 |
     | Altair = GoG | `Chart(data).mark_X().encode(...)` = data → geometry → aesthetics |
     | Type inference | Altair infers types from pandas dtypes; annotations override or clarify |
-    | Transforms | Filter, aggregate, calculate — keep transformation in the spec |
-    | Layering | `chart1 + chart2` — different marks or data, same axes |
-    | Faceting | `.facet("col:N")` — small multiples in one line |
+    | Transforms | Filter, aggregate, calculate: keep transformation in the spec |
+    | Layering | `chart1 + chart2`: different marks or data, same axes |
+    | Faceting | `.facet("col:N")`: small multiples in one line |
     | Selections | `selection_point()` / `selection_interval()` → `condition()` |
     | Linked views | Share a selection across panels for exploratory analysis |
 
@@ -988,7 +987,7 @@ def _(mo):
     ## Where to go next
 
     - **Altair gallery**: [altair-viz.github.io/gallery](https://altair-viz.github.io/gallery/)
-    - **Vega-Lite docs**: the authoritative reference — Altair compiles to this
+    - **Vega-Lite docs**: the authoritative reference; Altair compiles to this
     - **Observable**: browser-based notebooks, great for sharing interactive charts publicly
     - **Streamlit / Marimo app mode**: wrap an Altair chart in a deployable web app
     - **Further reading**: Munzner (2014) *Visualization Analysis and Design*;
