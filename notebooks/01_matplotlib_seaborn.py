@@ -487,14 +487,12 @@ def _(gm2000, plt):
     _regions = sorted(gm2000["region"].dropna().unique())
     _color_cycle = plt.rcParams["axes.prop_cycle"].by_key()["color"]
     _palette = dict(zip(_regions, _color_cycle))
-    _marker_map = {"Sub-Saharan Africa": "^", "East Asia & Pacific": "s"}
 
     _fig, _ax = plt.subplots(figsize=(9, 6))
     for _region, _grp in gm2000.groupby("region"):
         _ax.scatter(
             _grp["fertility"], _grp["life_expect"],
             color=_palette[_region],
-            marker=_marker_map.get(_region, "o"),
             s=_grp["pop"] / gm2000["pop"].max() * 700 + 15,
             alpha=0.72, edgecolors="white", linewidths=0.4,
             label=_region,
@@ -718,14 +716,9 @@ def _(line_subset, plt):
     _ax_raw.set_title("Evolution of Life expectancy in 5 countries")
     _ax_raw.set_xlabel("year")
     _ax_raw.set_ylabel("life_expect")
-    _ax_raw.spines["top"].set_visible(True)
-    _ax_raw.spines["right"].set_visible(True)
 
     for _country, _grp in line_subset.groupby("country"):
         _line, = _ax_pol.plot(_grp["year"], _grp["life_expect"])
-        _last = _grp.iloc[-1]
-        _ax_pol.text(_last["year"] + 0.4, _last["life_expect"],
-                     _country, color=_line.get_color(), va="center", fontsize=9, fontweight="bold")
 
 
     _ax_pol.set_xlim(right=2011)
@@ -738,12 +731,14 @@ def _(line_subset, plt):
     return
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     mo.accordion({
-            "Hint: Direct labels at line endpoints": mo.md(r"""
+            "Hints: Remove spines, direct labels at line endpoints": mo.md(r"""
 
         ```python
+        _ax_raw.spines["top"].set_visible(True)
+        _ax_raw.spines["right"].set_visible(True)
             ...
             _line, = _ax.plot(_grp["year"], _grp["life_expect"], lw=2.2)
             _last = _grp.iloc[-1]
@@ -1157,20 +1152,19 @@ def _(mo):
     ## 15. Color and Accessibility
 
     ~8% of men and ~0.5% of women have some form of color vision deficiency.
-    The most common: red-green confusion (deuteranopia / protanopia).
+    The most common is red-green confusion (deuteranopia / protanopia).
 
     **Rules of thumb**:
-    - **Sequential data**: `viridis`, `plasma`, `cividis` (perceptually uniform)
-    - **Diverging data** (e.g., correlation): `RdBu`, `coolwarm`
+    - **Sequential data**: use palettes such as `viridis`, `plasma`, `cividis` which are perceptually uniform
+    - **Diverging data** (e.g., correlation): use `RdBu`, `coolwarm`
     - **Categorical**: Matplotlib's `tab10` or Seaborn's `"colorblind"` palette
     - **Consistency**: keep the same category → color mapping across plots
     - **Avoid**: red + green together; jet/rainbow for continuous data
+    - **Print your chart in greyscale**: if information is lost, fix the palette.
 
     Okabe-Ito is a well-known accessible palette, but it is not available as a
     named palette in the stable Matplotlib/Seaborn versions used here. If you
     need it, define it once and reuse it; otherwise prefer built-in palette APIs.
-
-    Print your chart in greyscale; if information is lost, fix the palette.
     """)
     return
 
@@ -1210,7 +1204,7 @@ def _(mo):
 
     - Replace `"colorblind"` with `"Set2"`, `"Dark2"`, or `"Paired"`.
     - Try Matplotlib's style context: `with plt.style.context("tableau-colorblind10"): ...`
-    - For repeated plots, build a mapping once and reuse it:
+    - For consistency between plots, build a mapping once and reuse it:
 
     ```python
     _levels = sorted(gm2000["region"].dropna().unique())
@@ -1230,7 +1224,7 @@ def _(mo):
 def _(mo):
     mo.md(r"""
     ---
-    ## Exercise 2: Uncertainty, Honestly
+    ## Exercise 2: Uncertainty, honestly
 
     The regional `lineplot` above showed the mean life expectancy per region.
     That hides a lot of variation *within* regions.
