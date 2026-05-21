@@ -95,7 +95,7 @@ def _():
     from sklearn.metrics import silhouette_score
 
     alt.data_transformers.enable("vegafusion")
-    return KMeans, PCA, StandardScaler, alt, mo, np, pd, plt, silhouette_score, sns
+    return KMeans, PCA, StandardScaler, alt, mo, pd, plt, silhouette_score, sns
 
 
 @app.cell(hide_code=True)
@@ -118,7 +118,7 @@ def _(mo):
 
 
 @app.cell
-def _(pd, sns):
+def _(sns):
     penguins = sns.load_dataset("penguins").dropna()
 
     features = ["bill_length_mm", "bill_depth_mm", "flipper_length_mm", "body_mass_g"]
@@ -158,7 +158,7 @@ def _(features, labels_feat, penguins, plt):
     axes[0, 0].legend(fontsize=8)
     plt.tight_layout()
     plt.gca()
-    return fig, axes
+    return (ax,)
 
 
 @app.cell(hide_code=True)
@@ -217,7 +217,7 @@ def _(KMeans, StandardScaler, features, pd, penguins, silhouette_score):
         "inertia": _inertias,
         "silhouette": _silhouettes,
     })
-    return X_scaled, elbow_df, scaler
+    return X_scaled, elbow_df
 
 
 @app.cell
@@ -242,7 +242,7 @@ def _(elbow_df, plt):
                        fontsize=12, fontweight="bold")
     plt.tight_layout()
     fig_elbow
-    return ax1, ax2, fig_elbow
+    return
 
 
 @app.cell(hide_code=True)
@@ -258,7 +258,7 @@ def _(mo):
 
 
 @app.cell
-def _(KMeans, PCA, X_scaled, features, pd, penguins):
+def _(KMeans, PCA, X_scaled, pd, penguins):
     _km3 = KMeans(n_clusters=3, random_state=42, n_init="auto")
     cluster_labels = _km3.fit_predict(X_scaled)
 
@@ -337,7 +337,7 @@ def _(mo):
 
 
 @app.cell
-def _(cluster_labels, features, labels_feat, penguins, plt, sns):
+def _(ax, cluster_labels, features, labels_feat, penguins, plt, sns):
     fig_violin, axes_v = plt.subplots(2, 2, figsize=(11, 7))
     fig_violin.suptitle("Feature distributions differ clearly across clusters",
                          fontsize=13, fontweight="bold")
@@ -346,15 +346,15 @@ def _(cluster_labels, features, labels_feat, penguins, plt, sns):
     _pdf["cluster"] = [f"C{c+1}" for c in cluster_labels]
     _palette = {"C1": "#4C72B0", "C2": "#DD8452", "C3": "#55A868"}
 
-    for ax, feat in zip(axes_v.flat, features):
-        sns.violinplot(data=_pdf, x="cluster", y=feat,
-                       palette=_palette, inner="box", ax=ax)
+    for _ax, _feat in zip(axes_v.flat, features):
+        sns.violinplot(data=_pdf, x="cluster", y=_feat,
+                       palette=_palette, inner="box", ax=_ax)
         ax.set_xlabel("")
-        ax.set_ylabel(labels_feat[feat])
+        ax.set_ylabel(labels_feat[_feat])
 
     plt.tight_layout()
     fig_violin
-    return axes_v, fig_violin
+    return
 
 
 @app.cell(hide_code=True)
@@ -369,7 +369,16 @@ def _(mo):
 
 
 @app.cell
-def _(StandardScaler, cluster_labels, features, labels_feat, pd, penguins, plt, sns):
+def _(
+    StandardScaler,
+    cluster_labels,
+    features,
+    labels_feat,
+    pd,
+    penguins,
+    plt,
+    sns,
+):
     _pdf2 = penguins[features].copy()
     _pdf2["cluster"] = [f"Cluster {c+1}" for c in cluster_labels]
 
@@ -387,7 +396,7 @@ def _(StandardScaler, cluster_labels, features, labels_feat, pd, penguins, plt, 
                       fontsize=11)
     plt.tight_layout()
     fig_heat
-    return ax_heat, fig_heat
+    return
 
 
 @app.cell(hide_code=True)

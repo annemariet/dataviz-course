@@ -36,15 +36,14 @@ def _(mo):
     [*The Grammar of Graphics*](https://link.springer.com/book/10.1007/0-387-28695-0)
     (Springer; 2nd ed. 2005, **GoG** for short) arguing that every statistical
     chart is assembled from the same underlying components, that is a *grammar*, rather
-    than being one item in a fixed menu of named chart types.
+    than being one item in a fixed menu of named chart types. This book has been very influential in how data visualizations have been built and libraries implemented over the past 2 decades.
 
     **Why it matters:**
-    - You stop asking *"which chart type should I use?"* and start asking
+    - Stop asking *"which chart type should I use?"* and start asking
       *"which variables should map to which visual properties?"*
-    - You can compose charts that don't have a pre-set name, and know exactly
+    - Compose charts that don't have a pre-set name, and know exactly
       how to build them from first principles.
-    - Libraries that implement the grammar (ggplot2, Vega-Lite, Altair) become
-      predictable: learn it once, apply it everywhere.
+    - Most dataviz libraries implement the grammar (ggplot2, Vega-Lite, Altair) or try to approximate it despite other foundations (matlplotlib, seaborn). Knowing the grammar helps understanding more libraries.
 
     Wickham's [*A Layered Grammar of Graphics*](https://doi.org/10.1198/jcgs.2009.07098)
     (*Journal of Computational and Graphical Statistics*, 2010) is a shorter, more
@@ -61,7 +60,7 @@ def _(mo):
     the [Vega-Lite paper](https://doi.org/10.1109/TVCG.2016.2599030)
     (Satyanarayan et al., *IEEE TVCG*, 2017).
 
-    Wickham's paper (§3) defines a plot as having **five top-level components**:
+    Wickham's paper defines a plot as having **five top-level components**:
     a default dataset + aesthetic mappings, one or more **layers**, scales,
     a coordinate system, and a facet specification.
     A *layer* is itself a composite of four parts:
@@ -81,13 +80,6 @@ def _(mo):
     | **Scales** | How are data values rendered visually? | Log axis, colour gradient, date format |
     | **Facets** | Small multiples along which variable? | One panel per region |
     | **Coordinates** | What coordinate system? | Cartesian (default), polar, geographic |
-
-    > Source: Wickham (2010), §3 "Components of the Layered Grammar", p. 8.
-
-    Wickham & Grolemund, *R for Data Science* (2017), ch. 3 presents a similar list with
-    7 components (data, aesthetics, geom, stat, position, coordinates, facets), omitting
-    scales as an explicit item. The table above adds scales back as a distinct row, following
-    the 2010 paper. Both formulations describe the same grammar; the difference is presentational.
     """)
     return
 
@@ -423,13 +415,13 @@ def _(mo):
 def _(alt, gapminder):
     _gm2000 = gapminder[gapminder["year"] == 2000]
     alt.Chart(_gm2000).mark_point(filled=True, opacity=0.75).encode(
-        x=alt.X("fertility:Q", title="Fertility rate (children per woman)"),
-        y=alt.Y("life_expect:Q", title="Life expectancy (years)"),
-        color=alt.Color("region:N", title="Region",
+        x=alt.X("fertility", title="Fertility rate (children per woman)"),
+        y=alt.Y("life_expect", title="Life expectancy (years)"),
+        color=alt.Color("region", title="Region",
                         scale=alt.Scale(scheme="tableau10")),
-        size=alt.Size("pop:Q", title="Population",
+        size=alt.Size("pop", title="Population",
                       scale=alt.Scale(range=[20, 600])),
-        tooltip=["country:N", "fertility:Q", "life_expect:Q", "region:N"],
+        tooltip=["country", "fertility", "life_expect", "region"],
     ).properties(title="Gapminder 2000 — hover for details", width=550, height=380)
     return
 
