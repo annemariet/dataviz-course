@@ -53,7 +53,7 @@ def _():
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    ## 1 · Why Visualize? Anscombe's Quartet
+    ## 1. Why Visualize? Anscombe's Quartet
 
     You saw this in the intro slides. Run the cells below to have it at your fingertips —
     *running the code yourself* is different from seeing a static image.
@@ -188,7 +188,7 @@ def _(datasaurus, plt):
 def _(mo):
     mo.md(r"""
     ---
-    ## 2 · Tidy Data
+    ## 2. Tidy Data
 
     Seaborn, Altair, ggplot2, and most reusable visualization pipelines work best
     with **tidy data**, a concept formalised by Hadley Wickham in his 2014 paper
@@ -264,7 +264,7 @@ def _(mo):
 def _(mo):
     mo.md("""
     ---
-    ## 3 · Our Two Datasets
+    ## 3. Our Two Datasets
 
     We'll use the same two datasets in the next 2 sessions so you can focus on
     **the chart**, not on learning new data each time. Feel free to bring your own data later!
@@ -355,7 +355,7 @@ def _(penguins):
 def _(mo):
     mo.md(r"""
     ---
-    ## 4 · Matplotlib: two APIs
+    ## 4. Matplotlib: two APIs
 
     Every Matplotlib chart is built from two objects:
 
@@ -416,7 +416,7 @@ def _(mo):
 def _(mo):
     mo.md(r"""
     ---
-    ## 5 · Encoding Variables as Visual Channels
+    ## 5. Encoding Variables as Visual Channels
 
     **Reminder:**
 
@@ -550,7 +550,7 @@ def _(mo):
 def _(mo):
     mo.md(r"""
     ---
-    ## 6 · Annotations
+    ## 6. Annotations
 
     Good annotations draw attention to what matters most.
     Use them sparingly: one or two per chart is usually right.
@@ -608,7 +608,7 @@ def _(mo):
 def _(mo):
     mo.md(r"""
     ---
-    ## 7 · Time Series and Line Charts
+    ## 7. Time Series and Line Charts
 
     Line charts connect ordered observations, most commonly over time.
     """)
@@ -647,7 +647,7 @@ def _(mo):
 def _(mo):
     mo.md(r"""
     ---
-    ## 8 · Small Multiples
+    ## 8. Small Multiples
 
     **Small multiples** = the same chart, repeated across subgroups.
     The eye compares *position* across panels effortlessly, one of Tufte's
@@ -687,7 +687,7 @@ def _(gapminder, plt):
 def _(mo):
     mo.md(r"""
     ---
-    ## 9 · From Draft to Polished
+    ## 9. From Draft to Polished
 
     The gap between exploration and communication:
     - **Title** = a message, not a description
@@ -794,7 +794,7 @@ def _(mo):
 def _(mo):
     mo.md(r"""
     ---
-    ## 10 · Exporting Figures
+    ## 10. Exporting Figures
 
     | Format | Use case |
     |--------|---------|
@@ -816,7 +816,7 @@ def _(mo):
 def _(mo):
     mo.md(r"""
     ---
-    ## 11 · Seaborn: Philosophy
+    ## 11. Seaborn: Philosophy
 
     Seaborn is built on Matplotlib. It adds two things:
 
@@ -903,7 +903,7 @@ def _(mo):
 def _(mo):
     mo.md(r"""
     ---
-    ## 12 · Visualizing Distributions
+    ## 12. Visualizing Distributions
 
     Before looking at relationships, understand each variable on its own.
 
@@ -1015,7 +1015,7 @@ def _(gm2000, plt, sns):
 def _(mo):
     mo.md(r"""
     ---
-    ## 13 · Visualizing Relationships
+    ## 13. Visualizing Relationships
 
     | Plot | Purpose |
     |------|---------|
@@ -1088,7 +1088,7 @@ def _(gapminder, plt, sns):
 def _(mo):
     mo.md(r"""
     ---
-    ## 14 · Grid Plots
+    ## 14. Grid Plots
 
     This is the Seaborn version of **small multiples**: repeat the same plot
     across groups so comparisons stay local and aligned.
@@ -1154,7 +1154,7 @@ def _(mo):
 def _(mo):
     mo.md(r"""
     ---
-    ## 15 · Color and Accessibility
+    ## 15. Color and Accessibility
 
     ~8% of men and ~0.5% of women have some form of color vision deficiency.
     The most common: red-green confusion (deuteranopia / protanopia).

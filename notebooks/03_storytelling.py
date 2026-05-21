@@ -29,7 +29,7 @@ def _(mo):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    ## 1 · Theory: From Exploration to Explanation
+    ## 1. Theory: From Exploration to Explanation
 
     ### 1.1  Two modes of visualisation
 
@@ -103,7 +103,7 @@ def _(mo):
     mo.md(r"""
     ---
 
-    ## 2 · Case Study: Telling the Story of Penguin Clusters
+    ## 2. Case Study: Telling the Story of Penguin Clusters
 
     We will build a complete visual story in three acts using the Palmer Penguins dataset.
 
@@ -499,7 +499,7 @@ def _(mo):
 
     ---
 
-    ## 3 · Exercises
+    ## 3. Exercises
 
     ### Exercise A: Chart critique (15 min)
 

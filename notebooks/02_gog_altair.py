@@ -30,7 +30,7 @@ def _(mo):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    ## 1 · The Grammar of Graphics
+    ## 1. The Grammar of Graphics
 
     In 1999, Leland Wilkinson published
     [*The Grammar of Graphics*](https://link.springer.com/book/10.1007/0-387-28695-0)
@@ -126,7 +126,7 @@ def _(mo):
 def _(mo):
     mo.md(r"""
     ---
-    ## 1.5 · Marks, Channels, and Visual Effectiveness
+    ## 1.5. Marks, Channels, and Visual Effectiveness
 
     GoG tells you *what the grammar consists of*. Munzner's framework tells you
     *how to choose encodings that work*.
@@ -189,7 +189,7 @@ def _(mo):
 def _(mo):
     mo.md(r"""
     ---
-    ## 2 · The Ecosystem: From Theory to Python
+    ## 2. The Ecosystem: From Theory to Python
 
     GoG is a theory. Every plotting library is (implicitly or explicitly) an attempt to implement it.
 
@@ -241,7 +241,7 @@ def _(mo):
 def _(mo):
     mo.md(r"""
     ---
-    ## 3 · Altair = Grammar of Graphics in Python
+    ## 3. Altair = Grammar of Graphics in Python
 
     Every Altair chart maps directly to the GoG layers from §1:
 
@@ -361,7 +361,7 @@ def _(mo):
 def _(mo):
     mo.md(r"""
     ---
-    ## 4 · Marks
+    ## 4. Marks
 
     The mark defines the **geometry**, i.e. what shape is drawn for each data row.
 
@@ -399,7 +399,7 @@ def _(alt, gapminder):
 def _(mo):
     mo.md(r"""
     ---
-    ## 5 · Encodings and Data Types
+    ## 5. Encodings and Data Types
 
     When data comes from a pandas DataFrame, Altair infers the encoding type automatically
     from the column dtype. No annotation needed:
@@ -448,7 +448,7 @@ def _(alt, gapminder):
 def _(mo):
     mo.md(r"""
     ---
-    ## 6 · Marimo Reactivity + Altair
+    ## 6. Marimo Reactivity + Altair
 
     Marimo's reactive execution means a widget in one cell
     automatically updates every cell that depends on it.
@@ -489,7 +489,7 @@ def _(mo):
 def _(mo):
     mo.md(r"""
     ---
-    ## 7 · Transform Data Before Drawing
+    ## 7. Transform Data Before Drawing
 
     Altair can transform data *inside the specification*, avoiding preprocessing (no pandas groupby needed!).
 
@@ -526,7 +526,7 @@ def _(alt, gapminder):
 def _(mo):
     mo.md(r"""
     ---
-    ## 8 · Layering Charts
+    ## 8. Layering Charts
 
     Add layers using the `+` symbol. Each layer can use different marks or data. Example:
 
@@ -562,7 +562,7 @@ def _(alt, gapminder):
 def _(mo):
     mo.md(r"""
     ---
-    ## 9 · Concatenation and Facets
+    ## 9. Concatenation and Facets
 
     | Operator | Creates |
     |----------|---------|
@@ -591,7 +591,7 @@ def _(alt, gapminder):
 def _(mo):
     mo.md(r"""
     ---
-    ## 10 · Interactivity & Selections
+    ## 10. Interactivity & Selections
 
     Altair's interactivity is built on **selections** (params).
     A selection is a filter: points inside are highlighted, others dimmed.
@@ -693,7 +693,7 @@ def _(mo):
 def _(mo):
     mo.md(r"""
     ---
-    ## 11 · French Open Data: Baby Names (INSEE)
+    ## 11. French Open Data: Baby Names (INSEE)
 
     The **national baby names database** from INSEE covers all births
     in France from 1900 to 2023 (~4 MB, cached after first run).
