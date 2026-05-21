@@ -3,14 +3,14 @@ import marimo
 __generated_with = "0.23.2"
 app = marimo.App(
     width="medium",
-    app_title="Data Visualization · Part 1: Matplotlib & Seaborn",
+    app_title="Data Visualization, Part 1: Matplotlib & Seaborn",
 )
 
 
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    # Datavis in practice, part 1 · the fundamentals: Matplotlib & Seaborn
+    # Datavis in practice, part 1: Matplotlib & Seaborn
 
     **Session duration**: ~2 hours &nbsp;|&nbsp; **Datasets**: Gapminder, Palmer Penguins
 
@@ -539,7 +539,7 @@ def _(mo):
         )
     ```
 
-    Common marker strings: `"o"` circle · `"s"` square · `"^"` triangle · `"D"` diamond · `"P"` plus · `"X"` cross
+    Common marker strings: `"o"` circle | `"s"` square | `"^"` triangle | `"D"` diamond | `"P"` plus | `"X"` cross
     """)
         })
     ])
