@@ -143,13 +143,15 @@ layout: two-cols-header
 
 | # | Date | Topic |
 |---|------|-------|
-| 1 | 07/05 | Principles + Matplotlib/Seaborn |
-| 2 | 27/05 | Grammar of Graphics + Altair |
-| 3 | 28/05 | Communication & Storytelling |
-| 4 | 03/06 | Visualization × ML |
-| 5 | 04/06 | Big Data Scale |
-| 6 | 08/06 | AI-Assisted Viz + Ethics |
+| 1 | 27/05 | Principles + Matplotlib/Seaborn |
+| 2 | 28/05 | Grammar of Graphics + Altair |
+| 3–6 | 03/06–08/06 | Communication & Storytelling |
+| | | Visualization × Machine Learning |
+| | | Visualization at Scale |
+| | | Practice labs + peer critique |
 | 7+8 | 11/06 | Mini-project hackathon |
+
+*AI tools integrated throughout, not a dedicated session.*
 
 ::right::
 
