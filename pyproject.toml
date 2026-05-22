@@ -15,5 +15,6 @@ dependencies = [
     "pyarrow>=14.0",
     "vegafusion>=2.0.3",
     "vl-convert-python>=1.9.0.post1",
+    "scikit-learn>=1.5",
 ]
 
