@@ -143,21 +143,26 @@ layout: two-cols-header
 
 | # | Date | Topic |
 |---|------|-------|
-| 1 | 07/05 | Principles + Matplotlib/Seaborn |
-| 2 | 27/05 | Grammar of Graphics + Altair |
-| 3 | 28/05 | Communication & Storytelling |
-| 4 | 03/06 | Visualization × ML |
-| 5 | 04/06 | Big Data Scale |
-| 6 | 08/06 | AI-Assisted Viz + Ethics |
+| 1 | 27/05 | Principles + Matplotlib/Seaborn |
+| 2 | 28/05 | Grammar of Graphics + Altair |
+| 3 | 03/06 | Practice labs + peer critique |
+| 4 | 04/06 | Communication & Storytelling |
+| 5 | 04/06 | Visualization × Machine Learning |
+| 6 | 08/06 | Visualization at Scale |
 | 7+8 | 11/06 | Mini-project hackathon |
+
+<style scoped>
+table { font-size: 0.9em; }
+td, th { padding: 3px 10px; }
+</style>
 
 ::right::
 
 **How each session works**
 
-- 30–45 min: presentation
+- 30–45 min: presentation (optional)
 - 2h+: hands-on notebook workshop
-- 15 min: quiz (spaced repetition)
+- 15 min: quiz
 
 **Assessment:** mini-project on June 11:
 
@@ -470,10 +475,9 @@ class: text-center
 Processed in < 200ms, *before* conscious attention.
 
 
-<img src="/images/preattentive-attributes-full-channels.png" class="w-full mt-2" />
+<img src="/images/preattentive-attributes-examples.png" class="w-full mt-2" style="max-height:360px; object-fit:contain" />
 
 
-> Encode your most important dimension with the most powerful channel.
 
 ---
 layout: two-cols-header
@@ -837,7 +841,7 @@ layout: two-cols-header
 
 ---
 
-# What we'll cover today
+# What we'll cover today (maybe more)
 
 **Session 1 — Matplotlib & Seaborn**
 
