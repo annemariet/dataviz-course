@@ -160,7 +160,7 @@ td, th { padding: 3px 10px; }
 
 **How each session works**
 
-- 30–45 min: presentation (optional)
+- 30–45 min: presentation (maybe)
 - 2h+: hands-on notebook workshop
 - 15 min: quiz
 

@@ -18,7 +18,7 @@ def _(mo):
 
     - Explain the Grammar of Graphics and decompose any chart into its layers
     - Understand the Vega ecosystem (from D3 to Altair) and why we use Altair
-    - Read and write Altair's declarative API fluently
+    - Read and write Altair's declarative API
     - Build layered, faceted, and interactive charts with linked views
     - Build a name explorer from real French open data (INSEE baby names)
 
