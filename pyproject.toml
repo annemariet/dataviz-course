@@ -1,3 +1,7 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "dataviz-workshop"
 version = "0.1.0"
@@ -15,5 +19,15 @@ dependencies = [
     "pyarrow>=14.0",
     "vegafusion>=2.0.3",
     "vl-convert-python>=1.9.0.post1",
+    "polars>=1.40",
+    "skrub>=0.9",
 ]
 
+[tool.marimo.runtime]
+pythonpath = ["."]
+
+[tool.setuptools]
+py-modules = ["course_data"]
+
+[tool.uv]
+package = true
