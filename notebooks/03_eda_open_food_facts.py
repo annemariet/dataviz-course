@@ -450,7 +450,15 @@ def _(mo):
 
 
 @app.cell
-def _(GRADES, GRADE_COLORS, NOVA_COLORS, PARQUET_PATH, alt, duckdb, parquet_bind_path):
+def _(
+    GRADES,
+    GRADE_COLORS,
+    NOVA_COLORS,
+    PARQUET_PATH,
+    alt,
+    duckdb,
+    parquet_bind_path,
+):
     _path = parquet_bind_path(PARQUET_PATH)
     _lk = duckdb.sql(
         """
@@ -546,7 +554,15 @@ def _(mo):
 
 
 @app.cell
-def _(GRADES, GRADE_COLORS, NOVA_COLORS, PARQUET_PATH, alt, duckdb, parquet_bind_path):
+def _(
+    GRADES,
+    GRADE_COLORS,
+    NOVA_COLORS,
+    PARQUET_PATH,
+    alt,
+    duckdb,
+    parquet_bind_path,
+):
     _path = parquet_bind_path(PARQUET_PATH)
     _nova_dist = duckdb.sql(
         """
@@ -613,7 +629,12 @@ def _(mo):
     mo.md(r"""
     ### Exercise 6.2: Ridge plot by grade
 
-    Done in Section 5 (`RIDGE_NUTRIENT`). Try another nutrient.
+    We used a violinplot in Section 5 (`RIDGE_NUTRIENT`) which is similar. A ridge plot is a nice way to compare distributions between categories.
+    - [Seaborn Ridge Plot](https://seaborn.pydata.org/examples/kde_ridgeplot)
+    - [Altair Ridgeline Plot](https://altair-viz.github.io/gallery/ridgeline_plot.html)
+
+
+    Try other nutrients.
 
     ### Exercise 6.3: Category linked to grade mix (stretch)
 
