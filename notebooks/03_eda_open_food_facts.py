@@ -635,9 +635,11 @@ def _(mo):
     Post a screenshot, a one-sentence headline (the insight), and the cell you changed.
     Have it graded by the class!
 
-    ### Exercise 7.3: Story template (optional)
+    ### Exercise 7.3: Find a story to tell (if time permits)
 
+    Did you find something interesting in the data?
     Headline + chart + three sentences (context, evidence, caveat).
+    And have your chart graded by the class.
     """)
     return
 
