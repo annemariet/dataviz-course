@@ -3,7 +3,24 @@
 from __future__ import annotations
 
 import os
+import re
 from pathlib import Path
+
+# DuckDB: bind values with ? placeholders; allowlist for column names.
+ALLOWED_NUTRIENTS = frozenset(
+    {
+        "energy-kcal_100g",
+        "fat_100g",
+        "fiber_100g",
+        "proteins_100g",
+        "salt_100g",
+        "saturated-fat_100g",
+        "sugars_100g",
+    }
+)
+MIN_SAMPLE_N = 1
+MAX_SAMPLE_N = 500_000
+_COUNTRY_TAG_RE = re.compile(r"^en:[a-z-]+$")
 
 # Course SharePoint (requires Dauphine login in a browser for manual download).
 DEFAULT_PARQUET_SHARE_URL = (
@@ -28,6 +45,41 @@ Open Food Facts Parquet not found and automated download did not return a valid 
 **Optional:** set `PARQUET_URL` to a direct-download URL (no login) if you have one:
    export PARQUET_URL="https://..."
 """
+
+
+def parquet_bind_path(path: Path | str) -> str:
+    """Absolute path string for read_parquet(?) binding."""
+    return str(Path(path).resolve())
+
+
+def validate_sample_n(
+    sample_n: int,
+    *,
+    min_n: int = MIN_SAMPLE_N,
+    max_n: int = MAX_SAMPLE_N,
+) -> int:
+    """Coerce and bound SAMPLE row counts (SQL literals, not bind params)."""
+    n = int(sample_n)
+    if not min_n <= n <= max_n:
+        raise ValueError(f"SAMPLE_N must be between {min_n} and {max_n}, got {sample_n!r}")
+    return n
+
+
+def validate_country(country: str | None) -> str | None:
+    """Open Food Facts country tags look like en:france."""
+    if country is None:
+        return None
+    if not isinstance(country, str) or not _COUNTRY_TAG_RE.fullmatch(country):
+        raise ValueError(f"COUNTRY must look like 'en:france', got {country!r}")
+    return country
+
+
+def validate_nutrient(nutrient: str) -> str:
+    """Allowlist nutrient column names used in dynamic SQL identifiers."""
+    if nutrient not in ALLOWED_NUTRIENTS:
+        allowed = ", ".join(sorted(ALLOWED_NUTRIENTS))
+        raise ValueError(f"nutrient must be one of: {allowed}; got {nutrient!r}")
+    return nutrient
 
 
 def resolve_parquet_url() -> str | None:
