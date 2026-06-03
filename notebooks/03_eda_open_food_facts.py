@@ -140,20 +140,20 @@ def _(
         df_raw = duckdb.sql(
             """
             SELECT *
-            FROM read_parquet(?)
-            WHERE countries_tags LIKE ?
+            FROM read_parquet($path)
+            WHERE countries_tags LIKE $country_pattern
             """
             + _sample_clause,
-            params=[_path, f"%{_country}%"],
+            params={"path": _path, "country_pattern": f"%{_country}%"},
         ).df()
     else:
         df_raw = duckdb.sql(
             """
             SELECT *
-            FROM read_parquet(?)
+            FROM read_parquet($path)
             """
             + _sample_clause,
-            params=[_path],
+            params={"path": _path},
         ).df()
     print(f"Loaded {len(df_raw):,} rows, {len(df_raw.columns)} columns")
     return (df_raw,)
@@ -306,21 +306,21 @@ def _(PARQUET_PATH, SAMPLE_N, duckdb, parquet_bind_path, validate_sample_n):
     _blind = duckdb.sql(
         """
         SELECT count(*) AS n
-        FROM read_parquet(?)
+        FROM read_parquet($path)
         """
         + _sample_clause,
-        params=[_path],
+        params={"path": _path},
     ).df()["n"][0]
     _filtered = duckdb.sql(
         """
         SELECT count(*) AS n FROM (
             SELECT 1
-            FROM read_parquet(?)
+            FROM read_parquet($path)
             WHERE sugars_100g IS NOT NULL
               AND lower(nutriscore_grade) IN ('a','b','c','d','e')
         ) """
         + _filtered_sample_clause,
-        params=[_path],
+        params={"path": _path},
     ).df()["n"][0]
     print(f"Blind sample rows: {_blind:,}")
     print(f"After nutrient + grade filter, then sample: {_filtered:,}")
@@ -358,11 +358,11 @@ def _(PARQUET_PATH, alt, duckdb, parquet_bind_path, validate_nutrient):
     _hist = duckdb.sql(
         f"""
         SELECT floor("{_nutrient}" / 2) * 2 AS bin, count(*) AS n
-        FROM read_parquet(?)
-        WHERE "{_nutrient}" BETWEEN ? AND ?
+        FROM read_parquet($path)
+        WHERE "{_nutrient}" BETWEEN $lo AND $hi
         GROUP BY 1 ORDER BY 1
         """,
-        params=[_path, 0, 80],
+        params={"path": _path, "lo": 0, "hi": 80},
     ).df()
     alt.Chart(_hist, title=f"Binned distribution of {_nutrient}").mark_bar().encode(
         x="bin:Q",
@@ -456,13 +456,20 @@ def _(GRADES, GRADE_COLORS, NOVA_COLORS, PARQUET_PATH, alt, duckdb, parquet_bind
         """
         SELECT sugars_100g, fat_100g, upper(nutriscore_grade) AS grade,
                nova_group, product_name
-        FROM read_parquet(?)
-        WHERE sugars_100g BETWEEN ? AND ? AND fat_100g BETWEEN ? AND ?
+        FROM read_parquet($path)
+        WHERE sugars_100g BETWEEN $sugars_lo AND $sugars_hi
+          AND fat_100g BETWEEN $fat_lo AND $fat_hi
           AND lower(nutriscore_grade) IN ('a','b','c','d','e')
           AND nova_group IS NOT NULL
         USING SAMPLE 6000 ROWS (reservoir, 42)
         """,
-        params=[_path, 0, 70, 0, 60],
+        params={
+            "path": _path,
+            "sugars_lo": 0,
+            "sugars_hi": 70,
+            "fat_lo": 0,
+            "fat_hi": 60,
+        },
     ).df()
     BRUSH_COLOR_FIELD = "grade"  # Exercise 5.3: try "nova_group"
     brush = alt.selection_interval(name="brush", empty=True)
@@ -544,22 +551,22 @@ def _(GRADES, GRADE_COLORS, NOVA_COLORS, PARQUET_PATH, alt, duckdb, parquet_bind
     _nova_dist = duckdb.sql(
         """
         SELECT cast(nova_group AS integer) AS nova_group, count(*) AS n
-        FROM read_parquet(?)
+        FROM read_parquet($path)
         WHERE nova_group IS NOT NULL
         GROUP BY 1 ORDER BY 1
         """,
-        params=[_path],
+        params={"path": _path},
     ).df()
     _grade_by_nova = duckdb.sql(
         """
         SELECT cast(nova_group AS integer) AS nova_group,
                upper(nutriscore_grade) AS grade, count(*) AS n
-        FROM read_parquet(?)
+        FROM read_parquet($path)
         WHERE nova_group IS NOT NULL
           AND lower(nutriscore_grade) IN ('a','b','c','d','e')
         GROUP BY 1, 2
         """,
-        params=[_path],
+        params={"path": _path},
     ).df()
     nova_click = alt.selection_point(fields=["nova_group"], empty=False)
     _nova_scale = alt.Scale(

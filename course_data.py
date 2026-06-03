@@ -6,7 +6,7 @@ import os
 import re
 from pathlib import Path
 
-# DuckDB: bind values with ? placeholders; allowlist for column names.
+# DuckDB: bind values with $name placeholders and params={...}; allowlist for column names.
 ALLOWED_NUTRIENTS = frozenset(
     {
         "energy-kcal_100g",
