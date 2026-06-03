@@ -20,6 +20,8 @@ npm run build    # export to dist/
 
 ## Running the notebooks
 
+Run all commands from the **repository root** (the folder that contains `notebooks/` and `course_data.py`):
+
 ```bash
 uv sync --no-install-project
 uv run marimo edit notebooks/01_matplotlib_seaborn.py
@@ -34,12 +36,14 @@ uv run marimo tutorial intro
 
 ### Session 3 — EDA (Open Food Facts)
 
+From the repository root:
+
 ```bash
 uv sync
 uv run marimo edit notebooks/03_eda_open_food_facts.py
 ```
 
-`course_data.py` at the repo root supplies the Parquet path and download helper. Marimo adds the project root to `PYTHONPATH` via `.marimo.toml`.
+`course_data.py` at the repository root supplies the Parquet path and download helper. Paths such as `data/openfoodfacts.parquet` and `mlruns.db` are relative to this directory. Marimo adds the repository root to `PYTHONPATH` via `.marimo.toml`.
 
 #### Open Food Facts Parquet (~1 GB)
 
