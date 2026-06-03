@@ -49,8 +49,16 @@ def _():
     sns.set_theme(style="whitegrid", palette="muted")
     alt.data_transformers.disable_max_rows()
 
-    from course_data import PARQUET_PATH, resolve_parquet_url
+    from course_data import (
+        PARQUET_PATH,
+        parquet_bind_path,
+        resolve_parquet_url,
+        validate_country,
+        validate_nutrient,
+        validate_sample_n,
+    )
 
+    # DuckDB: bind values with ? placeholders; allowlist for column names.
     PARQUET_URL = resolve_parquet_url()
     SAMPLE_N = 100_000
     COUNTRY = None
@@ -75,8 +83,12 @@ def _():
         alt,
         duckdb,
         mo,
+        parquet_bind_path,
         plt,
         sns,
+        validate_country,
+        validate_nutrient,
+        validate_sample_n,
     )
 
 
@@ -110,18 +122,39 @@ def _(PARQUET_PATH, PARQUET_URL):
 
 
 @app.cell
-def _(COUNTRY, PARQUET_PATH, SAMPLE_N, duckdb):
-    _country_filter = (
-        f"AND countries_tags LIKE '%{COUNTRY}%'" if COUNTRY else ""
-    )
-    df_raw = duckdb.sql(
-        f"""
-        SELECT *
-        FROM read_parquet('{PARQUET_PATH.as_posix()}')
-        WHERE 1=1 {_country_filter}
-        USING SAMPLE {SAMPLE_N} ROWS (reservoir, 42)
-        """
-    ).df()
+def _(
+    COUNTRY,
+    PARQUET_PATH,
+    SAMPLE_N,
+    duckdb,
+    parquet_bind_path,
+    validate_country,
+    validate_sample_n,
+):
+    _path = parquet_bind_path(PARQUET_PATH)
+    _sample_n = validate_sample_n(SAMPLE_N)
+    _country = validate_country(COUNTRY)
+    _sample_clause = f"USING SAMPLE {_sample_n} ROWS (reservoir, 42)"
+
+    if _country:
+        df_raw = duckdb.sql(
+            """
+            SELECT *
+            FROM read_parquet(?)
+            WHERE countries_tags LIKE ?
+            """
+            + _sample_clause,
+            params=[_path, f"%{_country}%"],
+        ).df()
+    else:
+        df_raw = duckdb.sql(
+            """
+            SELECT *
+            FROM read_parquet(?)
+            """
+            + _sample_clause,
+            params=[_path],
+        ).df()
     print(f"Loaded {len(df_raw):,} rows, {len(df_raw.columns)} columns")
     return (df_raw,)
 
@@ -264,23 +297,30 @@ def _(mo):
 
 
 @app.cell
-def _(PARQUET_PATH, SAMPLE_N, duckdb):
+def _(PARQUET_PATH, SAMPLE_N, duckdb, parquet_bind_path, validate_sample_n):
+    _path = parquet_bind_path(PARQUET_PATH)
+    _sample_n = validate_sample_n(SAMPLE_N)
+    _sample_clause = f"USING SAMPLE {_sample_n} ROWS (reservoir, 1)"
+    _filtered_sample_clause = f"USING SAMPLE {_sample_n} ROWS (reservoir, 2)"
+
     _blind = duckdb.sql(
-        f"""
-        SELECT count(*) AS n
-        FROM read_parquet('{PARQUET_PATH.as_posix()}')
-        USING SAMPLE {SAMPLE_N} ROWS (reservoir, 1)
         """
+        SELECT count(*) AS n
+        FROM read_parquet(?)
+        """
+        + _sample_clause,
+        params=[_path],
     ).df()["n"][0]
     _filtered = duckdb.sql(
-        f"""
+        """
         SELECT count(*) AS n FROM (
             SELECT 1
-            FROM read_parquet('{PARQUET_PATH.as_posix()}')
+            FROM read_parquet(?)
             WHERE sugars_100g IS NOT NULL
               AND lower(nutriscore_grade) IN ('a','b','c','d','e')
-        ) USING SAMPLE {SAMPLE_N} ROWS (reservoir, 2)
-        """
+        ) """
+        + _filtered_sample_clause,
+        params=[_path],
     ).df()["n"][0]
     print(f"Blind sample rows: {_blind:,}")
     print(f"After nutrient + grade filter, then sample: {_filtered:,}")
@@ -312,14 +352,18 @@ def _(mo):
 
 
 @app.cell
-def _(PARQUET_PATH, alt, duckdb):
-    _nutrient = "sugars_100g"
-    _hist = duckdb.sql(f"""
+def _(PARQUET_PATH, alt, duckdb, parquet_bind_path, validate_nutrient):
+    _nutrient = validate_nutrient("sugars_100g")
+    _path = parquet_bind_path(PARQUET_PATH)
+    _hist = duckdb.sql(
+        f"""
         SELECT floor("{_nutrient}" / 2) * 2 AS bin, count(*) AS n
-        FROM read_parquet('{PARQUET_PATH.as_posix()}')
-        WHERE "{_nutrient}" BETWEEN 0 AND 80
+        FROM read_parquet(?)
+        WHERE "{_nutrient}" BETWEEN ? AND ?
         GROUP BY 1 ORDER BY 1
-    """).df()
+        """,
+        params=[_path, 0, 80],
+    ).df()
     alt.Chart(_hist, title=f"Binned distribution of {_nutrient}").mark_bar().encode(
         x="bin:Q",
         y="n:Q",
@@ -406,16 +450,20 @@ def _(mo):
 
 
 @app.cell
-def _(GRADES, GRADE_COLORS, NOVA_COLORS, PARQUET_PATH, alt, duckdb):
-    _lk = duckdb.sql(f"""
+def _(GRADES, GRADE_COLORS, NOVA_COLORS, PARQUET_PATH, alt, duckdb, parquet_bind_path):
+    _path = parquet_bind_path(PARQUET_PATH)
+    _lk = duckdb.sql(
+        """
         SELECT sugars_100g, fat_100g, upper(nutriscore_grade) AS grade,
                nova_group, product_name
-        FROM read_parquet('{PARQUET_PATH.as_posix()}')
-        WHERE sugars_100g BETWEEN 0 AND 70 AND fat_100g BETWEEN 0 AND 60
+        FROM read_parquet(?)
+        WHERE sugars_100g BETWEEN ? AND ? AND fat_100g BETWEEN ? AND ?
           AND lower(nutriscore_grade) IN ('a','b','c','d','e')
           AND nova_group IS NOT NULL
         USING SAMPLE 6000 ROWS (reservoir, 42)
-    """).df()
+        """,
+        params=[_path, 0, 70, 0, 60],
+    ).df()
     BRUSH_COLOR_FIELD = "grade"  # Exercise 5.3: try "nova_group"
     brush = alt.selection_interval(name="brush", empty=True)
     _grade_scale = alt.Scale(
@@ -491,21 +539,28 @@ def _(mo):
 
 
 @app.cell
-def _(GRADES, GRADE_COLORS, NOVA_COLORS, PARQUET_PATH, alt, duckdb):
-    _nova_dist = duckdb.sql(f"""
+def _(GRADES, GRADE_COLORS, NOVA_COLORS, PARQUET_PATH, alt, duckdb, parquet_bind_path):
+    _path = parquet_bind_path(PARQUET_PATH)
+    _nova_dist = duckdb.sql(
+        """
         SELECT cast(nova_group AS integer) AS nova_group, count(*) AS n
-        FROM read_parquet('{PARQUET_PATH.as_posix()}')
+        FROM read_parquet(?)
         WHERE nova_group IS NOT NULL
         GROUP BY 1 ORDER BY 1
-    """).df()
-    _grade_by_nova = duckdb.sql(f"""
+        """,
+        params=[_path],
+    ).df()
+    _grade_by_nova = duckdb.sql(
+        """
         SELECT cast(nova_group AS integer) AS nova_group,
                upper(nutriscore_grade) AS grade, count(*) AS n
-        FROM read_parquet('{PARQUET_PATH.as_posix()}')
+        FROM read_parquet(?)
         WHERE nova_group IS NOT NULL
           AND lower(nutriscore_grade) IN ('a','b','c','d','e')
         GROUP BY 1, 2
-    """).df()
+        """,
+        params=[_path],
+    ).df()
     nova_click = alt.selection_point(fields=["nova_group"], empty=False)
     _nova_scale = alt.Scale(
         domain=[1, 2, 3, 4],
