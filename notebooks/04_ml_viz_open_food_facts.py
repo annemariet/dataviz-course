@@ -838,6 +838,78 @@ def _(
 
     return (clf,)
 
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## 5c. ROC-AUC vs PR-AUC (grade E, one-vs-rest)
+
+    **ROC-AUC** summarizes ranking quality across all decision thresholds on the same holdout set.
+
+    **PR-AUC** (average precision) matters when positives are rare: ROC can look optimistic while the model still misses most true grade-E products.
+
+    Keep the **same** train/test split; compare **XGBoost** vs **logistic regression** on grade **E** (OvR), alongside the calibration curves above.
+    """)
+    return
+
+
+@app.cell
+def _(
+    X_test,
+    X_train,
+    clf,
+    grade_encoder,
+    mlflow,
+    plt,
+    y_test_clf,
+    y_train_clf,
+):
+    from sklearn.linear_model import LogisticRegression as _LogisticRegression
+    from sklearn.metrics import (
+        PrecisionRecallDisplay,
+        RocCurveDisplay,
+        average_precision_score,
+        roc_auc_score,
+    )
+    from sklearn.pipeline import Pipeline as _Pipeline
+    from sklearn.preprocessing import StandardScaler as _StandardScaler
+
+    _grade_e = int(grade_encoder.transform(["E"])[0])
+    _y_bin = (y_test_clf == _grade_e).astype(int)
+    _log_reg = _Pipeline(
+        [
+            ("scale", _StandardScaler()),
+            ("clf", _LogisticRegression(max_iter=2000, random_state=0)),
+        ]
+    )
+    _log_reg.fit(X_train, y_train_clf)
+    _models = [("XGBoost", clf), ("LogisticRegression", _log_reg)]
+    fig, _axes = plt.subplots(1, 2, figsize=(10, 4))
+    _ax_roc, _ax_pr = _axes
+    with mlflow.start_run(run_name="grade-roc-pr"):
+        mlflow.set_tag("task", "classification")
+        mlflow.set_tag("positive_class", "grade_E_ovr")
+        for _name, _est in _models:
+            _scores_e = _est.predict_proba(X_test)[:, _grade_e]
+            RocCurveDisplay.from_predictions(_y_bin, _scores_e, ax=_ax_roc, name=_name)
+            PrecisionRecallDisplay.from_predictions(
+                _y_bin, _scores_e, ax=_ax_pr, name=_name
+            )
+            _roc = roc_auc_score(_y_bin, _scores_e)
+            _pr = average_precision_score(_y_bin, _scores_e)
+            print(f"{_name}: ROC-AUC={_roc:.3f}, PR-AUC={_pr:.3f}")
+            _key = {"XGBoost": "xgboost", "LogisticRegression": "logistic"}[_name]
+            mlflow.log_metric(f"roc_auc_{_key}", _roc)
+            mlflow.log_metric(f"pr_auc_{_key}", _pr)
+        _ax_roc.set_title("ROC — grade E (OvR)")
+        _ax_pr.set_title("Precision–recall — grade E (OvR)")
+        plt.tight_layout()
+        mlflow.log_figure(fig, "roc_pr_grade_E.png")
+        plt.close(fig)
+    return
+
+
+
+
 
 @app.cell(hide_code=True)
 def _(mo):
