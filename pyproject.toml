@@ -20,11 +20,24 @@ dependencies = [
     "polars==1.40.1",
     "duckdb==1.5.3",
     "pyarrow==24.0.0",
-    "skore==0.18.0",
+    "skore[hub]==0.18.0",
     "vegafusion==2.0.3",
     "vl-convert-python==1.9.0.post1",
     "requests==2.34.2",
+    # Session 4 (mlflow metadata still says pandas<3; override below keeps pandas 3.0.3)
+    "mlflow==3.12.0",
+    "xgboost==3.1.3",
+    "shap==0.51.0",
+    "numba==0.65.1",
+    "llvmlite==0.47.0",
+    "umap-learn==0.5.12",
 ]
+
+[project.optional-dependencies]
+dev = ["pytest==9.0.3", "black==26.5.1", "ruff==0.15.15"]
+# Session 5 embeddings / session 6 Streamlit: install ad hoc (uv.lock size cap)
+# e.g. datasets, sentence-transformers, umap-learn, streamlit>=1.53
+
 
 [tool.marimo.runtime]
 pythonpath = ["."]
@@ -34,3 +47,11 @@ py-modules = ["course_data"]
 
 [tool.uv]
 package = true
+# mlflow 3.12 metadata: pandas<3, pyarrow<24 (works with pandas 3 / pyarrow 24 in practice)
+override-dependencies = ["pandas==3.0.3", "pyarrow==24.0.0"]
+# shap+numba on Intel Mac is unsatisfiable with numpy 2.4; lock for Linux + Apple Silicon
+environments = [
+    "sys_platform == 'linux'",
+    "sys_platform == 'darwin' and platform_machine == 'arm64'",
+    "sys_platform == 'win32'",
+]

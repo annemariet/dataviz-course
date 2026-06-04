@@ -62,3 +62,32 @@ Optional mirror:
 ```bash
 export PARQUET_URL="https://example.com/openfoodfacts.parquet"
 ```
+
+### Session 4 — ML visualization (Open Food Facts)
+
+From the repository root (same Parquet as Session 3):
+
+```bash
+uv sync --no-install-project
+uv run marimo edit notebooks/04_ml_viz_open_food_facts.py
+```
+
+MLflow logs to `mlruns.db` (SQLite) at the repo root by default in this notebook. Optional UI:
+
+```bash
+uv run mlflow ui --backend-store-uri sqlite:///mlruns.db --host 127.0.0.1 --port 5000
+```
+
+### Session 5 — Embeddings (OFF nutrients + optional Wikipedia embeddings)
+
+```bash
+uv sync --no-install-project
+uv run marimo edit notebooks/05_embeddings.py
+```
+
+Optional real text embeddings (large download):
+
+```bash
+uv run marimo edit notebooks/05_embeddings.py -- --real-embeddings
+```
+

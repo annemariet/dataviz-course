@@ -11,3 +11,6 @@ slides/.slidev/
 
 *.local.md
 
+mlruns/
+mlruns.db
+.skore-workspace/
