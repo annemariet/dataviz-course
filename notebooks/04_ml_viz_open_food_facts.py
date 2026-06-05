@@ -119,7 +119,7 @@ def _():
     PARQUET_URL = resolve_parquet_url()
     SAMPLE_N = 200_000
     MAX_DEPTH = 4  # Exercises 3.1 / 5.1: try 2 or 8
-    USE_SKORE_HUB = False  # Teachers: True, then re-run §5b login + Skore cells
+    USE_SKORE_HUB = True  # Teachers: True, then re-run §5b login + Skore cells
     SKORE_HUB_WORKSPACE = "amarie"  # Hub slug: workspace/name
     FEATURE_COLS = [
         "energy-kcal_100g",
@@ -142,7 +142,6 @@ def _():
     mlflow.set_tracking_uri("sqlite:///mlruns.db")
     mlflow.set_experiment("off-nutriscore")
     mlflow.xgboost.autolog(log_models=False)
-
     return (
         FEATURE_COLS,
         MAX_DEPTH,
@@ -187,7 +186,6 @@ def _(PARQUET_PATH, PARQUET_URL):
     from course_data import ensure_openfoodfacts_parquet
     ensure_openfoodfacts_parquet(PARQUET_PATH, PARQUET_URL)
     print(f"Using Parquet: {PARQUET_PATH}")
-
     return
 
 
@@ -217,15 +215,14 @@ def _(FEATURE_COLS, df_model, grade_encoder, train_test_split):
         random_state=0,
         stratify=df_model["nutriscore_grade"],
     )
-    X_train = train_df[FEATURE_COLS].to_numpy()
-    X_test = test_df[FEATURE_COLS].to_numpy()
+    X_train = train_df[FEATURE_COLS]
+    X_test = test_df[FEATURE_COLS]
     y_train_g = train_df["nutriscore_grade"].to_numpy(dtype=object)
     y_test_g = test_df["nutriscore_grade"].to_numpy(dtype=object)
     y_train_clf = grade_encoder.transform(y_train_g)
     y_test_clf = grade_encoder.transform(y_test_g)
     y_train_s = train_df["nutriscore_score"].to_numpy(dtype=float)
     y_test_s = test_df["nutriscore_score"].to_numpy(dtype=float)
-
     return (
         X_test,
         X_train,
@@ -272,7 +269,6 @@ def _(mo):
     max_depth_sel = mo.ui.number(start=1, step=1,stop=8, value=4, label="Maximum depth")
     nb_estimators_sel = mo.ui.number(start=10, step=10, stop=100, value=50, label="Nb estimators")
     mo.vstack([max_depth_sel, nb_estimators_sel])
-
     return max_depth_sel, nb_estimators_sel
 
 
@@ -280,20 +276,20 @@ def _(mo):
 def _(max_depth_sel, nb_estimators_sel):
     max_depth = max_depth_sel.value
     nb_estimators = nb_estimators_sel.value
+    return max_depth, nb_estimators
 
-    return
 
-
-@app.cell
+@app.cell(hide_code=True)
 def _(
     FEATURE_COLS,
-    MAX_DEPTH,
     XGBClassifier,
     XGBRegressor,
     XGB_CLF_KWARGS,
     df_model,
     grade_encoder,
+    max_depth,
     mlflow,
+    nb_estimators,
     np,
     plt,
 ):
@@ -302,8 +298,9 @@ def _(
     _yg = grade_encoder.transform(df_model["nutriscore_grade"].to_numpy(dtype=object))
     _ys = df_model["nutriscore_score"].to_numpy(dtype=float)
     _clf_est = XGBClassifier(
-        max_depth=MAX_DEPTH, n_estimators=50, random_state=0, **XGB_CLF_KWARGS
+        max_depth=max_depth, n_estimators=nb_estimators, random_state=0, **XGB_CLF_KWARGS
     )
+    _reg_est = XGBRegressor(max_depth=max_depth, n_estimators=nb_estimators, random_state=0)
     mlflow.autolog(disable=True)
     mlflow.xgboost.autolog(disable=True)
     try:
@@ -321,7 +318,7 @@ def _(
             )
             _lc_axes[0].set_title("Classification: accuracy vs training size")
             LearningCurveDisplay.from_estimator(
-                XGBRegressor(max_depth=MAX_DEPTH, n_estimators=50, random_state=0),
+                _reg_est,
                 _X,
                 _ys,
                 scoring="neg_root_mean_squared_error",
@@ -336,7 +333,6 @@ def _(
         # Re-enable autolog for Sections 5-7 (one baseline fit per run)
         mlflow.xgboost.autolog(log_models=False)
     fig_lc_size
-
     return
 
 
@@ -358,21 +354,22 @@ def _(mo):
 
 @app.cell
 def _(
-    MAX_DEPTH,
     XGBClassifier,
     XGBRegressor,
     XGB_CLF_KWARGS,
     X_test,
     X_train,
     alt,
+    max_depth,
     mlflow,
+    nb_estimators,
     pd,
     y_test_clf,
     y_test_s,
     y_train_clf,
     y_train_s,
 ):
-    _n_rounds = 60
+    _n_rounds = nb_estimators
     _early_stop = 12
     mlflow.autolog(disable=True)
     mlflow.xgboost.autolog(disable=True)
@@ -397,7 +394,7 @@ def _(
             mlflow.set_tag("task", "classification")
             mlflow.set_tag("approach", "xgboost-eval-set")
             _clf_iter = XGBClassifier(
-                max_depth=MAX_DEPTH,
+                max_depth=max_depth,
                 n_estimators=_n_rounds,
                 early_stopping_rounds=_early_stop,
                 random_state=0,
@@ -421,7 +418,7 @@ def _(
             mlflow.set_tag("task", "regression")
             mlflow.set_tag("approach", "xgboost-eval-set")
             _reg_iter = XGBRegressor(
-                max_depth=MAX_DEPTH,
+                max_depth=max_depth,
                 n_estimators=_n_rounds,
                 early_stopping_rounds=_early_stop,
                 subsample=0.8,
@@ -450,7 +447,7 @@ def _(
         )
 
         chart_lc_iter = (
-            alt.Chart(_lc_iter)
+            alt.Chart(_lc_iter,width=260, height=140)
             .mark_line()
             .encode(
                 x=alt.X("round:Q", title="Boosting round"),
@@ -459,13 +456,12 @@ def _(
                 strokeDash=alt.StrokeDash("split:N"),
             )
             .facet(column=alt.Column("task:N", title=None))
-            .properties(width=260, height=140, title="Learning curve vs boosting round")
+            .properties( title="Learning curve vs boosting round")
             .resolve_scale(y="independent")
         )
     finally:
         mlflow.xgboost.autolog(log_models=False)
     chart_lc_iter
-
     return
 
 
@@ -554,7 +550,6 @@ def _(
     chart_manual_lc
     _manual_lc_table = mo.ui.table(_manual_rows)
     _manual_lc_table
-
     return
 
 
@@ -591,7 +586,6 @@ def _(FEATURE_COLS, mo):
             "then contrast adding columns at low depth vs adding data at high depth."
         ),
     ])
-
     return lc_depth, lc_n_feats, lc_train_max
 
 
@@ -658,7 +652,6 @@ def _(
     else:
         _story = "**Contrast:** try depth=2 with 2 features (underfit) vs depth=8 with 6 features (overfit, data helps)."
     mo.vstack([mo.md(_story), fig_lc_inter])
-
     return
 
 
@@ -694,7 +687,6 @@ def _(
             # Metric = measured outcome; param = fixed experimental choice (filter in UI)
             mlflow.log_metric("accuracy", _c.score(_Xv, _yv))
             mlflow.log_param("with_fiber", True)
-
     return
 
 
@@ -727,6 +719,8 @@ def _(mo):
 
     A **reliability diagram** plots the fraction of positives against mean predicted probability in bins. A well-calibrated model lies on the diagonal. With five grades we use **one-vs-rest** (OvR): grade **E** is the positive class, all others negative, following the [sklearn calibration curve example](https://scikit-learn.org/stable/auto_examples/calibration/plot_calibration_curve.html).
 
+    See also this nice [introduction to reliability diagrams](https://medium.com/data-science/introduction-to-reliability-diagrams-for-probability-calibration-ed785b3f5d44) taking weather forecast as an example.
+
     The code cell fits **XGBoost**, **logistic regression**, and **random forest** on the same train/test split and overlays their grade-E calibration curves.
     """)
     return
@@ -742,6 +736,7 @@ def _(
     X_train,
     grade_encoder,
     mlflow,
+    mo,
     pd,
     plt,
     sns,
@@ -770,10 +765,15 @@ def _(
         print(f"Test accuracy (XGBoost): {acc:.2%}")
 
         y_pred = grade_encoder.inverse_transform(clf.predict(X_test).astype(int))
-        cm = confusion_matrix(y_test_g, y_pred, labels=NUTRISCORES)
+        cm_arr = confusion_matrix(y_test_g, y_pred, labels=NUTRISCORES)
+        # Log raw counts so any run's confusion matrix can be rebuilt from MLflow
+        mlflow.log_dict(
+            {"labels": NUTRISCORES, "matrix": cm_arr.tolist()},
+            "confusion_matrix.json",
+        )
         fig_cm, _ax_cm = plt.subplots(figsize=(6, 5))
         sns.heatmap(
-            cm,
+            cm_arr,
             annot=True,
             fmt="d",
             xticklabels=NUTRISCORES,
@@ -785,7 +785,6 @@ def _(
         _ax_cm.set_title("Confusion matrix: grade classification (XGBoost)")
         plt.tight_layout()
         mlflow.log_figure(fig_cm, "confusion_matrix.png")
-        plt.close(fig_cm)
 
         _pred_counts = pd.Series(y_pred).value_counts().reindex(NUTRISCORES, fill_value=0)
         _true_counts = pd.Series(y_test_g).value_counts().reindex(NUTRISCORES, fill_value=0)
@@ -797,7 +796,6 @@ def _(
         plt.suptitle("Calibration check: do predicted frequencies look like reality?")
         plt.tight_layout()
         mlflow.log_figure(fig_cal, "grade_distribution_compare.png")
-        plt.close(fig_cal)
 
         _cal_models = [
             ("XGBoost", clf),
@@ -813,13 +811,8 @@ def _(
             ("RandomForest", RandomForestClassifier(n_estimators=100, random_state=0)),
         ]
         fig_rel, _ax_rel = plt.subplots(figsize=(6, 5))
-        _ax_rel.plot(
-            [0, 1],
-            [0, 1],
-            linestyle="--",
-            color="gray",
-            label="Perfect calibration",
-        )
+        _ax_rel.plot([0, 1], [0, 1], linestyle="--", color="gray", label="Perfect calibration")
+        _rel_data = {}
         for _name, _est in _cal_models:
             if _name != "XGBoost":
                 _est.fit(X_train, y_train_clf)
@@ -827,16 +820,19 @@ def _(
             _y_bin_e = (y_test_clf == _grade_e).astype(int)
             _frac_pos, _mean_pred = calibration_curve(_y_bin_e, _proba_e, n_bins=10)
             _ax_rel.plot(_mean_pred, _frac_pos, marker="o", label=_name)
+            _rel_data[_name] = {"mean_pred": _mean_pred.tolist(), "frac_pos": _frac_pos.tolist()}
         _ax_rel.set_xlabel("Mean predicted probability (grade E)")
         _ax_rel.set_ylabel("Fraction of positives (grade E)")
         _ax_rel.set_title("Reliability diagram: grade E (one-vs-rest)")
         _ax_rel.legend(loc="lower right")
         plt.tight_layout()
+        # Log curve data so reliability diagrams can be compared across runs
+        mlflow.log_dict(_rel_data, "calibration_curve_grade_E.json")
         mlflow.log_figure(fig_rel, "calibration_grade_E_multi_model.png")
-        plt.close(fig_rel)
-    fig_rel
 
+    mo.vstack([fig_cm, fig_cal, fig_rel])
     return (clf,)
+
 
 @app.cell(hide_code=True)
 def _(mo):
@@ -883,7 +879,7 @@ def _(
     )
     _log_reg.fit(X_train, y_train_clf)
     _models = [("XGBoost", clf), ("LogisticRegression", _log_reg)]
-    fig, _axes = plt.subplots(1, 2, figsize=(10, 4))
+    fig_roc_pr, _axes = plt.subplots(1, 2, figsize=(10, 4))
     _ax_roc, _ax_pr = _axes
     with mlflow.start_run(run_name="grade-roc-pr"):
         mlflow.set_tag("task", "classification")
@@ -903,12 +899,9 @@ def _(
         _ax_roc.set_title("ROC — grade E (OvR)")
         _ax_pr.set_title("Precision–recall — grade E (OvR)")
         plt.tight_layout()
-        mlflow.log_figure(fig, "roc_pr_grade_E.png")
-        plt.close(fig)
+        mlflow.log_figure(fig_roc_pr, "roc_pr_grade_E.png")
+    fig_roc_pr
     return
-
-
-
 
 
 @app.cell(hide_code=True)
@@ -943,7 +936,7 @@ def _(USE_SKORE_HUB):
         print("Skore Hub login OK (cached credentials on this machine)")
     else:
         print("Skipping Hub login (USE_SKORE_HUB is False in setup).")
-    return
+    return (skore,)
 
 
 @app.cell
@@ -954,54 +947,86 @@ def _(
     XGBClassifier,
     XGB_CLF_KWARGS,
     X_train,
-    mo,
+    alt,
+    pd,
+    skore,
     y_train_clf,
 ):
     from pathlib import Path
-    from skore import CrossValidationReport, Project, compare
 
     if USE_SKORE_HUB:
-        _skore_project = Project(
+        _skore_project = skore.Project(
             f"{SKORE_HUB_WORKSPACE}/off-nutriscore-skore",
             mode="hub",
         )
-        print(
-            f"Skore Hub project: {SKORE_HUB_WORKSPACE}/off-nutriscore-skore (run login cell first)"
-        )
+        print(f"Skore Hub project: {SKORE_HUB_WORKSPACE}/off-nutriscore-skore")
     else:
         _skore_ws = Path(".skore-workspace").resolve()
-        _skore_project = Project(
+        _skore_project = skore.Project(
             "off-nutriscore-skore",
             mode="local",
             workspace=_skore_ws,
         )
         print(f"Skore workspace: {_skore_ws}")
 
+    # Single EstimatorReport (80/20 split) pushed to Hub for interactive exploration
+    _est_single = XGBClassifier(
+        max_depth=MAX_DEPTH, n_estimators=50, random_state=0, **XGB_CLF_KWARGS
+    )
+    _single_report = skore.evaluate(_est_single, X_train, y_train_clf, splitter=0.2)
+    _skore_project.put("grade-estimator", _single_report)
+    print("Pushed EstimatorReport to Hub as \'grade-estimator\'")
+
+    # Cross-validation at several depths
     _depths = sorted({2, MAX_DEPTH, 8})
     _cv_by_depth = {}
     for _d in _depths:
         _est = XGBClassifier(
-            max_depth=_d,
-            n_estimators=50,
-            random_state=0,
-            **XGB_CLF_KWARGS,
+            max_depth=_d, n_estimators=50, random_state=0, **XGB_CLF_KWARGS
         )
-        _report = CrossValidationReport(
+        _cv_by_depth[_d] = skore.evaluate(
             _est, X_train, y_train_clf, splitter=3, n_jobs=-1
         )
-        _cv_by_depth[_d] = _report
-        _skore_project.put(f"grade-cv-depth-{_d}", _report)
-    compare({f"depth_{d}": r for d, r in _cv_by_depth.items()})
-    _skore_frame = _cv_by_depth[MAX_DEPTH].metrics.summarize().frame()
-    _skore_display = _skore_frame.reset_index()
-    _skore_display.columns = [
-        "_".join(str(c) for c in col).strip("_")
-        if isinstance(col, tuple)
-        else str(col)
-        for col in _skore_display.columns
-    ]
-    print("Project keys:", [f"grade-cv-depth-{d}" for d in _depths])
-    mo.ui.table(_skore_display)
+        _skore_project.put(f"grade-cv-depth-{_d}", _cv_by_depth[_d])
+
+    # Build parallel-coords data including max_depth as an axis
+    _pc_rows = []
+    for _d, _r in _cv_by_depth.items():
+        _f = _r.metrics.summarize().frame()
+        _mean_col = next(c for c in _f.columns if c[1] == "mean")
+        _roc_idx = [idx for idx in _f.index if idx[0] == "ROC AUC"]
+        _pc_rows.append({
+            "max_depth": _d,
+            "Accuracy": float(_f.loc[("Accuracy", ""), _mean_col]),
+            "ROC AUC (macro)": float(_f.loc[_roc_idx, _mean_col].mean()),
+            "Log loss": float(_f.loc[("Log loss", ""), _mean_col]),
+            "Fit time (s)": float(_f.loc[("Fit time (s)", ""), _mean_col]),
+        })
+
+    _pc_df = pd.DataFrame(_pc_rows)
+    _pc_df["depth_label"] = _pc_df["max_depth"].astype(str)
+    _metric_order = ["max_depth", "Accuracy", "ROC AUC (macro)", "Log loss", "Fit time (s)"]
+    _pc_melted = _pc_df[_metric_order + ["depth_label"]].melt(
+        id_vars="depth_label", var_name="metric", value_name="raw_value"
+    )
+    _pc_melted["value"] = _pc_melted.groupby("metric")["raw_value"].transform(
+        lambda s: (s - s.min()) / (s.max() - s.min() + 1e-9)
+    )
+
+    _chart_parallel = (
+        alt.Chart(_pc_melted)
+        .mark_line(point=True)
+        .encode(
+            x=alt.X("metric:N", sort=_metric_order, title=None, axis=alt.Axis(labelAngle=-15)),
+            y=alt.Y("value:Q", title="Normalized (0 = min, 1 = max across depths)", axis=alt.Axis(labels=False)),
+            color=alt.Color("depth_label:N", title="max_depth"),
+            detail="depth_label:N",
+            tooltip=["depth_label:N", "metric:N", alt.Tooltip("raw_value:Q", format=".4f")],
+        )
+        .properties(width=500, height=260, title="Depth comparison: CV metrics + hyperparameter (each axis normalized)")
+    )
+    print("Project keys:", ["grade-estimator"] + [f"grade-cv-depth-{d}" for d in _depths])
+    _chart_parallel
     return
 
 
@@ -1036,20 +1061,26 @@ def _(
     X_test,
     X_train,
     mlflow,
+    mo,
     np,
     plt,
     y_test_s,
     y_train_s,
 ):
+    from sklearn.metrics import mean_absolute_error, r2_score
+
     with mlflow.start_run(run_name="score-baseline"):
         mlflow.set_tag("task", "regression")
         reg = XGBRegressor(max_depth=MAX_DEPTH, n_estimators=100, random_state=0)
         reg.fit(X_train, y_train_s)
         y_pred_s = reg.predict(X_test)
         rmse = float(np.sqrt(np.mean((y_test_s - y_pred_s) ** 2)))
-        # Primary regression metric; compare across runs with tags.task=regression
+        mae = float(mean_absolute_error(y_test_s, y_pred_s))
+        r2 = float(r2_score(y_test_s, y_pred_s))
         mlflow.log_metric("rmse", rmse)
-        print(f"Test RMSE: {rmse:.2f}")
+        mlflow.log_metric("mae", mae)
+        mlflow.log_metric("r2", r2)
+        print(f"Test RMSE: {rmse:.2f}  MAE: {mae:.2f}  R2: {r2:.3f}")
 
         fig_sc, _ax_sc = plt.subplots(figsize=(5, 5))
         _ax_sc.scatter(y_test_s, y_pred_s, alpha=0.2, s=8)
@@ -1060,7 +1091,6 @@ def _(
         _ax_sc.set_title("Predicted vs actual")
         plt.tight_layout()
         mlflow.log_figure(fig_sc, "pred_vs_actual.png")
-        plt.close(fig_sc)
 
         resid = y_test_s - y_pred_s
         fig_r, _ax_r = plt.subplots(figsize=(5, 4))
@@ -1069,8 +1099,8 @@ def _(
         _ax_r.set_title("Residual distribution")
         plt.tight_layout()
         mlflow.log_figure(fig_r, "residuals.png")
-        plt.close(fig_r)
 
+    mo.hstack([fig_sc, fig_r])
     return
 
 
@@ -1105,7 +1135,7 @@ def _(mo):
 def _(FEATURE_COLS, X_test, X_train, clf, grade_encoder, mlflow, mo, plt):
     import shap
 
-    _X_shap = X_test[:500]
+    _X_shap = X_test.iloc[:500]
     explainer = shap.Explainer(clf, X_train, feature_names=FEATURE_COLS)
     shap_values = explainer(_X_shap)
 
@@ -1123,31 +1153,39 @@ def _(FEATURE_COLS, X_test, X_train, clf, grade_encoder, mlflow, mo, plt):
     else:
         shap_e = shap_values
 
+    # Explicit new figures so beeswarm and waterfall don't share a canvas
+    plt.figure(figsize=(8, 5))
     shap.plots.beeswarm(shap_e, max_display=8, show=False)
     fig_sh = plt.gcf()
-    fig_sh.set_size_inches(8, 5)
     fig_sh.suptitle("SHAP beeswarm: grade E (multiclass slice)")
     plt.tight_layout()
 
     _e_mask = clf.predict(_X_shap) == _grade_e
     if _e_mask.any():
         _e_idx = int(_e_mask.nonzero()[0][0])
+        plt.figure(figsize=(8, 5))
         shap.plots.waterfall(shap_e[_e_idx], max_display=8, show=False)
         fig_wf = plt.gcf()
-        fig_wf.set_size_inches(8, 5)
         fig_wf.suptitle(f"SHAP waterfall: grade E (test sample {_e_idx})")
         plt.tight_layout()
     else:
         fig_wf = None
         print("No predicted-E rows in SHAP slice; waterfall skipped.")
 
+    # Log SHAP mean |value| per feature so runs are comparable in MLflow
+    _shap_importance = {
+        f"shap_mean_abs_{feat}": float(abs(shap_e.values[:, i]).mean())
+        for i, feat in enumerate(FEATURE_COLS)
+    }
     with mlflow.start_run(run_name="grade-shap-figure"):
         mlflow.set_tag("task", "classification")
+        for _k, _v in _shap_importance.items():
+            mlflow.log_metric(_k, _v)
         mlflow.log_figure(fig_sh, "shap_beeswarm_grade_E.png")
         if fig_wf is not None:
             mlflow.log_figure(fig_wf, "shap_waterfall_grade_E.png")
-    plt.close(fig_sh)
-    mo.vstack([fig_sh, fig_wf])
+
+    mo.vstack([fig_sh] + ([fig_wf] if fig_wf is not None else []))
     return
 
 
@@ -1180,7 +1218,6 @@ def _(mlflow):
         ["run_id", "tags.task", "metrics.accuracy", "metrics.rmse", "params.max_depth"]
     ].copy()
     _plot_df.head(10)
-
     return (runs,)
 
 
@@ -1194,7 +1231,6 @@ def _(alt, runs):
             color="tags.task:N",
             tooltip=["run_id", "metrics.accuracy"],
         ).properties(width=450, height=280, title="Classifier runs")
-
     return
 
 

@@ -672,6 +672,131 @@ def _(mo):
     return
 
 
+@app.cell
+def _(PARQUET_PATH, alt, duckdb, parquet_bind_path):
+    parquet_bind = parquet_bind_path(PARQUET_PATH)
+    _growth = duckdb.sql(
+        """
+        SELECT date_trunc('month', created_datetime::TIMESTAMP) AS month,
+               count(*) AS n
+        FROM read_parquet($path)
+        WHERE created_datetime IS NOT NULL AND created_datetime != ''
+          AND created_datetime::TIMESTAMP >= '2012-01-01'
+          AND created_datetime::TIMESTAMP < '2026-06-01'
+        GROUP BY 1 ORDER BY 1
+        """,
+        params={"path": parquet_bind},
+    ).df()
+    _area = alt.Chart(_growth).mark_area(opacity=0.5, color="#4c78a8").encode(
+        x=alt.X("month:T", title="Month"),
+        y=alt.Y("n:Q", title="products added"))
+    _trend = alt.Chart(_growth).transform_loess(
+        "month", "n", bandwidth=0.2).mark_line(color="#d62728", size=2).encode(
+        x="month:T", y="n:Q")
+    (_area + _trend).properties(
+        width=620, height=320,
+        title="Products added per month (red = LOESS trend)").interactive()
+    return (parquet_bind,)
+
+
+@app.cell
+def _(GRADES, GRADE_COLORS, alt, duckdb, parquet_bind):
+    _grade_time = duckdb.sql(
+        """
+        SELECT year(created_datetime::TIMESTAMP) AS year,
+               upper(nutriscore_grade) AS grade, count(*) AS n
+        FROM read_parquet($path)
+        WHERE created_datetime IS NOT NULL AND created_datetime != ''
+          AND lower(nutriscore_grade) IN ('a','b','c','d','e')
+          AND created_datetime::TIMESTAMP >= '2013-01-01'
+          AND created_datetime::TIMESTAMP < '2026-06-01'
+        GROUP BY 1, 2 ORDER BY 1
+        """,
+        params={"path": parquet_bind},
+    ).df()
+    _grade_time["pct"] = (
+        100 * _grade_time["n"] / _grade_time.groupby("year")["n"].transform("sum")
+    )
+    _chart = (
+        alt.Chart(_grade_time, title="Grade share by year of creation")
+        .mark_line(point=True).encode(
+            x=alt.X("year:O", title="Year created"),
+            y=alt.Y("pct:Q", title="% of graded products"),
+            color=alt.Color("grade:N", sort=GRADES,
+                            scale=alt.Scale(domain=GRADES,
+                                            range=[GRADE_COLORS[g] for g in GRADES])),
+            tooltip=["year", "grade", alt.Tooltip("pct:Q", format=".1f")])
+        .properties(width=620, height=320)
+    )
+    _chart
+    return
+
+
+@app.cell
+def _(alt, duckdb, mo, parquet_bind):
+    from vega_datasets import data as _vega
+    import pandas as _pd
+
+    _by_country = duckdb.sql(
+        """
+        SELECT countries_tags AS country, avg(nutriscore_score) AS mean_score,
+               count(*) AS n,
+               100.0 * count(*) FILTER (
+                   WHERE lower(nutriscore_grade) IN ('a','b','c','d','e')
+               ) / count(*) AS pct_graded
+        FROM read_parquet($path)
+        WHERE countries_tags IS NOT NULL AND countries_tags NOT LIKE '%,%'
+          AND nutriscore_score IS NOT NULL
+        GROUP BY 1 HAVING count(*) > 200
+        """,
+        params={"path": parquet_bind},
+    ).df()
+
+    # world-110m uses ISO 3166-1 numeric ids (no properties.name in this TopoJSON)
+    _COUNTRY_ID = {
+        "en:france": 250, "en:united-states": 840, "en:germany": 276,
+        "en:spain": 724, "en:italy": 380, "en:united-kingdom": 826,
+        "en:canada": 124, "en:belgium": 56, "en:switzerland": 756,
+        "en:netherlands": 528, "en:australia": 36, "en:brazil": 76,
+        "en:mexico": 484,
+    }
+    COUNTRY_ISO = {
+        "en:france": "France", "en:united-states": "United States of America",
+        "en:germany": "Germany", "en:spain": "Spain", "en:italy": "Italy",
+        "en:united-kingdom": "United Kingdom", "en:canada": "Canada",
+        "en:belgium": "Belgium", "en:switzerland": "Switzerland",
+        "en:netherlands": "Netherlands", "en:australia": "Australia",
+        "en:brazil": "Brazil", "en:mexico": "Mexico",
+    }
+    _by_country["country_name"] = _by_country["country"].map(COUNTRY_ISO)
+    _by_country["id"] = _by_country["country"].map(_COUNTRY_ID)
+    _mapped = _by_country.dropna(subset=["id"]).copy()
+    _mapped["id"] = _mapped["id"].astype(int)
+
+    _world = alt.topo_feature(_vega.world_110m.url, "countries")
+    _base = alt.Chart(_world).mark_geoshape(
+        fill="#eee", stroke="white").project("naturalEarth1").properties(
+        width=620, height=340)
+    _chart = (
+        alt.Chart(_world).mark_geoshape(stroke="white").transform_lookup(
+            lookup="id",
+            from_=alt.LookupData(_mapped, "id", ["mean_score", "n", "pct_graded", "country_name"]),
+        ).encode(
+            color=alt.Color("mean_score:Q",
+                            scale=alt.Scale(scheme="redyellowgreen", reverse=True),
+                            title="Mean score"),
+            tooltip=[alt.Tooltip("country_name:N", title="country"),
+                     alt.Tooltip("mean_score:Q", format=".1f"),
+                     alt.Tooltip("n:Q"),
+                     alt.Tooltip("pct_graded:Q", format=".0f")],
+        ).project("naturalEarth1").properties(width=620, height=340,
+            title="Mean NutriScore score by country (greener = healthier)")
+    )
+    mo.vstack([_base + _chart])
+
+    return
+
+
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""

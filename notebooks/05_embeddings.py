@@ -47,7 +47,7 @@ def _(mo):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    ## 2. OFF nutrient space
+    ## 2. Open Food Facts nutrient space
 
     Same Parquet as Sessions 3-4 (`data/openfoodfacts.parquet`). Download from course SharePoint if missing (see README).
 
@@ -82,8 +82,6 @@ def _():
         "proteins_100g",
         "fiber_100g",
     ]
-    UMAP_NEIGHBORS = 15  # Exercise 2.1: try 5 or 50
-    UMAP_MIN_DIST = 0.1
     RANDOM_STATE = 42
     COLOR_BY = "grade"  # Exercise 2.2: "grade" or "category"
     return (
@@ -95,8 +93,6 @@ def _():
         RANDOM_STATE,
         StandardScaler,
         TSNE,
-        UMAP_MIN_DIST,
-        UMAP_NEIGHBORS,
         alt,
         duckdb,
         mo,
@@ -105,6 +101,21 @@ def _():
         plt,
         umap,
     )
+
+
+@app.cell
+def _(mo):
+    umap_neighbors_sel = mo.ui.slider(value=15, start=5,stop=100,step=5, label="Nb neighbors")
+    umap_min_dist_sel = mo.ui.number(value=0.1, start=0.0, stop=1.0, step=0.05, label="Min distance")
+    mo.vstack([umap_neighbors_sel, umap_min_dist_sel])
+    return umap_min_dist_sel, umap_neighbors_sel
+
+
+@app.cell
+def _(umap_min_dist_sel, umap_neighbors_sel):
+    UMAP_NEIGHBORS = umap_neighbors_sel.value  # Exercise 2.1: try 5 or 50
+    UMAP_MIN_DIST = umap_min_dist_sel.value
+    return UMAP_MIN_DIST, UMAP_NEIGHBORS
 
 
 @app.cell
@@ -127,7 +138,7 @@ def _(FEATURE_COLS, PARQUET_PATH, duckdb):
         FROM read_parquet('{PARQUET_PATH.as_posix()}')
         WHERE {_nulls}
           AND lower(nutriscore_grade) IN ('a','b','c','d','e')
-        USING SAMPLE 8000 ROWS (reservoir, 42)
+        USING SAMPLE 10000 ROWS (reservoir, 42)
     """).df()
     print(f"Embedding sample: {len(df_nut):,} products")
     return (df_nut,)
@@ -144,7 +155,7 @@ def _(
     df_nut,
     umap,
 ):
-    X = df_nut[FEATURE_COLS].to_numpy()
+    X = df_nut[FEATURE_COLS]
     X_scaled = StandardScaler().fit_transform(X)
     pca = PCA(n_components=2, random_state=RANDOM_STATE)
     xy_pca = pca.fit_transform(X_scaled)
@@ -179,9 +190,9 @@ def _(COLOR_BY, alt, df_nut, pc1_var, pc2_var):
 
 
 @app.cell
-def _(COLOR_BY, alt, df_nut):
+def _(COLOR_BY, UMAP_NEIGHBORS, alt, df_nut):
     _color_field = "grade:N" if COLOR_BY == "grade" else "category:N"
-    alt.Chart(df_nut, title="UMAP of nutrient space").mark_circle(size=12, opacity=0.5).encode(
+    alt.Chart(df_nut, title=f"UMAP of nutrient space n={UMAP_NEIGHBORS}").mark_circle(size=12, opacity=0.5).encode(
         x="umap_x:Q",
         y="umap_y:Q",
         color=_color_field,
@@ -291,13 +302,13 @@ def _(
     ).fit_transform(X_wiki_scaled)
     df_wiki["umap_x"] = xy_wiki[:, 0]
     df_wiki["umap_y"] = xy_wiki[:, 1]
-    return X_wiki_scaled,
+    return
 
 
 @app.cell
-def _(alt, df_wiki):
+def _(UMAP_NEIGHBORS, alt, df_wiki):
 
-    alt.Chart(df_wiki, title="Wikipedia FR: UMAP of text embeddings").mark_circle(size=20, opacity=0.7).encode(
+    alt.Chart(df_wiki, title=f"Wikipedia FR: UMAP of text embeddings n={UMAP_NEIGHBORS}").mark_circle(size=20, opacity=0.7).encode(
         x="umap_x:Q",
         y="umap_y:Q",
         color="topic:N",
