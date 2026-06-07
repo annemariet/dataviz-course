@@ -32,6 +32,10 @@ npm run dev:s6
 npm run build:s6
 ```
 
+### Slide images
+
+Deck markdown references images as `/images/filename.ext`. Slidev resolves these from `slides/public/images/` — files are committed directly (not symlinked). Session 6 adds ~30 assets on top of the Session 1 set; if a build fails with missing `/images/...` imports, check that the file exists under `slides/public/images/` before running `npm run build:s6`.
+
 ## Running the notebooks
 
 Run all commands from the **repository root** (the folder that contains `notebooks/` and `course_data.py`):
