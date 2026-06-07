@@ -4,10 +4,12 @@
   "scripts": {
     "dev": "slidev --open",
     "build": "slidev build",
-    "export": "slidev export"
+    "export": "slidev export",
+    "dev:s6": "slidev --open session6_dashboarding.md",
+    "build:s6": "slidev build session6_dashboarding.md"
   },
   "dependencies": {
-    "@slidev/cli": "^52.14.2",
-    "@slidev/theme-seriph": "^0.25.0"
+    "@slidev/cli": "52.15.2",
+    "@slidev/theme-seriph": "0.25.0"
   }
 }
