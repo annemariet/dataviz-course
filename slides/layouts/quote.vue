@@ -45,8 +45,8 @@ defineProps({
 
 .quote-text {
   font-family: Inter, "Avenir Next", Avenir, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  font-size: 4.1rem;
-  line-height: 1.8;
+  font-size: clamp(1.85rem, 2.6vw, 2.75rem);
+  line-height: 1.45;
   font-weight: 500;
 }
 
