@@ -2,9 +2,11 @@
   "name": "dataviz-workshop-slides",
   "private": true,
   "scripts": {
-    "dev": "slidev --open",
-    "build": "slidev build",
-    "export": "slidev export",
+    "dev": "slidev --open session1_principles.md",
+    "build": "slidev build session1_principles.md",
+    "export": "slidev export session1_principles.md",
+    "dev:s1": "slidev --open session1_principles.md",
+    "build:s1": "slidev build session1_principles.md",
     "dev:s6": "slidev --open session6_dashboarding.md",
     "build:s6": "slidev build session6_dashboarding.md"
   },

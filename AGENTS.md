@@ -18,7 +18,7 @@ Students clone it to follow along with the slides and run the workshop notebooks
 ## Structure
 
 ```
-slides/           Slidev presentation (slides.md + seriph theme)
+slides/           Slidev decks (session1_principles.md, session6_dashboarding.md, seriph theme)
   public/images/  Slide images — committed directly, see below
 notebooks/        Marimo workshop notebooks
   01_matplotlib_seaborn.py
@@ -35,7 +35,8 @@ uv.lock
 ```bash
 cd slides
 npm install
-npm run dev      # localhost:3030
+npm run dev        # session 1 (or dev:s1)
+npm run dev:s6     # session 6
 ```
 
 **Notebooks** — run from the repo root:
@@ -59,7 +60,7 @@ Images are committed directly to `slides/public/images/`.
 
 **To add a new image:**
 1. Drop it into `slides/public/images/`
-2. Reference it in slides.md as `<img src="/images/filename.ext" />`
+2. Reference it in the deck markdown as `<img src="/images/filename.ext" />`
 3. Commit it
 
 **Pitfall:** `slides/.gitignore` has `public/fonts/` and `public/icons/` but NOT a
