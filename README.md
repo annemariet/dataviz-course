@@ -7,6 +7,7 @@ PSL Master IASD · 2026 · Anne-Marie Tousch
 ```
 slides/      Slidev decks (session1_principles.md, session6_dashboarding.md, ...)
 notebooks/   Marimo workshop notebooks
+session6/    Session 6 dashboard workshop (Streamlit + optional tracks)
 ```
 
 ## Running the slides
@@ -108,4 +109,25 @@ Optional real text embeddings (large download):
 ```bash
 uv run marimo edit notebooks/05_embeddings.py -- --real-embeddings
 ```
+
+### Session 6 — Dashboards (Streamlit)
+
+Slides: `slides/session6_dashboarding.md` (see [Running the slides](#running-the-slides)).
+
+From the repository root (same Parquet as Sessions 3–5):
+
+```bash
+uv sync --extra s6
+uv run streamlit run session6/streamlit_app.py
+```
+
+Opens at http://localhost:8501. Extend the starter by adding queries in
+`session6/off_dashboard_queries.py` and matching charts in
+`session6/streamlit_app.py`. Full build order and extension tasks:
+[`session6/README.md`](session6/README.md).
+
+Optional self-paced tracks (same repo):
+
+- **Tableau Public** — [`session6/tableau.md`](session6/tableau.md) (`export_tableau_csv.py`)
+- **Nao (agentic BI)** — [`session6/nao.md`](session6/nao.md) (`build_off_db.py`)
 

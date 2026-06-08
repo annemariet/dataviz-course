@@ -35,8 +35,10 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = ["pytest==9.0.3", "black==26.5.1", "ruff==0.15.15"]
-# Session 5 embeddings / session 6 Streamlit: install ad hoc (uv.lock size cap)
-# e.g. datasets, sentence-transformers, umap-learn, streamlit>=1.53
+# Session 6 Streamlit track: `uv sync --extra s6`
+s6 = ["streamlit==1.58.0"]
+# Session 5 embeddings: install ad hoc (datasets, sentence-transformers — kept
+# out of uv.lock because the GPU-related sub-deps are heavy and optional)
 
 
 [tool.marimo.runtime]
