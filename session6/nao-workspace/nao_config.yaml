@@ -1,0 +1,22 @@
+# nao configuration for the Session 6 Open Food Facts workshop.
+# Docs: https://docs.getnao.io/nao-agent/context-builder/configuration#nao_config-yaml
+
+project_name: dataviz-course-s6-off
+databases:
+  - type: duckdb
+    name: off-local
+    path: ../data/off.duckdb
+    include: []
+    exclude: []
+    templates:
+      - columns
+      - how_to_use
+      - preview
+      - ai_summary
+    profiling:
+      refresh_policy: always
+      interval_days: 7
+llm:
+  provider: anthropic
+  api_key: ${{ env('ANTHROPIC_API_KEY') }}
+  annotation_model: claude-sonnet-4-6

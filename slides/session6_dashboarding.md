@@ -977,7 +977,7 @@ uv run streamlit run \
 
 Scaffold: DuckDB + country filter + 2 KPI tiles + 1 chart.
 
-Extend: heatmap + one KPI from Beat 1.
+Extend: heatmap + one KPI from Wooclap poll.
 
 ::footer::
 
