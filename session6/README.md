@@ -1,4 +1,4 @@
-# Session 6 — Dashboards, AI-assisted BI, Ethics
+# Session 6: Dashboards, AI-assisted BI, Ethics
 
 Workshop code for the Open Food Facts analytical dashboard. Slides live in
 [`slides/session6_dashboarding.md`](../slides/session6_dashboarding.md).
@@ -12,17 +12,16 @@ uv sync --extra s6
 uv run streamlit run session6/streamlit_app.py
 ```
 
-Opens at http://localhost:8501. You need `data/openfoodfacts.parquet` — same
+Opens at http://localhost:8501. You need `data/openfoodfacts.parquet`, the same
 file as Sessions 3–5 (see the [root README](../README.md#open-food-facts-parquet-1-gb)).
 
-## Workshop structure
+## Workshop content
 
 | Part | What you do |
 |------|-------------|
-| **Beat 2 — Streamlit** | Extend the starter dashboard (default track) |
-| **Ethics drill** | For each chart: *A careless reader would conclude __, but the data actually says __.* |
-| **Tableau** (optional) | No-code comparison — [`tableau.md`](tableau.md) |
-| **Nao** (optional) | Agentic BI NL → SQL — [`nao.md`](nao.md) |
+| **Streamlit** | Extend the starter dashboard (default track) |
+| **Tableau** (optional) | No-code comparison. Follow instructions in [`tableau.md`](tableau.md) |
+| **Nao** (optional) | Agentic BI library. Follow instructions in [`nao.md`](nao.md) |
 
 ## Files
 
@@ -40,7 +39,7 @@ session6/
 
 Generated data (gitignored): `session6/data/off.duckdb`, `data/off_grade_by_category.csv`.
 
-## Beat 2 — extend the Streamlit dashboard
+## Main workshop: extend the Streamlit dashboard
 
 Two files, one convention: **queries in** `off_dashboard_queries.py`, **charts in**
 `streamlit_app.py`.
@@ -55,20 +54,16 @@ Two files, one convention: **queries in** `off_dashboard_queries.py`, **charts i
 6. **6.1–6.2**: `query_category_nutri_score` (with `share` column) → heatmap (`mark_rect`)
 
 Query stubs for steps 4–6 are already in `off_dashboard_queries.py`; the app has
-placeholder panels — wire them up by copying the Nutri-Score chart pattern in section 1.4.
+placeholder panels. Wire them up by copying the Nutri-Score chart pattern in section 1.4.
 
 ### Extension ideas
 
-- Add one KPI from your own dashboard brainstorm (Beat 1)
+- Add one KPI from your own dashboard brainstorm
 - Compare filtered vs unfiltered row counts in the sidebar
 - Export a chart spec and note what a careless reader might misread
 
 ## Optional tracks
 
-- **Tableau Public** — [`tableau.md`](tableau.md): `export_tableau_csv.py` → upload CSV → drag-and-drop dashboard
-- **Nao (agentic BI)** — [`nao.md`](nao.md): `build_off_db.py` → `nao sync` → `nao chat` — read the SQL every time
+- **Tableau Public**: [`tableau.md`](tableau.md): `export_tableau_csv.py` → upload CSV → drag-and-drop dashboard
+- **Nao (agentic BI)**: [`nao.md`](nao.md): `build_off_db.py` → `nao sync` → `nao chat`. Check the generated SQL.
 
-## Ethics check
-
-Built into the app (expandable footer). Apply the same sentence to Streamlit charts,
-Tableau views, or Nao-generated SQL output.
