@@ -13,16 +13,7 @@ checklist (same spirit as the ethics drill on Streamlit charts).
 ## Prerequisites
 
 - `data/openfoodfacts.parquet` (same as Sessions 3–6)
-- An [Anthropic API key](https://console.anthropic.com/) in `ANTHROPIC_API_KEY`
-- ~25 min for one-time setup
-
-`nao-core` is not in the main `pyproject.toml` (keeps the lockfile smaller).
-Install it ad hoc:
-
-```bash
-uv sync
-uv pip install 'nao-core[duckdb]'
-```
+- An LLM API key. Warning: the default Nao setup might write it in `nao_config.yaml`, use `api_key: ${{ env('ANTHROPIC_API_KEY') }}` to avoid leakage.
 
 ## 1. Build the DuckDB
 
@@ -42,7 +33,9 @@ uv run python session6/build_off_db.py --sample 50000
 
 ## 2. Configure the workspace
 
-Already in this repo:
+Follow instructions in https://github.com/getnao/nao.
+
+Already in this repo as examples but can be overriden (or removed) in case of conflict
 
 ```
 session6/nao-workspace/
