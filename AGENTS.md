@@ -18,7 +18,7 @@ Students clone it to follow along with the slides and run the workshop notebooks
 ## Structure
 
 ```
-slides/           Slidev presentation (slides.md + seriph theme)
+slides/           Slidev decks (session1_principles.md, session6_dashboarding.md, seriph theme)
   public/images/  Slide images — committed directly, see below
 notebooks/        Marimo workshop notebooks
   01_matplotlib_seaborn.py
@@ -35,7 +35,8 @@ uv.lock
 ```bash
 cd slides
 npm install
-npm run dev      # localhost:3030
+npm run dev        # session 1 (or dev:s1)
+npm run dev:s6     # session 6
 ```
 
 **Notebooks** — run from the repo root:
@@ -59,7 +60,7 @@ Images are committed directly to `slides/public/images/`.
 
 **To add a new image:**
 1. Drop it into `slides/public/images/`
-2. Reference it in slides.md as `<img src="/images/filename.ext" />`
+2. Reference it in the deck markdown as `<img src="/images/filename.ext" />`
 3. Commit it
 
 **Pitfall:** `slides/.gitignore` has `public/fonts/` and `public/icons/` but NOT a
@@ -133,6 +134,22 @@ The notebook has a fallback sample if the INSEE URL is unreachable.
 | 7+8 | 11/06 | Mini-project hackathon |
 
 Key theoretical framework: Munzner's marks/channels vocabulary → Grammar of Graphics (Wilkinson/Wickham) → Altair implementation. Cleveland & McGill accuracy ranking underpins channel choice guidance.
+
+---
+
+## Dependency versioning
+
+**Python** (`pyproject.toml`):
+
+- **Always pin exact versions**: use `==x.y.z`, never `>=` or `~=`.
+- **Never pin a version released in the last 7 days.** Check PyPI before pinning; if the latest stable is too new, pin the previous stable release.
+- After editing `pyproject.toml`, run `uv sync`, then commit `uv.lock` alongside it.
+
+**npm / Node** (`slides/package.json`, and `session6/package.json` in the amai-lab monorepo):
+
+- **Always pin exact versions** in `dependencies` / `devDependencies`: use `"x.y.z"`, never `^`, `~`, `*`, or ranges.
+- **Never pin a version released in the last 7 days.** Use `npm view <package>@<version> time --json`; if the latest stable is too new, pin the previous stable release.
+- After editing `package.json`, run `npm install` in that directory, then commit `package-lock.json` alongside it.
 
 ---
 

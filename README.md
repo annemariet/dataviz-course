@@ -5,18 +5,36 @@ PSL Master IASD · 2026 · Anne-Marie Tousch
 ## Structure
 
 ```
-slides/      Slidev presentation (slides.md)
+slides/      Slidev decks (session1_principles.md, session6_dashboarding.md, ...)
 notebooks/   Marimo workshop notebooks
 ```
 
 ## Running the slides
 
+Run all commands from `slides/` (not the repo root):
+
 ```bash
 cd slides
 npm install
-npm run dev      # live preview at localhost:3030
-npm run build    # export to dist/
 ```
+
+**Session 1** (`session1_principles.md`):
+
+```bash
+npm run dev        # or npm run dev:s1 — live preview at localhost:3030
+npm run build      # or npm run build:s1 — export to dist/
+```
+
+**Session 6** (`session6_dashboarding.md`):
+
+```bash
+npm run dev:s6
+npm run build:s6
+```
+
+### Slide images
+
+Deck markdown references images as `/images/filename.ext`. Slidev resolves these from `slides/public/images/` — files are committed directly (not symlinked). Session 6 adds ~30 assets on top of the Session 1 set; if a build fails with missing `/images/...` imports, check that the file exists under `slides/public/images/` before running `npm run build:s6`.
 
 ## Running the notebooks
 
