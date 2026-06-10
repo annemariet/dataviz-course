@@ -228,7 +228,7 @@ Let:
 **Calibration score:**
 $$\text{score}_3 = \max(0,\ \rho_S(r_s,\ r^*)) \times 20$$
 
-where $\rho_S$ is the **Spearman rank correlation** (appropriate for ordinal 1–5 scales). Floor at 0.
+where $\rho_S$ is the **Pearson correlation**. Floor at 0.
 
 Tentative scoring, may be adjusted depending on actual correlation values:
 
