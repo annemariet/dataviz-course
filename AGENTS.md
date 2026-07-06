@@ -40,7 +40,9 @@ npm run dev:s6     # session 6
 ```
 
 **Notebooks** — run from the repo root:
+
 ```bash
+cp .env.example .env   # set TEACHER_EMAIL (required for 06 & 07)
 uv sync --no-install-project
 uv run marimo edit notebooks/01_matplotlib_seaborn.py
 uv run marimo edit notebooks/02_gog_altair.py
@@ -117,6 +119,15 @@ alt.data_transformers.enable("vegafusion")
 Data is downloaded on first run and cached to `data/prenoms.parquet` (gitignored).
 The notebook has a fallback sample if the INSEE URL is unreachable.
 
+### Editing marimo notebooks (agents)
+
+Workshop notebooks are **marimo** files (`import marimo`, `@app.cell`). When the user asks to edit one:
+
+1. **Use marimo-pair** — read `.claude/skills/marimo-pair/SKILL.md` and edit via `marimo._code_mode` (`ctx.edit_cell`, `ctx.run_cell`). Do **not** patch the `.py` on disk while a session is running; the kernel will clobber those edits.
+2. **Connect first** — `bash .claude/skills/marimo-pair/scripts/discover-servers.sh`, or the URL the user provides. If the server needs a token and none was given in this chat, **ask for the URL and token** before editing.
+3. **Reuse session credentials** — if the user already shared `http://localhost:…/` and a `--token`, keep using them for the rest of the conversation.
+4. **Verify live** — confirm changes in the running kernel / browser, not only on disk.
+
 ---
 
 ## Course content overview
@@ -159,3 +170,4 @@ Key theoretical framework: Munzner's marks/channels vocabulary → Grammar of Gr
 - Don't add `public/` back to `slides/.gitignore`
 - Don't commit `data/`, `.venv/`, or `slides/node_modules/` (all gitignored)
 - Don't add a vault symlink at `slides/public/images` — commit images directly
+- Don't edit marimo notebook `.py` files directly while `marimo edit` is running — use marimo-pair instead

@@ -24,6 +24,8 @@ dependencies = [
     "vegafusion==2.0.3",
     "vl-convert-python==1.9.0.post1",
     "requests==2.34.2",
+    "openpyxl==3.1.5",
+    "python-dotenv==1.2.2",
     # Session 4 (mlflow metadata still says pandas<3; override below keeps pandas 3.0.3)
     "mlflow==3.12.0",
     "xgboost==3.1.3",
@@ -45,7 +47,7 @@ s6 = ["streamlit==1.58.0"]
 pythonpath = ["."]
 
 [tool.setuptools]
-py-modules = ["course_data"]
+py-modules = ["course_data", "course_env"]
 
 [tool.uv]
 package = true
