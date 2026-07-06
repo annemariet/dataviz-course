@@ -11,7 +11,15 @@ slides/dist/
 slides/.slidev/
 
 *.local.md
+.env
 
 mlruns/
 mlruns.db
 .skore-workspace/
+
+# Local-only evaluation exports (student emails / names)
+project_eval/
+chart-scoring/
+notes/
+scratch/
+.tmp_*
