@@ -55,13 +55,94 @@ Submission files shared with the teacher before the afternoon starts.
 
 ---
 
+## Final score computation
+
+Computed post-session from the MS Forms export (`project_eval/`), in `notebooks/07_chart_scoring.py`.
+
+### Who gets what
+
+| Component | Scope | Shared? |
+|-----------|-------|---------|
+| Part 1 · Chart | Per **team** | Yes — all members of the group receive the same score |
+| Part 2 · Presentation | Per **team** | Yes |
+| Part 3 · Judgment | Per **student** | No — individual calibration score |
+| **Project total** | Per **student** | Part 1 + Part 2 + Part 3 |
+
+### Self-evaluations
+
+Students rate every team on the Form, including their own. **Self-evaluations are treated differently by part:**
+
+| Part | Self-eval included? |
+|------|---------------------|
+| **1 · Chart** | **No** — peer mean excludes a student's rating of their own team |
+| **2 · Presentation** | **No** — same rule |
+| **3 · Judgment** | **Yes** — the student's own ratings (including their team) are compared to cohort + teacher references; the crowd reference also includes self-evaluations |
+
+### Teacher weight α
+
+Parts 1, 2, and 3 all use the same blend:
+
+$$\text{blended} = \frac{\text{peer or crowd} + \alpha \cdot \text{teacher}}{\alpha + 1}$$
+
+With **α = 1** (equal weight) unless adjusted after experiments.
+
+### Part 1 (/40) — per team
+
+1. **Raw sum** = sum of 5 chart criteria (1–5 stars → 5–25)
+2. **Peer score** = mean raw sum over all student raters **except the team's own members**, scaled: $(\text{raw} / 25) \times 40$
+3. **Teacher score** = teacher's raw sum, same scaling
+4. **Part 1** = blend of peer + teacher (α above)
+
+### Part 2 (/40) — per team
+
+1. **Peer score** = mean of five presentation criteria (8 pts each → max 40), **excluding self-evaluations**
+2. **Teacher score** = teacher's total (max 40)
+3. **Part 2** = blend of peer + teacher (same α)
+
+### Part 3 (/20) — per student
+
+Uses **Part 1 chart ratings only** (all teams × 5 criteria). Method: **Spearman rank alignment** (production default).
+
+For each student, build a **charts × criteria** matrix of their star ratings. Compare separately to:
+
+- **Crowd reference** — mean rating per cell across all students (self-evaluations **included**)
+- **Teacher reference** — teacher's ratings
+
+For each of the 5 criteria, compute Spearman ρ between the student's chart-rank vector and the reference chart-rank vector. Then:
+
+$$\text{score}_\text{crowd} = \max(0,\ \bar\rho_\text{crowd}) \times 20 \qquad \text{score}_\text{teacher} = \max(0,\ \bar\rho_\text{teacher}) \times 20$$
+
+$$\text{Part 3} = \frac{\text{score}_\text{crowd} + \alpha \cdot \text{score}_\text{teacher}}{\alpha + 1}$$
+
+**Edge cases (scored 0):**
+- Constant profile (e.g. 5/5 on every criterion for every chart) → rank correlation undefined
+- Negative ρ → floored at 0 before scaling
+
+### Project total (/100) and course note (/20)
+
+$$\text{project\_total} = \text{Part 1} + \text{Part 2} + \text{Part 3}$$
+
+**Note /20** (for grade entry): round **up** to the nearest 0.5:
+
+$$\text{note}_{20} = \left\lceil \dfrac{\text{project\_total}}{100} \times 20 \times 2 \right\rceil / 2$$
+
+Example: 79.5 /100 → 15.9 → **16.0/20**.
+
+Leaderboard **rank** is by `project_total` (descending). Parts 1–2 scores are attached to each student via their team; Part 3 is individual.
+
+### Combining peer and teacher scores (Parts 1 & 2) — detail
+
+Same blend as above. **Production run:** α = 1. Reproducible in `notebooks/07_chart_scoring.py`.
+
+---
+
 ## Part 1: Chart Scoring (40 pts)
 
 ### How it works
 
 Immediately after each group's presentation, **all students and the teacher score the focus chart** silently using the MS Form (2–3 minutes). All students score all charts, including their own group's.
 
-Scores are not revealed until the end of the afternoon. Self-ratings are included by default and can be filtered out in post-processing if needed.
+Scores are not revealed until the end of the afternoon. **Self-ratings on a student's own team are excluded from Parts 1 & 2** (see [Final score computation](#final-score-computation)); they are still used in Part 3 calibration.
 
 The five questions are the same ones used in previous sessions.
 
@@ -138,7 +219,14 @@ Reference: position > length > angle > area > colour saturation > colour hue.
 
 ### Part 1 scoring
 
-For each chart: **sum of 5 question scores** (5–25 pts). Normalize the total across all charts to 40 pts.
+For each team, from the focus chart ratings:
+
+1. **Raw sum** = sum of the 5 question scores (1–5 stars each → **5–25**)
+2. **Peer score** = mean raw sum across all student raters **except the team's own members** → scale to /40: $(\text{raw} / 25) \times 40$
+3. **Teacher score** = teacher's raw sum, scaled the same way
+4. **Part 1 final** = weighted blend (see above): $(\text{peer} + \alpha \cdot \text{teacher}) / (\alpha + 1)$
+
+Shared within the team — all group members receive the same Part 1 score.
 
 Students may add a brief written comment on any rating to justify their choice. The teacher reviews these post-session and may adjust Part 3 for a student whose divergent rating is well-argued (see Part 3).
 
@@ -209,6 +297,18 @@ Part 2 is graded by the students and the teacher from the 5-minute presentation 
 
 ---
 
+### Part 2 scoring
+
+For each team, from the five presentation criteria (C1–C5, **8 pts each**):
+
+1. **Peer score** = mean total across all student raters **except the team's own members** (max **40**)
+2. **Teacher score** = teacher's total (max **40**)
+3. **Part 2 final** = weighted blend (same $\alpha$ as Part 1): $(\text{peer} + \alpha \cdot \text{teacher}) / (\alpha + 1)$
+
+Shared within the team — all group members receive the same Part 2 score.
+
+---
+
 ## Part 3: Judgment (20 pts)
 
 ### Rationale
@@ -217,22 +317,18 @@ Part 3 rewards students whose critical eye is well-calibrated against the teache
 
 This is computed after the session from the Part 1 rating data.
 
-### Formula
+### Formula (production)
 
-Let:
-- $r_s$ = student's Part 1 ratings (all groups × 5 questions, in presentation order)
-- $r_T$ = teacher's ratings for the same charts and questions
-- $\bar{r}_P$ = mean ratings from the full cohort
-- $r^* = \dfrac{\alpha \cdot r_T + \bar{r}_P}{\alpha + 1}$ : weighted consensus (teacher weight TBD)
+See [Final score computation](#final-score-computation) for the full pipeline. Summary:
 
-**Calibration score:**
-$$\text{score}_3 = \max(0,\ \rho_S(r_s,\ r^*)) \times 20$$
+- **Input:** student's Part 1 ratings (all teams × 5 criteria)
+- **Method:** Spearman rank correlation per criterion, then mean → scale to /20
+- **References:** crowd mean (self-eval **included**) and teacher, blended with α
+- **Floor:** undefined or negative alignment → **0** (e.g. rating 5/5 everywhere)
 
-where $\rho_S$ is the **Spearman rank correlation** (appropriate for ordinal 1–5 scales). Floor at 0.
+The band table below was used during experiments; production scoring uses the continuous $\max(0, \bar\rho) \times 20$ mapping directly.
 
-Tentative scoring, may be adjusted depending on actual correlation values:
-
-| Spearman ρ | Part 3 score |
+| Spearman ρ (experimental bands) | Indicative range |
 | ---------- | ------------ |
 | ≥ 0.80     | 16–20        |
 | 0.60–0.79  | 12–15        |
